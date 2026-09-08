@@ -4,19 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sign in — LinkUp</title>
-<meta name="theme-color" content="#0f1115" />
+<meta name="theme-color" content="#f5f6f8" />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="site.css" />
 <style>
+  body { background: var(--bg); }
   .auth-wrap {
     min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px;
   }
   .card {
     width: min(420px, 100%);
-    background: var(--stage-elev);
-    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    border: 1px solid var(--line);
     border-radius: var(--r-lg);
     padding: 36px 30px;
     box-shadow: var(--shadow-md);
@@ -26,33 +27,33 @@
     font-family: var(--display); font-size: 28px; letter-spacing: -0.03em; text-align: center;
   }
   .card .sub {
-    text-align: center; color: var(--fog); font-size: 14.5px; margin: 8px 0 26px; font-weight: 500;
+    text-align: center; color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 26px; font-weight: 500;
   }
   .field { margin-bottom: 14px; }
   .field label {
-    display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--fog);
+    display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft);
   }
   .field input {
     width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
-    padding: 12px 14px; font-size: 15px; background: var(--stage-soft); color: var(--paper);
+    padding: 12px 14px; font-size: 15px; background: var(--surface-2); color: var(--ink);
   }
   .field input:focus { outline: 2px solid var(--citrus); border-color: transparent; }
   .card .btn { width: 100%; margin-top: 6px; }
-  .swap { text-align: center; margin-top: 18px; font-size: 14px; color: var(--fog); }
+  .swap { text-align: center; margin-top: 18px; font-size: 14px; color: var(--ink-soft); }
   .swap button {
     background: none; border: none; cursor: pointer; color: var(--citrus);
     font-weight: 600; text-decoration: underline; padding: 0;
   }
   .msg { margin-top: 14px; font-size: 14px; text-align: center; line-height: 1.45; }
-  .msg.bad { color: #ff8e7a; }
-  .msg.good { color: #7fd4a8; }
+  .msg.bad { color: #b42318; }
+  .msg.good { color: #0f6b5c; }
   .forgot {
-    display: block; text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--fog);
+    display: block; text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--ink-soft);
   }
   .setup {
-    background: rgba(240, 194, 75, 0.12); border: 1px solid rgba(240, 194, 75, 0.35);
+    background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
     border-radius: var(--r-md); padding: 16px 18px; font-size: 14px; line-height: 1.5;
-    margin-bottom: 20px; color: var(--mist);
+    margin-bottom: 20px; color: var(--ink);
   }
 </style>
 </head>
@@ -95,7 +96,7 @@
           I want my own custom domain
         </label>
         <p style="font-size:12px;color:var(--fog);line-height:1.45;margin-bottom:8px">
-          You upload videos and content. We build/host if you pick a package.
+          Website builds are quoted by email — nothing charged online except LinkUp software.
           <a href="services.html" style="color:var(--citrus)">See packages</a>
         </p>
       </div>

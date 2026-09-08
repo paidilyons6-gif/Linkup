@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Done-for-you websites — LinkUp</title>
 <meta name="description" content="Need a sales page or full site for your offers? We build it, host it, and wire it to your LinkUp quiz. You upload the content." />
-<meta name="theme-color" content="#0f1115" />
+<meta name="theme-color" content="#f5f6f8" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="site.css" />
@@ -15,7 +15,7 @@
     font-family: var(--display); font-size: clamp(34px, 5vw, 52px);
     letter-spacing: -.03em; line-height: 1.05; max-width: 14ch;
   }
-  .svc-hero p { margin-top: 16px; color: var(--fog); font-size: 17px; max-width: 42ch; }
+  .svc-hero p { margin-top: 16px; color: var(--ink-soft); font-size: 17px; max-width: 42ch; }
   .pkg-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
     margin: 40px 0 64px;
@@ -23,11 +23,11 @@
   @media (max-width: 900px) { .pkg-grid { grid-template-columns: 1fr; } }
   .pkg {
     border: 1px solid var(--line-strong); border-radius: 18px;
-    background: var(--stage-elev); padding: 26px 24px; display: flex; flex-direction: column;
+    background: var(--surface); padding: 26px 24px; display: flex; flex-direction: column;
   }
   .pkg.featured {
-    border-color: color-mix(in srgb, var(--citrus) 55%, transparent);
-    background: linear-gradient(180deg, var(--citrus-soft), var(--stage-elev) 40%);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 45%);
   }
   .pkg .flag {
     font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
@@ -37,11 +37,11 @@
   .pkg .price {
     margin: 14px 0 6px; font-family: var(--display); font-size: 34px; letter-spacing: -.03em;
   }
-  .pkg .price span { font-size: 14px; color: var(--fog); font-family: var(--sans); }
-  .pkg .care { color: var(--fog); font-size: 14px; margin-bottom: 18px; }
+  .pkg .price span { font-size: 14px; color: var(--ink-soft); font-family: var(--sans); }
+  .pkg .care { color: var(--ink-soft); font-size: 14px; margin-bottom: 18px; }
   .pkg ul { list-style: none; display: grid; gap: 10px; flex: 1; margin-bottom: 22px; }
   .pkg li {
-    padding-left: 22px; position: relative; font-size: 14.5px; color: var(--mist); line-height: 1.4;
+    padding-left: 22px; position: relative; font-size: 14.5px; color: var(--ink); line-height: 1.4;
   }
   .pkg li::before {
     content: ''; position: absolute; left: 0; top: .4em; width: 10px; height: 10px; border-radius: 50%;
@@ -52,28 +52,28 @@
   }
   @media (max-width: 800px) { .flow { grid-template-columns: 1fr 1fr; } }
   .flow article h3 { font-family: var(--display); font-size: 20px; margin-bottom: 8px; }
-  .flow article p { color: var(--fog); font-size: 14.5px; }
+  .flow article p { color: var(--ink-soft); font-size: 14.5px; }
   .flow .n { color: var(--citrus); font-family: var(--display); font-size: 28px; }
   .intake {
     max-width: 520px; margin: 0 auto 80px;
     border: 1px solid var(--line-strong); border-radius: 18px;
-    background: var(--stage-elev); padding: 28px 26px;
+    background: var(--surface); padding: 28px 26px;
   }
   .intake h2 { font-family: var(--display); font-size: 28px; letter-spacing: -.02em; margin-bottom: 8px; }
-  .intake .sub { color: var(--fog); margin-bottom: 20px; font-size: 14.5px; }
+  .intake .sub { color: var(--ink-soft); margin-bottom: 20px; font-size: 14.5px; }
   .intake .field { margin-bottom: 12px; }
-  .intake label { display: block; font-size: 12.5px; font-weight: 600; color: var(--fog); margin-bottom: 6px; }
+  .intake label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
   .intake input, .intake select, .intake textarea {
     width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
-    background: var(--stage-soft); color: var(--paper); padding: 11px 13px; font: inherit;
+    background: var(--surface-2); color: var(--ink); padding: 11px 13px; font: inherit;
   }
   .checks { display: grid; gap: 8px; margin: 8px 0 16px; }
   .checks label {
-    display: flex; gap: 10px; align-items: flex-start; color: var(--mist);
+    display: flex; gap: 10px; align-items: flex-start; color: var(--ink);
     font-size: 14px; font-weight: 500; margin: 0; cursor: pointer;
   }
   .checks input { width: auto; margin-top: 3px; }
-  .ok { color: #7fd4a8; text-align: center; margin-top: 12px; }
+  .ok { color: var(--accent); text-align: center; margin-top: 12px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -196,7 +196,7 @@
     <div class="wrap">
       <form class="intake" id="form">
         <h2>Tell us what you need</h2>
-        <p class="sub">We’ll reply with a start date and invoice. No pressure — software-only is always fine.</p>
+        <p class="sub">Email goes straight to Paulie (paidilyons6@gmail.com). Website builds are quoted by email — you only pay in-app for LinkUp quiz/software plans.</p>
 
         <div class="field">
           <label for="name">Name</label>
@@ -232,7 +232,7 @@
           <label for="notes">Anything else</label>
           <textarea id="notes" name="notes" rows="4" placeholder="What you sell, deadline, existing domain…"></textarea>
         </div>
-        <button class="btn pink" type="submit" style="width:100%">Send request</button>
+        <button class="btn pink" type="submit" style="width:100%">Email Paulie</button>
         <p class="ok" id="ok" hidden>Got it — we’ll be in touch shortly.</p>
       </form>
     </div>
@@ -244,6 +244,7 @@
     <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
     <a href="terms.html">Terms</a>
     <a href="privacy.html">Privacy</a>
+    <a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a>
   </div>
 </footer>
 
@@ -279,7 +280,7 @@
     const body = encodeURIComponent(
       `Name: ${lead.name}\nEmail: ${lead.email}\nBusiness: ${lead.business}\nPackage: ${lead.package}\nNeeds: ${needs.join(', ') || '—'}\n\n${lead.notes || ''}`
     );
-    location.href = `mailto:hello@linkup.ie?subject=${encodeURIComponent('LinkUp website request — ' + lead.package)}&body=${body}`;
+    location.href = `mailto:paidilyons6@gmail.com?subject=${encodeURIComponent('LinkUp website request — ' + lead.package)}&body=${body}`;
   };
 </script>
 </body>
