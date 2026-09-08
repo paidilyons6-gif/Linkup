@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>LinkUp</title>
+<meta name="description" content="One link. Everything you do." />
+<meta name="theme-color" content="#111629" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="linkup.css" />
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- Hidden entirely when there's no welcome video, so a Basic customer never
+     sees a black rectangle where one should be. -->
+<div class="welcome" id="welcome" hidden>
+  <video id="welcomeVideo" playsinline preload="metadata"></video>
+  <div class="welcome-cover" id="welcomeCover">
+    <img class="welcome-avatar" id="welcomeAvatar" alt="" hidden />
+    <button class="play" id="playBtn" aria-label="Play welcome video"></button>
+    <p id="welcomeName"></p>
+  </div>
+  <button class="skip" id="skipBtn">Skip</button>
+</div>
+
+<main class="page" id="page"></main>
+
+<script src="linkup.js"></script>
+<script>
+  const profile = LinkUp.load();
+  LinkUp.render(profile);
+  LinkUp.liven();
+
+  const page    = document.getElementById('page');
+  const welcome = document.getElementById('welcome');
+  const video   = document.getElementById('welcomeVideo');
+  const cover   = document.getElementById('welcomeCover');
+
+  function reveal() {
+    welcome.classList.add('gone');
+    page.classList.add('show');
+    try { video.pause(); } catch {}
+    // Released once it's off screen — a paused video still holds its buffer.
+    setTimeout(() => { welcome.hidden = true; video.removeAttribute('src'); video.load(); }, 800);
+  }
+
+  // The editor embeds this page and reloads it as you type; sitting through
+  // the welcome video every time would make it unusable.
+  const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+
+  if (profile.welcomeVideo && !isPreview) {
+    welcome.hidden = false;
+    video.src = profile.welcomeVideo;
+    document.getElementById('welcomeName').textContent =
+      profile.name ? `A quick hello from ${profile.name}` : '';
+    if (profile.avatar) {
+      const a = document.getElementById('welcomeAvatar');
+      a.src = profile.avatar;
+      a.hidden = false;
+    }
+
+    // Sound needs a tap — no browser will autoplay audible video. Better an
+    // honest play button than a video that silently does nothing.
+    document.getElementById('playBtn').onclick = () => {
+      cover.classList.add('gone');
+      video.play().catch(reveal);          // if it won't play at all, don't trap them
+    };
+    document.getElementById('skipBtn').onclick = reveal;
+    video.onended = reveal;
+    video.onerror = reveal;
+  } else {
+    page.classList.add('show');
+  }
+
+  /* Live preview. The editor posts the working profile in as it's typed and
+     this redraws in place — no reload, so the page doesn't blink white, the
+     background video doesn't restart, and a bubble you're renaming updates
+     under the cursor. Only messages from our own window are listened to. */
+  if (isPreview) {
+    addEventListener('message', (e) => {
+      if (e.source !== parent || !e.data || e.data.type !== 'linkup:profile') return;
+      LinkUp.render(e.data.profile);
+      page.classList.add('show');
+      LinkUp.liven();
+      // Dragging a bubble here reports the new spot back; the editor owns it.
+      LinkUp.makePlaceable(document, (i, x, y) =>
+        parent.postMessage({ type: 'linkup:move', i, x, y }, '*'));
+    });
+    parent.postMessage({ type: 'linkup:ready' }, '*');
+  }
+</script>
+</body>
+</html>

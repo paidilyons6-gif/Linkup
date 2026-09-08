@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terms — LinkUp</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  .doc { padding: 40px 0 80px; }
+  .doc h1 { font-family: var(--serif); font-size: 38px; letter-spacing: -.03em; margin-bottom: 8px; }
+  .doc .when { color: var(--ink-soft); font-size: 14px; margin-bottom: 34px; }
+  .doc h2 { font-family: var(--serif); font-size: 23px; letter-spacing: -.02em; margin: 32px 0 10px; }
+  .doc p, .doc li { color: var(--ink-soft); font-size: 15.5px; line-height: 1.65; }
+  .doc p { margin-bottom: 12px; }
+  .doc ul { margin: 0 0 12px 20px; }
+  .doc li { margin-bottom: 6px; }
+  .doc strong { color: var(--ink); }
+  .review {
+    background: rgba(240, 194, 75, 0.12); border: 1px solid rgba(240, 194, 75, 0.35);
+    border-radius: var(--r-md); padding: 16px 18px; font-size: 14.5px; line-height: 1.55;
+    margin-bottom: 30px; color: var(--mist);
+  }
+  .doc strong { color: var(--paper); }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <a class="link" href="privacy.html">Privacy</a>
+</div></header>
+
+<main class="narrow doc">
+  <div class="review">
+    <strong>Read this before publishing.</strong> This is a reasonable starting point
+    that matches how the software actually behaves, but it is a binding contract with
+    your customers. Have a solicitor read it, and fill in the placeholders, before you
+    take money.
+  </div>
+
+  <h1>Terms</h1>
+  <p class="when">Last updated: <span id="d"></span></p>
+
+  <p>LinkUp is a service of <strong>[YOUR COMPANY NAME]</strong>, [ADDRESS], Ireland.
+     Using it means agreeing to what's below. These terms are governed by Irish law.</p>
+
+  <h2>What you get</h2>
+  <p>A page at an address of your choosing, editable by you, on whichever plan you're
+     paying for. Building a page is free; publishing one needs a paid plan. What each
+     plan includes is on the <a href="index.html#pricing">pricing page</a> and may
+     change with a month's notice.</p>
+
+  <h2>Paying</h2>
+  <p>Plans are monthly, in euro, charged in advance, and renew automatically until you
+     cancel. Prices include VAT where it applies. You can cancel at any time from
+     Manage billing — you keep access until the end of the month you've paid for, and
+     part-months aren't refunded.</p>
+  <p>If a payment fails we'll retry. If it keeps failing your page stops being public,
+     but nothing is deleted — pay and it comes straight back.</p>
+  <p><strong>Your first fourteen days:</strong> as a consumer buying online in the EU you
+     have fourteen days to change your mind. If you publish a page inside that window
+     you're asking us to start straight away, and the refund is reduced by what you've
+     used. Ask and we'll sort it out fairly.</p>
+
+  <h2>What you put on your page</h2>
+  <p>Your content stays yours. You give us permission to store it and show it to
+     people who visit your page — that's all, and it ends when you delete it.</p>
+  <p>You're responsible for what you publish. Don't put up anything illegal, anything
+     that isn't yours to use, anything designed to deceive, or anything that would
+     make us a party to it. We can take down a page that breaks this, and will tell
+     you why.</p>
+
+  <h2>Email</h2>
+  <p>On the Business plan you can email the people who signed up through your page.
+     You may only email people who actually gave you their address there. Uploading a
+     list you got somewhere else is not allowed and will get your account closed —
+     it damages delivery for every other customer.</p>
+  <p>There is a monthly ceiling on how many emails an account can send. It's generous
+     for normal use; if you need more, ask.</p>
+
+  <h2>Ending it</h2>
+  <p>You can delete your account whenever you like, and it takes everything with it.
+     We can close an account that breaks these terms, or give thirty days' notice for
+     any other reason and refund what you've paid for time you won't get.</p>
+
+  <h2>What we don't promise</h2>
+  <p>We work to keep the service running but can't promise it's never down. We're not
+     liable for money you didn't make, and in any case our liability is limited to
+     what you've paid us in the previous twelve months. Nothing here limits liability
+     that can't legally be limited.</p>
+
+  <h2>Changes</h2>
+  <p>If these terms change materially we'll email you at least thirty days beforehand.
+     Carrying on using LinkUp after that means accepting the new version; if you'd
+     rather not, cancel and we'll refund the unused part.</p>
+</main>
+
+<footer class="foot"><div class="wrap nav-in" style="height:auto;padding-block:8px">
+  <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <span>© <span id="y"></span></span>
+</div></footer>
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
+  document.getElementById('d').textContent = new Date().toLocaleDateString('en-IE', { day:'numeric', month:'long', year:'numeric' });
+</script>
+</body>
+</html>

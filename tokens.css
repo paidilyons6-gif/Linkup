@@ -1,0 +1,74 @@
+/* Shared foundations — Studio stage.
+ *
+ * Public customer pages keep local type stacks (no webfont request from a bio
+ * link). Marketing and editor override --display/--sans via @font-face there. */
+
+:root {
+  /* Stage */
+  --stage:        #0f1115;
+  --stage-elev:   #171a21;
+  --stage-soft:   #1e232d;
+  --fog:          #9aa3b5;
+  --mist:         #c8d0de;
+  --paper:        #eef1f6;
+  --paper-dim:    #d8dee9;
+  --line:         rgba(255, 255, 255, 0.1);
+  --line-strong:  rgba(255, 255, 255, 0.18);
+
+  /* Accent — warm citrus on charcoal */
+  --citrus:       #f0c24b;
+  --citrus-deep:  #d9a82a;
+  --citrus-soft:  rgba(240, 194, 75, 0.16);
+  --teal:         #5ec8c0;
+
+  /* Type — local stacks for public pages */
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans:    ui-rounded, "SF Pro Rounded", "Segoe UI", "Helvetica Neue", sans-serif;
+  --serif:   var(--display);
+
+  /* Legacy aliases used by editor JS templates / older class names */
+  --ink:        var(--paper);
+  --ink-soft:   var(--fog);
+  --pink:       var(--citrus);
+  --pink-deep:  var(--citrus-deep);
+  --pink-soft:  var(--citrus-soft);
+  --plum:       var(--stage);
+
+  /* Rhythm */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 40px 80px rgba(0, 0, 0, 0.5);
+
+  --ease: cubic-bezier(0.22, 0.9, 0.28, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--citrus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
