@@ -7,12 +7,18 @@ right offer, and leave to your checkout. You keep **100%** of programme sales.
 
 Static site — no npm build. Open locally or deploy the folder to Netlify.
 
-## Product
+## Done-for-you websites (agency add-on)
 
-| Mode | What it does |
-|---|---|
-| **Sales quiz** | Questions → branching paths → programme result (benefits + CTA) |
-| **Link hub** | Curated destinations for simple pages |
+Separate from software. Sold at signup or via `services.html`:
+
+| Package | Setup | Care / mo | Includes |
+|---|---|---|---|
+| Software only | — | LinkUp plan only | Quiz/hub; client uses own checkout links |
+| Sales page | €1,490 | €79 | One offer page, quiz wiring, Stripe link, hosting |
+| Site + domain | €2,900 | €129 | Up to 5 pages, domain, hosting, monthly tweaks |
+
+Client uploads videos/content. End users only see the quiz → page → buy path.
+Leads are captured in the browser and opened as a mailto until you plug a CRM.
 
 ## Pricing (publish)
 

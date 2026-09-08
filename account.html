@@ -79,6 +79,26 @@
         <label for="password">Password</label>
         <input id="password" type="password" autocomplete="current-password" required minlength="8" />
       </div>
+      <div id="svcAsk" hidden>
+        <p style="font-size:12.5px;font-weight:600;color:var(--fog);margin:4px 0 10px">Do you also need a website?</p>
+        <div class="field">
+          <label for="svcPackage" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Website package</label>
+          <select id="svcPackage" style="width:100%;border:1px solid var(--line-strong);border-radius:10px;background:var(--stage-soft);color:var(--paper);padding:12px 14px;font:inherit">
+            <option value="software">No — I’ll use my own links / checkout</option>
+            <option value="sales">Yes — a sales page (€1,490 + €79/mo)</option>
+            <option value="site">Yes — full site + domain (€2,900 + €129/mo)</option>
+            <option value="unsure">Not sure — tell me more</option>
+          </select>
+        </div>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--mist);font-weight:500;margin:0 0 12px;cursor:pointer">
+          <input type="checkbox" id="svcDomain" style="width:auto;margin-top:3px" />
+          I want my own custom domain
+        </label>
+        <p style="font-size:12px;color:var(--fog);line-height:1.45;margin-bottom:8px">
+          You upload videos and content. We build/host if you pick a package.
+          <a href="services.html" style="color:var(--citrus)">See packages</a>
+        </p>
+      </div>
       <button class="btn pink" id="go" type="submit">Create account</button>
     </form>
 
@@ -126,6 +146,7 @@
     $('password').setAttribute('autocomplete', mode === 'signin' ? 'current-password' : 'new-password');
     $('forgot').hidden = mode === 'recover';
     $('swap').hidden = mode === 'recover';
+    $('svcAsk').hidden = mode !== 'signup';
     if (mode === 'recover') return;
     $('swap').innerHTML = mode === 'signup'
       ? 'Already have one? <button type="button" id="toggle">Sign in</button>'
@@ -138,6 +159,34 @@
     const el = $('msg');
     el.textContent = text;
     el.className = 'msg ' + (text ? kind : '');
+  }
+
+  function rememberServiceInterest(email) {
+    if (mode !== 'signup') return;
+    const pkg = $('svcPackage').value;
+    const lead = {
+      at: new Date().toISOString(),
+      email,
+      package: pkg,
+      needs: $('svcDomain').checked ? ['domain'] : [],
+      source: 'signup',
+    };
+    localStorage.setItem('linkup.serviceInterest', JSON.stringify(lead));
+    if (pkg !== 'software') {
+      const all = JSON.parse(localStorage.getItem('linkup.serviceLeads') || '[]');
+      all.push(lead);
+      localStorage.setItem('linkup.serviceLeads', JSON.stringify(all));
+    }
+  }
+
+  function afterAuth(email) {
+    rememberServiceInterest(email);
+    const interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null');
+    if (interest && interest.package && interest.package !== 'software') {
+      location.href = `services.html?package=${encodeURIComponent(interest.package)}&email=${encodeURIComponent(email || '')}#intake`;
+    } else {
+      location.href = 'edit.html';
+    }
   }
 
   $('form').onsubmit = async (e) => {
@@ -155,10 +204,11 @@
       }
       const out = mode === 'signup' ? await API.signUp(email, pass) : await API.signIn(email, pass);
       if (out.needsConfirmation) {
+        rememberServiceInterest(email);
         show('Check your email to confirm your address, then sign in.', 'good');
         mode = 'signin'; draw();
       } else {
-        location.href = 'edit.html';
+        afterAuth(email);
       }
     } catch (err) {
       show(err.message);

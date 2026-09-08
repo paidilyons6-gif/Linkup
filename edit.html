@@ -46,6 +46,17 @@
     <code>config.js</code> and redeploy.
   </div>
 
+  <div class="plan" id="svcBanner" hidden style="margin-bottom:22px">
+    <div class="plan-now">
+      <span class="badge">Done for you</span>
+      <span class="hint" style="margin:0">Need a sales page or domain? We build & host — you upload content.</span>
+    </div>
+    <div class="buy">
+      <a class="btn pink sm" href="services.html?package=sales">Sales page €1,490</a>
+      <a class="btn ghost sm" href="services.html?package=site">Site + domain €2,900</a>
+    </div>
+  </div>
+
   <h1>Studio</h1>
   <p class="sub" id="who">Guide visitors to the right programme.</p>
 
@@ -623,6 +634,8 @@
     ensureQuiz(row);
     $('app').hidden = false;
     $('who').textContent = API.user()?.email || '';
+    const interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null');
+    if (!interest || interest.package === 'software') $('svcBanner').hidden = false;
     ['name','handle','tagline'].forEach(k => bind('f-'+k, k));
     bind('f-captureHeading', 'capture_heading');
     $('f-capture').checked = !!row.capture_enabled;
