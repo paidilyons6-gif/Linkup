@@ -134,6 +134,7 @@ const API = (() => {
   const allows = (plan, feature) => ({
     page:          ['basic', 'premium', 'business'],
     welcome_video: ['premium', 'business'],
+    quiz:          ['premium', 'business'],
     email_capture: ['business'],
   }[feature] || []).includes(plan);
 

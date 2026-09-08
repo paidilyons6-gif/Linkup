@@ -8,19 +8,6 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="linkup.css" />
-<style>
-  .missing {
-    position: relative; z-index: 2; min-height: 100dvh;
-    display: grid; place-content: center; justify-items: center; gap: 16px;
-    text-align: center; padding: 32px; color: #fff;
-  }
-  .missing h1 { font-family: var(--serif); font-size: 30px; letter-spacing: -.02em; }
-  .missing p { opacity: .8; max-width: 32ch; line-height: 1.5; }
-  .missing a {
-    margin-top: 8px; text-decoration: none; padding: 12px 22px; border-radius: var(--r-pill);
-    background: rgba(255,255,255,.16); font-size: 14px; font-weight: 600;
-  }
-</style>
 </head>
 <body>
 
@@ -47,8 +34,6 @@
 <script src="api.js"></script>
 <script src="linkup.js"></script>
 <script>
-  /* The address is the path: /becca, or ?u=becca when opened as a plain file.
-     Netlify rewrites /:slug onto this page — see netlify.toml. */
   const slug = (new URLSearchParams(location.search).get('u')
              || location.pathname.replace(/^\/+|\/+$/g, '').split('/').pop() || '')
              .toLowerCase();
@@ -70,30 +55,48 @@
     document.getElementById('missing').hidden = false;
   }
 
+  /* DB snake_case → renderer shape */
+  function toView(r) {
+    const quiz = typeof r.quiz === 'string' ? JSON.parse(r.quiz || 'null') : r.quiz;
+    return LinkUp.mergeProfile({
+      name: r.name, handle: r.handle, tagline: r.tagline,
+      avatar: r.avatar_url || '', theme: r.theme || 'midnight',
+      mode: r.mode || (quiz?.enabled === false ? 'hub' : 'quiz'),
+      bubbleStyle: r.bubble_style || 'glass',
+      welcomeVideo: r.welcome_video_url || '',
+      backgroundVideo: r.background_video_url || '',
+      backgroundImage: r.background_image_url || '',
+      links: Array.isArray(r.links) ? r.links : [],
+      captureEnabled: !!r.capture_enabled,
+      captureHeading: r.capture_heading || '',
+      quiz: quiz || undefined,
+      badge: r.badge !== false,
+    });
+  }
+
   (async () => {
     if (!API.configured() || !slug || slug === 'u.html') return notFound();
 
-    let p = null;
-    try { p = await API.publicProfile(slug); } catch { return notFound(); }
-    if (!p) return notFound();
+    let raw = null;
+    try { raw = await API.publicProfile(slug); } catch { return notFound(); }
+    if (!raw) return notFound();
 
+    const p = toView(raw);
     document.title = p.name ? `${p.name} — LinkUp` : 'LinkUp';
     LinkUp.render(p);
-    LinkUp.liven();
 
-    // The badge is a Basic-plan thing; the database decides, not the browser.
-    if (!p.badge) document.querySelector('.foot')?.remove();
+    if (!raw.badge) {
+      page.dataset.hideBadge = '1';
+      document.querySelector('.foot')?.remove();
+    }
 
-    /* Count the tap, then let the link do what it was going to do. keepalive
-       means the request survives the page being navigated away from, so no
-       delay is added for the sake of a number. */
-    document.querySelectorAll('.bubble').forEach(a => {
-      a.addEventListener('click', () => {
-        API.recordTap(p.id, a.querySelector('span')?.textContent?.trim() || 'Untitled');
-      });
+    page.addEventListener('click', (e) => {
+      const hit = e.target.closest('.quiz-option, .hub-item, .quiz-cta[href]');
+      if (!hit || !raw.id) return;
+      const label = hit.textContent?.trim().slice(0, 80) || 'tap';
+      API.recordTap(raw.id, label);
     });
 
-    // Joining a list writes a real row, so the demo handler is replaced.
     const form = document.querySelector('.capture');
     if (form) {
       form.onsubmit = async (e) => {
@@ -102,7 +105,7 @@
         const btn = form.querySelector('button');
         btn.disabled = true;
         try {
-          await API.joinList(p.id, input.value.trim());
+          await API.joinList(raw.id, input.value.trim());
           form.closest('.capture-wrap').innerHTML =
             `<p class="capture-note">Thanks — you're on the list.</p>`;
         } catch {

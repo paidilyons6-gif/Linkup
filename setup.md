@@ -20,6 +20,16 @@ fitness app.
 
 Both schema files are run. `config.js` already has the URL and anon key in it.
 
+**Quiz columns (add if missing):** the studio saves `mode` and `quiz` on
+`profiles`. Run this once on the Supabase SQL editor if those columns are absent:
+
+```sql
+alter table public.profiles
+  add column if not exists mode text not null default 'quiz',
+  add column if not exists quiz jsonb not null default '{}'::jsonb;
+-- Ensure public_profile() (or your public read path) returns mode + quiz.
+```
+
 Verified against the live project:
 
 | check | result |
@@ -58,8 +68,10 @@ Check: visiting `yoursite.com/notarealname` should show "Nothing here yet".
 
 ## 3. Stripe
 
-1. Create three **recurring** products, monthly, in EUR: €5, €10, €15. Copy
-   each **price ID** (`price_...`, not the product id).
+1. Create three **recurring** products, monthly, in EUR: **€9 Launch**, **€19 Guide**,
+   **€29 Scale**. Copy each **price ID** (`price_...`, not the product id).
+   Map them to secrets `STRIPE_PRICE_BASIC` (Launch), `STRIPE_PRICE_PREMIUM` (Guide),
+   `STRIPE_PRICE_BUSINESS` (Scale).
 2. **Stripe Tax → enable.** These are digital services sold across the EU, so
    VAT is charged where the customer is. `create-checkout` already asks Stripe
    to work it out; without Tax enabled that request fails.

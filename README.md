@@ -1,45 +1,37 @@
 # LinkUp
 
-A link-in-bio with a welcome video and your offers as a **composed pinboard** —
-not another grey list of buttons.
+The link-in-bio that **sells programmes**.
 
-Static site. No build step, no npm, no framework. Open `index.html` locally or
-drag the folder onto Netlify.
+Visitors land on a guided sales quiz (or a simple hub), get matched to the
+right offer, and leave to your checkout. You keep **100%** of programme sales.
+
+Static site — no npm build. Open locally or deploy the folder to Netlify.
+
+## Product
+
+| Mode | What it does |
+|---|---|
+| **Sales quiz** | Questions → branching paths → programme result (benefits + CTA) |
+| **Link hub** | Curated destinations for simple pages |
+
+## Pricing (publish)
+
+| Plan | Price | Includes |
+|---|---|---|
+| **Launch** | €9/mo | Public page, themes, hub mode |
+| **Guide** | €19/mo | Sales quiz, welcome video, tap insights, no badge |
+| **Scale** | €29/mo | Email capture, broadcasts, CSV export |
+
+Build and preview free. No seller fee on your off-platform checkouts.
 
 ## Pages
 
-| | |
-|---|---|
-| `index.html` | Marketing — hero stage, how it works, pricing, FAQ |
-| `page.html` | Demo / preview of a customer page |
-| `u.html` | Public customer page (`/:slug` via Netlify rewrite) |
-| `edit.html` | Studio editor with live phone preview |
-| `account.html` | Sign up / sign in |
-
-`tokens.css` is shared foundations. `site.css` styles marketing. `editor.css`
-styles the studio. `linkup.css` styles a customer page — kept separate so a
-customer theme never reaches the marketing site.
-
-`linkup.js` is the profile shape, themes, shapes, and renderer shared by the
-live page and the editor preview. `api.js` talks to Supabase. `config.js` holds
-the two public keys.
-
-## Working now
-
-- Welcome video with play, skip, and hand-off when it ends
-- Background video (silent, looping) or still image
-- Pinboard objects: bubble, polaroid, sticker, ticket, note, pill — place, size, reorder
-- Five themes + glass / solid / outline looks
-- Email capture (Business)
-- Live preview that updates as you type
+- `index.html` — marketing
+- `page.html` — demo / studio preview
+- `u.html` — live `/:slug` (Netlify rewrite)
+- `edit.html` — studio (quiz + hub builder)
+- `account.html` — auth
 
 ## Make it live
 
-See **`setup.md`** — Supabase, Netlify, Stripe. About an hour of keys and
-dashboards.
-
-## Still not built
-
-- Sending email to a list at scale (Resend + caps) — capture and export work
-- Real analytics beyond tap counts
-- Video transcoding (uploads capped and served as-is)
+See `setup.md`. Update Stripe price IDs to match Launch / Guide / Scale.

@@ -1,39 +1,134 @@
-/* LinkUp — shared rendering.
+/* LinkUp — profile model, quiz funnel, and hub renderer.
  *
- * A page is a profile object and nothing else. The live page reads one and
- * draws it; the editor writes one and hands it straight back to the same
- * renderer, so the preview cannot drift from the real thing.
- *
- * There is no backend yet. Profiles live in localStorage, which is enough to
- * demonstrate the product and not enough to sell it — accounts, payments and
- * email sending are the next build, not this one. */
+ * A page is either a Sales Quiz (guided path → program) or a Hub (curated
+ * destinations). The editor and the live page share this module so the preview
+ * cannot drift from production. */
 
 const LinkUp = (() => {
   const KEY = 'linkup.profile';
 
+  /* Demo is a generic coach — not a real client brand. Shows the quiz product. */
   const DEMO = {
-    name: 'Becca Lyons',
-    handle: '@bodiesbybeccaa',
-    tagline: 'Online coach — strength, food, and not hating either.',
+    name: 'Maya Chen',
+    handle: '@maya.moves',
+    tagline: 'Strength, pregnancy fitness, and training that fits real life.',
     avatar: '',
     welcomeVideo: '',
     backgroundVideo: '',
     backgroundImage: '',
     theme: 'midnight',
+    mode: 'quiz', // 'quiz' | 'hub'
     bubbleStyle: 'glass',
-    captureEnabled: true,
-    captureHeading: 'Get the free 5-day reset',
+    captureEnabled: false,
+    captureHeading: 'Get weekly tips',
     links: [
-      { label: 'Join The Village', note: 'most popular', url: 'https://jointhevillage.ie', size: 'l', emoji: '💫', shape: 'bubble' },
-      { label: '8 Week Reset', note: '€39', url: '#', emoji: '🔥', shape: 'ticket' },
-      { label: 'Calorie calculator', note: '', url: '#', emoji: '🧮', shape: 'sticker', size: 's' },
-      { label: 'Instagram', note: '', url: '#', emoji: '📸', shape: 'polaroid' },
-      { label: 'Book a call', note: '', url: '#', emoji: '☎️', shape: 'note', size: 's' },
+      { label: 'Instagram', note: '', url: 'https://instagram.com', size: 'm', emoji: '📸', shape: 'pill' },
+      { label: 'Free guide', note: 'PDF', url: '#', size: 'm', emoji: '📘', shape: 'sticker' },
     ],
+    quiz: {
+      enabled: true,
+      introTitle: 'Find your next step',
+      introSub: 'Sixty seconds. Honest answers. The programme that fits you — not a wall of links.',
+      introCta: 'Start',
+      questions: [
+        {
+          id: 'q1',
+          text: 'Where are you right now?',
+          options: [
+            { id: 'a', label: 'Pregnant', next: 'q2' },
+            { id: 'b', label: 'Trying to conceive', next: 'result:conceive' },
+            { id: 'c', label: 'Postpartum / rebuilding', next: 'result:postpartum' },
+            { id: 'd', label: 'Not pregnant — training goals', next: 'q3' },
+          ],
+        },
+        {
+          id: 'q2',
+          text: 'Which trimester?',
+          options: [
+            { id: 'a', label: 'First (1–12 weeks)', next: 'result:trim1' },
+            { id: 'b', label: 'Second (13–26 weeks)', next: 'result:trim2' },
+            { id: 'c', label: 'Third (27–40 weeks)', next: 'result:trim3' },
+          ],
+        },
+        {
+          id: 'q3',
+          text: 'What are you chasing?',
+          options: [
+            { id: 'a', label: 'Build muscle & strength', next: 'result:muscle' },
+            { id: 'b', label: 'Lose weight sustainably', next: 'result:lose' },
+            { id: 'c', label: 'Feel energised & consistent', next: 'result:energy' },
+          ],
+        },
+      ],
+      results: {
+        conceive: {
+          title: 'Preconception Strength',
+          subtitle: 'Build a body that’s ready — without burning out.',
+          benefits: ['Gentle progressive strength', 'Cycle-aware training weeks', 'Nutrition that supports fertility', 'Private community check-ins'],
+          price: 'From €49',
+          cta: 'See the programme',
+          url: 'https://example.com/preconception',
+        },
+        trim1: {
+          title: 'Trimester 1 Studio',
+          subtitle: 'Stay strong while energy is low and everything is new.',
+          benefits: ['Safe first-trimester sessions', 'Nausea-friendly workouts', 'Pelvic floor foundations', 'Weekly form tips'],
+          price: 'From €59',
+          cta: 'Join Trimester 1',
+          url: 'https://example.com/t1',
+        },
+        trim2: {
+          title: 'Trimester 2 Momentum',
+          subtitle: 'Your energy window — train with confidence.',
+          benefits: ['Strength that scales with bump', 'Core strategies that adapt', 'Mobility for comfort', 'Coach messaging'],
+          price: 'From €59',
+          cta: 'Join Trimester 2',
+          url: 'https://example.com/t2',
+        },
+        trim3: {
+          title: 'Trimester 3 Prep',
+          subtitle: 'Prepare for birth and the weeks after.',
+          benefits: ['Labour-prep movement', 'Breath & pelvic floor', 'Short sessions for fatigue', 'Birth recovery roadmap'],
+          price: 'From €59',
+          cta: 'Join Trimester 3',
+          url: 'https://example.com/t3',
+        },
+        postpartum: {
+          title: 'Rebuild & Return',
+          subtitle: 'Come back stronger — on your timeline.',
+          benefits: ['Diastasis-aware progressions', 'Sleep-friendly workouts', 'Strength for motherhood', 'Supportive check-ins'],
+          price: 'From €69',
+          cta: 'Start Rebuild',
+          url: 'https://example.com/postpartum',
+        },
+        muscle: {
+          title: 'Strength Lab',
+          subtitle: 'Progressive lifting with clear weekly targets.',
+          benefits: ['4-day strength split', 'Video demos for every lift', 'Progressive overload plan', 'Form feedback'],
+          price: 'From €79',
+          cta: 'Enter Strength Lab',
+          url: 'https://example.com/strength',
+        },
+        lose: {
+          title: 'Lean Reset',
+          subtitle: 'Lose weight without living in a deficit forever.',
+          benefits: ['Training + nutrition paired', 'Sustainable calorie framework', 'Habit tracking that sticks', 'Weekly accountability'],
+          price: 'From €79',
+          cta: 'Start Lean Reset',
+          url: 'https://example.com/lean',
+        },
+        energy: {
+          title: 'Daily Engine',
+          subtitle: 'Consistency over intensity — feel human again.',
+          benefits: ['20–30 min sessions', 'Energy-first programming', 'Mobility + strength blend', 'Habit streaks'],
+          price: 'From €49',
+          cta: 'Get Daily Engine',
+          url: 'https://example.com/energy',
+        },
+      },
+    },
   };
 
-  /* Presets rather than a colour picker: most people pick badly, and a page
-     that looks cheap is the whole reason they left Linktree. */
   const THEMES = {
     blush:    { label: 'Blush',    bg: '#2e1b2b', accent: '#ff7fb8', deep: '#ef4e97', light: '#ffb3d4' },
     midnight: { label: 'Midnight', bg: '#111629', accent: '#7f9dff', deep: '#4e6ce8', light: '#b3c4ff' },
@@ -45,9 +140,9 @@ const LinkUp = (() => {
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      return raw ? { ...DEMO, ...JSON.parse(raw) } : { ...DEMO };
+      return raw ? mergeProfile(JSON.parse(raw)) : structuredClone(DEMO);
     } catch {
-      return { ...DEMO };
+      return structuredClone(DEMO);
     }
   }
 
@@ -55,14 +150,27 @@ const LinkUp = (() => {
     localStorage.setItem(KEY, JSON.stringify(profile));
   }
 
+  function mergeProfile(p) {
+    const base = structuredClone(DEMO);
+    const out = { ...base, ...p };
+    if (p?.quiz) {
+      out.quiz = {
+        ...base.quiz,
+        ...p.quiz,
+        questions: Array.isArray(p.quiz.questions) ? p.quiz.questions : base.quiz.questions,
+        results: p.quiz.results && typeof p.quiz.results === 'object' ? p.quiz.results : base.quiz.results,
+      };
+    }
+    if (!Array.isArray(out.links)) out.links = [];
+    if (out.mode !== 'hub' && out.mode !== 'quiz') out.mode = out.quiz?.enabled === false ? 'hub' : 'quiz';
+    return out;
+  }
+
   function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, c =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  /* A link the customer typed is not to be trusted with the page's own
-     origin — javascript: URLs in particular. Anything unrecognised becomes a
-     dead anchor rather than a live one. */
   function safeUrl(url) {
     const u = String(url ?? '').trim();
     if (!u || u === '#') return '#';
@@ -72,19 +180,17 @@ const LinkUp = (() => {
   }
 
   function applyTheme(root, name) {
-    const t = THEMES[name] || THEMES.blush;
+    const t = THEMES[name] || THEMES.midnight;
     root.style.setProperty('--p-bg', t.bg);
     root.style.setProperty('--p-accent', t.accent);
     root.style.setProperty('--p-deep', t.deep);
     root.style.setProperty('--p-light', t.light);
-    // Colour the browser chrome too, so the page doesn't stop at a white bar.
     const meta = (root.ownerDocument || root).querySelector?.('meta[name=theme-color]');
     if (meta) meta.setAttribute('content', t.bg);
   }
 
   function backgroundHtml(p) {
     if (p.backgroundVideo) {
-      // muted + playsinline is the only combination iOS will start on its own.
       return `<video src="${esc(p.backgroundVideo)}" autoplay muted loop playsinline
                      ${p.backgroundImage ? `poster="${esc(p.backgroundImage)}"` : ''}></video>`;
     }
@@ -92,163 +198,29 @@ const LinkUp = (() => {
     return '';
   }
 
-  // How much text has to fit decides the size it's set at.
-  function fit(label) {
-    const n = String(label || '').length;
-    return n > 24 ? 'longer' : n > 14 ? 'long' : '';
-  }
-
-  /* Three sizes. `big` was the old boolean and still means large, so pages
-     built before sizes existed look exactly as they did. */
+  /* ── Hub (curated destinations) ─────────────────────────────────────── */
+  const SHAPES = ['bubble', 'polaroid', 'sticker', 'ticket', 'note', 'pill'];
   const SIZES = ['s', 'm', 'l'];
+  const shapeOf = l => (SHAPES.includes(l.shape) ? l.shape : 'pill');
   const sizeOf = l => (SIZES.includes(l.size) ? l.size : (l.big ? 'l' : 'm'));
-
-  /* One emoji, not a string of them — a circle this size has room for one, and
-     three of them turns the label into a ransom note. */
-  function oneEmoji(v) {
-    const t = String(v ?? '').trim();
-    if (!t) return '';
-    return [...t][0] || '';
-  }
-
-  /* Placement.
-     A bubble may carry x and y as percentages of the stage — that's what makes
-     a LinkUp page a composition rather than a list. Anything without them is
-     laid out automatically, so a page built before placing existed still looks
-     right, and so does one where she's only moved two of them. */
   const placed = l => Number.isFinite(l.x) && Number.isFinite(l.y);
   const anyPlaced = p => (p.links || []).some(placed);
 
-  /* Automatic arrangement for anything she hasn't placed herself.
-     Not a column and not a grid. Objects come down the board in rows, leaning
-     alternately, each nudged off the centre line by a fixed amount taken from
-     its position in the list — so it reads as arranged, and it is the same
-     every time rather than reshuffling as she types.
-
-     It has to know that a ticket is not a circle: wide objects take a row to
-     themselves, or two of them side by side would sit on top of each other. */
-  /* Roughly how much room each object takes, in pixels, on a phone. Kept here
-     rather than measured because the layout has to be decided before anything
-     is on screen — and because it must come out the same every time, not
-     depend on when a font finished loading. Generous by design: a few pixels
-     Widths are the ones used on the narrowest phones, where bubbles step down
-     a size — that is the only place things can touch, so it is the width the
-     decision has to be made at. */
-  const BOX = {
-    bubble:   { s: [96, 116], m: [112, 146], l: [140, 176] },
-    polaroid: { s: [124, 172], m: [156, 210], l: [192, 252] },
-    sticker:  { s: [150,  96], m: [190, 112], l: [210, 132] },
-    ticket:   { s: [148,  78], m: [182,  88], l: [220, 108] },
-    note:     { s: [112, 120], m: [136, 140], l: [168, 168] },
-    pill:     { s: [190,  74], m: [230,  88], l: [260, 104] },
-  };
-  const boxOf = l => BOX[shapeOf(l)][sizeOf(l)];
-
-  /* Two objects share a row only if they actually fit side by side. The pair
-     sits at 29% and 71%, so the gap between their centres is 42% of the board;
-     anything wider than that has the row to itself. */
-  const STAGE_W = 280;                       // a 320px phone, less the padding
-  const fitsBeside = (a, b) => (boxOf(a)[0] + boxOf(b)[0]) / 2 + 4 <= STAGE_W * 0.42;
-
-  function autoLayout(links) {
-    const rows = [];
-    let i = 0;
-    while (i < links.length) {
-      if (i + 1 < links.length && fitsBeside(links[i], links[i + 1])) { rows.push([i, i + 1]); i += 2; }
-      else { rows.push([i]); i += 1; }
-    }
-
-    /* Rows are as tall as the tallest thing in them, so a polaroid never lands
-       on the note beneath it however many objects there are. */
-    const GAP = 22;
-    const heights = rows.map(r => Math.max(...r.map(idx => boxOf(links[idx])[1])) + GAP);
-    const total = heights.reduce((a, b) => a + b, 0);
-
-    const spots = [];
-    let top = 0;
-    rows.forEach((rowItems, r) => {
-      const mid = top + heights[r] / 2;
-      const y = (mid / total) * 100;
-      if (rowItems.length === 1) {
-        const idx = rowItems[0];
-        spots[idx] = { x: 50 + (r % 2 ? -6 : 6), y };
-      } else {
-        rowItems.forEach((idx, k) => {
-          const lean = r % 2 === 0 ? 0 : 4;
-          const jitter = ((idx * 37) % 7) - 3;
-          spots[idx] = { x: (k === 0 ? 29 : 71) + lean + jitter, y };
-        });
-      }
-      top += heights[r];
-    });
-    spots.stageHeight = total;      // the board tells the CSS how tall to be
-    return spots;
-  }
-
-  /* ── Shapes ─────────────────────────────────────────────────────────────
-     A page is a pinboard, and every offer is an object on it. Which object is
-     the customer's choice — that, plus where it sits and how it leans, is what
-     stops two LinkUp pages looking like each other. */
-  const SHAPES = ['bubble', 'polaroid', 'sticker', 'ticket', 'note', 'pill'];
-  const shapeOf = l => (SHAPES.includes(l.shape) ? l.shape : 'bubble');
-
-  /* Lean. Fixed per position, never random, so nothing wobbles to a new angle
-     on every keystroke. Bubbles stay upright — a tilted sphere is just wrong. */
-  function tiltOf(l, i) {
-    if (Number.isFinite(l.tilt)) return l.tilt;
-    if (shapeOf(l) === 'bubble' || shapeOf(l) === 'pill') return 0;
-    return [-4, 3, -2.5, 5, -6, 2][i % 6];
-  }
-
-  function inner(l, shape, emoji) {
-    const label = esc(l.label);
-    const note  = l.note ? `<span class="note">${esc(l.note)}</span>` : '';
-    const pic   = l.image ? `<span class="shot" style="background-image:url('${esc(l.image)}')"></span>` : '';
-    const em    = emoji ? `<span class="emoji" aria-hidden="true">${esc(emoji)}</span>` : '';
-
-    if (shape === 'polaroid') {
-      // A photo with a caption written under it. Falls back to the emoji on a
-      // coloured card when there's no picture yet, rather than a grey hole.
-      return `${pic || `<span class="shot empty">${emoji || '📷'}</span>`}
-              <span class="cap">${label}</span>${note}`;
-    }
-    if (shape === 'ticket') {
-      return `<span class="stub">${em || ''}</span>
-              <span class="tbody"><span class="tlabel">${label}</span>
-              ${l.note ? `<span class="tnote">${esc(l.note)}</span>` : ''}</span>`;
-    }
-    if (shape === 'sticker') return `${em}<span class="slab">${label}</span>${note}`;
-    if (shape === 'note')    return `${em}<span class="nlab">${label}</span>${note}`;
-    if (shape === 'pill')    return `${em}<span class="plab">${label}</span>${note}`;
-    return `${em}<span>${label}</span>${note}`;                       // bubble
-  }
-
-  /* How tall the board has to be for what's on it. */
-  function stageHeight(p) {
+  function hubHtml(p) {
     const links = (p.links || []).filter(l => l.label);
-    return links.length ? autoLayout(links).stageHeight : 340;
-  }
-
-  function bubblesHtml(p) {
-    const links = (p.links || []).filter(l => l.label);
-    const auto = autoLayout(links);
-    return links.map((l, i) => {
-      const emoji = oneEmoji(l.emoji);
-      const shape = shapeOf(l);
-      const spot  = placed(l) ? { x: l.x, y: l.y } : auto[i];
-      const dur   = (8 + (i * 1.7) % 5).toFixed(2);
-      const delay = ((i * 0.9) % 3).toFixed(2);
-      const swing = (6 + (i * 3) % 7).toFixed(0);
-      return `
-      <a class="bubble ${shape} ${sizeOf(l)} ${emoji ? 'has-emoji' : ''} ${shape === 'bubble' ? fit(l.label) : ''}"
-         href="${esc(safeUrl(l.url))}"
-         ${safeUrl(l.url) === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}
-         data-i="${i}"
-         style="--x:${spot.x}%; --y:${spot.y}%; --dur:${dur}s; --delay:${delay}s; --swing:${swing}px;
-                --rise:${(i * 90)}ms; --tilt:${tiltOf(l, i)}deg">
-        ${inner(l, shape, emoji)}
+    if (!links.length) {
+      return `<div class="hub-empty"><p>No destinations yet.</p></div>`;
+    }
+    return `<nav class="hub-list">${links.map((l, i) => {
+      const url = safeUrl(l.url);
+      return `<a class="hub-item rise" style="--rise:${i * 70}ms" href="${esc(url)}"
+        ${url === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'} data-i="${i}">
+        ${l.emoji ? `<span class="hub-emoji">${esc([...String(l.emoji)][0] || '')}</span>` : ''}
+        <span class="hub-copy"><strong>${esc(l.label)}</strong>
+        ${l.note ? `<small>${esc(l.note)}</small>` : ''}</span>
+        <span class="hub-arrow" aria-hidden="true">→</span>
       </a>`;
-    }).join('');
+    }).join('')}</nav>`;
   }
 
   function captureHtml(p) {
@@ -263,110 +235,177 @@ const LinkUp = (() => {
       </div>`;
   }
 
-  /* Renders into whatever containers exist, so the editor can reuse it for a
-     live preview without duplicating any markup. */
-  function render(p, { root = document, bgEl, pageEl } = {}) {
+  /* ── Quiz funnel ────────────────────────────────────────────────────── */
+  function quizShell(p) {
+    const q = p.quiz || {};
+    return `
+      <div class="quiz" id="quiz" data-step="intro">
+        <div class="quiz-progress" aria-hidden="true"><i id="quizBar"></i></div>
+        <div class="quiz-stage" id="quizStage"></div>
+      </div>`;
+  }
+
+  function renderQuizStep(p, step, { root = document } = {}) {
+    const stage = root.querySelector('#quizStage');
+    const bar = root.querySelector('#quizBar');
+    const quizRoot = root.querySelector('#quiz');
+    if (!stage || !p.quiz) return;
+
+    const questions = p.quiz.questions || [];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const firstPaint = !stage.dataset.ready;
+
+    function swap(html, progress) {
+      if (bar) bar.style.width = `${Math.max(4, progress * 100)}%`;
+      if (quizRoot) quizRoot.dataset.step = step;
+
+      const paint = () => {
+        stage.innerHTML = html;
+        stage.classList.remove('out');
+        stage.dataset.ready = '1';
+        void stage.offsetWidth;
+        stage.classList.add('in');
+      };
+
+      if (firstPaint || reduced) {
+        paint();
+        return;
+      }
+      stage.classList.remove('in');
+      stage.classList.add('out');
+      setTimeout(paint, 220);
+    }
+
+    if (step === 'intro') {
+      swap(`
+        <div class="quiz-panel intro">
+          ${p.avatar ? `<img class="quiz-avatar" src="${esc(p.avatar)}" alt="" />` : `<div class="quiz-mark" aria-hidden="true"></div>`}
+          <p class="quiz-kicker">${esc(p.name || 'LinkUp')}</p>
+          <h1>${esc(p.quiz.introTitle || 'Find your next step')}</h1>
+          <p class="quiz-lede">${esc(p.quiz.introSub || '')}</p>
+          <button type="button" class="quiz-cta" data-quiz-go="q:${questions[0]?.id || ''}">${esc(p.quiz.introCta || 'Start')}</button>
+          ${p.mode === 'quiz' && (p.links || []).some(l => l.label) ? `<button type="button" class="quiz-skip" data-quiz-go="hub">Browse all links</button>` : ''}
+        </div>`, 0);
+      return;
+    }
+
+    if (step === 'hub') {
+      swap(`
+        <div class="quiz-panel hub">
+          <button type="button" class="quiz-back" data-quiz-go="intro">← Back</button>
+          <h2>All destinations</h2>
+          ${hubHtml(p)}
+        </div>`, 1);
+      return;
+    }
+
+    if (step.startsWith('q:')) {
+      const id = step.slice(2);
+      const qi = questions.findIndex(x => x.id === id);
+      const question = questions[qi];
+      if (!question) return;
+      const progress = (qi + 1) / (questions.length + 1);
+      swap(`
+        <div class="quiz-panel question">
+          <p class="quiz-count">Question ${qi + 1} of ${questions.length}</p>
+          <h2>${esc(question.text)}</h2>
+          <div class="quiz-options">
+            ${(question.options || []).map((opt, i) => `
+              <button type="button" class="quiz-option rise" style="--rise:${i * 60}ms"
+                data-quiz-go="${esc(opt.next || '')}">
+                <span>${esc(opt.label)}</span>
+                <i aria-hidden="true">→</i>
+              </button>`).join('')}
+          </div>
+        </div>`, progress);
+      return;
+    }
+
+    if (step.startsWith('result:')) {
+      const key = step.slice(7);
+      const r = p.quiz.results?.[key];
+      if (!r) {
+        swap(`<div class="quiz-panel"><h2>Nothing matched</h2><button type="button" class="quiz-cta" data-quiz-go="intro">Start again</button></div>`, 1);
+        return;
+      }
+      const url = safeUrl(r.url);
+      swap(`
+        <div class="quiz-panel result">
+          <p class="quiz-kicker">Your match</p>
+          <h1>${esc(r.title)}</h1>
+          <p class="quiz-lede">${esc(r.subtitle || '')}</p>
+          <ul class="quiz-benefits">
+            ${(r.benefits || []).map(b => `<li>${esc(b)}</li>`).join('')}
+          </ul>
+          ${r.price ? `<p class="quiz-price">${esc(r.price)}</p>` : ''}
+          <a class="quiz-cta" href="${esc(url)}" ${url === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}">${esc(r.cta || 'Continue')}</a>
+          <button type="button" class="quiz-skip" data-quiz-go="intro">Retake the quiz</button>
+        </div>`, 1);
+    }
+  }
+
+  function wireQuiz(p, { root = document, onTap } = {}) {
+    const quiz = root.querySelector('#quiz');
+    if (!quiz) return;
+    let step = 'intro';
+    renderQuizStep(p, step, { root });
+
+    quiz.onclick = (e) => {
+      const btn = e.target.closest('[data-quiz-go]');
+      if (!btn) return;
+      const next = btn.getAttribute('data-quiz-go');
+      if (!next) return;
+      if (onTap && btn.matches('.quiz-option, .quiz-cta')) {
+        try { onTap(btn.textContent.trim().slice(0, 80)); } catch {}
+      }
+      if (next.startsWith('q:')) step = next;
+      else if (next.startsWith('result:')) step = next;
+      else if (next === 'hub' || next === 'intro') step = next;
+      else if (next.startsWith('q') && !next.includes(':')) step = `q:${next}`;
+      else step = next;
+      renderQuizStep(p, step, { root });
+    };
+  }
+
+  /* Renders into whatever containers exist. */
+  function render(p, { root = document, bgEl, pageEl, interactive = true } = {}) {
+    p = mergeProfile(p);
     const html = root.documentElement || document.documentElement;
     applyTheme(html, p.theme);
-    // The look of the bubbles is an attribute on the root, so all of it is
-    // decided in CSS and none of it is decided here.
-    html.setAttribute('data-bubbles', ['glass', 'solid', 'outline'].includes(p.bubbleStyle) ? p.bubbleStyle : 'glass');
+    html.setAttribute('data-mode', p.mode === 'hub' ? 'hub' : 'quiz');
     const bg = bgEl || root.querySelector('.bg');
     const page = pageEl || root.querySelector('.page');
     if (bg) bg.innerHTML = backgroundHtml(p);
     if (!page) return;
+
+    const showBadge = true; // plan gating applied by host page if needed via dataset
+    const foot = `<p class="foot">Made with <a href="/">LinkUp</a></p>`;
+
+    if (p.mode === 'hub' || p.quiz?.enabled === false) {
+      page.innerHTML = `
+        <header class="profile-head rise">
+          ${p.avatar ? `<img class="avatar" src="${esc(p.avatar)}" alt="" />` : ''}
+          <h1 class="name">${esc(p.name)}</h1>
+          ${p.handle ? `<div class="handle">${esc(p.handle)}</div>` : ''}
+          ${p.tagline ? `<p class="tagline">${esc(p.tagline)}</p>` : ''}
+        </header>
+        ${hubHtml(p)}
+        ${captureHtml(p)}
+        ${foot}`;
+      return;
+    }
+
     page.innerHTML = `
-      ${p.avatar ? `<img class="avatar" src="${esc(p.avatar)}" alt="" />` : ''}
-      <h1 class="name">${esc(p.name)}</h1>
-      ${p.handle ? `<div class="handle">${esc(p.handle)}</div>` : ''}
-      ${p.tagline ? `<p class="tagline">${esc(p.tagline)}</p>` : ''}
-      <nav class="bubbles stage" style="--stage-h:${stageHeight(p)}px">${bubblesHtml(p)}</nav>
+      ${quizShell(p)}
       ${captureHtml(p)}
-      <p class="foot">Made with <a href="/">LinkUp</a></p>`;
+      ${foot}`;
+    if (interactive) wireQuiz(p, { root });
   }
 
+  function liven() { /* hub items use CSS rise; quiz handles its own motion */ }
 
-  /* ── Nudge ──────────────────────────────────────────────────────────────
-     Bubbles lean away from a pointer as it passes. It is the difference
-     between a picture of bubbles and something that feels like it's floating
-     in front of you, and it costs one rAF over a handful of elements. */
-  function liven(root = document) {
-    const stage = root.querySelector('.bubbles');
-    if (!stage || stage.dataset.livened) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    stage.dataset.livened = '1';
+  function makePlaceable() { /* hub no longer uses free placement */ }
 
-    let px = null, py = null, queued = false;
-
-    const apply = () => {
-      queued = false;
-      stage.querySelectorAll('.bubble').forEach(el => {
-        if (px == null) { el.style.setProperty('--nudge-x', '0px'); el.style.setProperty('--nudge-y', '0px'); return; }
-        const b = el.getBoundingClientRect();
-        const dx = (b.left + b.width / 2) - px;
-        const dy = (b.top + b.height / 2) - py;
-        const dist = Math.hypot(dx, dy);
-        const reach = 190;
-        if (dist > reach || dist === 0) {
-          el.style.setProperty('--nudge-x', '0px');
-          el.style.setProperty('--nudge-y', '0px');
-          return;
-        }
-        const push = (1 - dist / reach) * 26;
-        el.style.setProperty('--nudge-x', `${((dx / dist) * push).toFixed(1)}px`);
-        el.style.setProperty('--nudge-y', `${((dy / dist) * push).toFixed(1)}px`);
-      });
-    };
-    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(apply); } };
-
-    const doc = root.ownerDocument || root;
-    doc.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; queue(); }, { passive: true });
-    doc.addEventListener('pointerleave', () => { px = py = null; queue(); });
-    doc.addEventListener('pointercancel', () => { px = py = null; queue(); });
-  }
-
-  /* ── Placing, from inside the preview ───────────────────────────────────
-     The editor's preview is the editing surface: a bubble is dragged where it
-     should live and the position is handed back to the editor, which owns the
-     data. Nothing is saved in here. */
-  function makePlaceable(root, onMove) {
-    const stage = root.querySelector('.bubbles');
-    if (!stage) return;
-    stage.classList.add('placing');
-
-    stage.querySelectorAll('.bubble').forEach(el => {
-      el.addEventListener('click', e => e.preventDefault());   // never follow the link while arranging
-      el.addEventListener('pointerdown', e => {
-        e.preventDefault();
-        const i = Number(el.dataset.i);
-        el.classList.add('held');
-        el.setPointerCapture(e.pointerId);
-
-        const move = (ev) => {
-          const box = stage.getBoundingClientRect();
-          const half = el.offsetWidth / 2;
-          // Kept fully on the stage, so nothing can be dragged out of sight.
-          const x = Math.min(Math.max(ev.clientX - box.left, half), box.width - half);
-          const y = Math.min(Math.max(ev.clientY - box.top, half), box.height - half);
-          el.style.setProperty('--x', `${((x / box.width) * 100).toFixed(2)}%`);
-          el.style.setProperty('--y', `${((y / box.height) * 100).toFixed(2)}%`);
-        };
-        const up = () => {
-          el.classList.remove('held');
-          el.removeEventListener('pointermove', move);
-          el.removeEventListener('pointerup', up);
-          el.removeEventListener('pointercancel', up);
-          onMove(i, parseFloat(el.style.getPropertyValue('--x')), parseFloat(el.style.getPropertyValue('--y')));
-        };
-        el.addEventListener('pointermove', move);
-        el.addEventListener('pointerup', up);
-        el.addEventListener('pointercancel', up);
-      });
-    });
-  }
-
-  /* No server to post to yet. Storing locally proves the flow and makes it
-     obvious this is a demo rather than quietly losing someone's address. */
   function onCapture(e) {
     e.preventDefault();
     const input = e.target.querySelector('input[name=email]');
@@ -376,6 +415,32 @@ const LinkUp = (() => {
     e.target.outerHTML = `<p class="tagline">Thanks — you're on the list.</p>`;
   }
 
-  return { KEY, DEMO, THEMES, SIZES, SHAPES, sizeOf, shapeOf, placed, anyPlaced, autoLayout, liven, makePlaceable,
-           load, save, render, esc, safeUrl, onCapture };
+  /* Helpers for editor */
+  function emptyQuestion() {
+    return {
+      id: 'q' + Math.random().toString(36).slice(2, 7),
+      text: 'New question',
+      options: [
+        { id: 'a', label: 'Option A', next: 'result:new' },
+        { id: 'b', label: 'Option B', next: 'result:new' },
+      ],
+    };
+  }
+
+  function emptyResult(key) {
+    return {
+      title: 'Programme name',
+      subtitle: 'One line on who it’s for.',
+      benefits: ['Benefit one', 'Benefit two', 'Benefit three'],
+      price: 'From €59',
+      cta: 'Get started',
+      url: 'https://',
+    };
+  }
+
+  return {
+    KEY, DEMO, THEMES, SIZES, SHAPES, sizeOf, shapeOf, placed, anyPlaced,
+    load, save, mergeProfile, render, esc, safeUrl, onCapture, liven, makePlaceable,
+    wireQuiz, renderQuizStep, emptyQuestion, emptyResult, hubHtml,
+  };
 })();
