@@ -149,11 +149,11 @@ const API = (() => {
      survives the browser navigating away half a millisecond later. */
   function recordTap(profileId, label) {
     try {
-      fetch(`${URL_}/rest/v1/taps`, {
+      fetch(`${URL_}/rest/v1/rpc/record_tap`, {
         method: 'POST', keepalive: true,
         headers: { apikey: ANON, Authorization: `Bearer ${ANON}`,
                    'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify({ profile_id: profileId, label }),
+        body: JSON.stringify({ p_profile_id: profileId, p_label: label }),
       }).catch(() => {});
     } catch { /* never let counting break a link */ }
   }
@@ -220,12 +220,11 @@ const API = (() => {
     location.href = body.url;
   }
 
-  const joinList = (profileId, email) =>
-    rest('subscribers', {
-      method: 'POST',
-      headers: { Prefer: 'return=minimal,resolution=merge-duplicates' },
-      body: JSON.stringify({ profile_id: profileId, email }),
-    });
+  const joinList = async (profileId, email) => {
+    const ok = await rpc('join_list', { p_profile_id: profileId, p_email: email });
+    if (!ok) throw new Error('Email signup is not available on this page');
+    return ok;
+  };
 
   return {
     configured, signedIn, user, signUp, signIn, signOut, resetPassword, setPassword,

@@ -5,18 +5,24 @@
 
 ## Backend
 
-- Supabase project `linkup` (`ldaajbuumgjujfwmlcwm`) — healthy
-- Auth Site URL + Stripe `SITE_URL` → https://linkupping.netlify.app
-- Quiz columns (`mode`, `quiz`) applied
-- Stripe Checkout works for Launch / Guide / Scale
-- Signups auto-create a blank page
-- Website build inquiries → paidilyons6@gmail.com (no online charge)
+Supabase project `linkup` (`ldaajbuumgjujfwmlcwm`) is production-hardened:
 
-## Redeploy
+- RLS + least-privilege grants (anon cannot read profiles/subscriptions)
+- Publish blocked without an active paid plan
+- Quiz gated to Guide/Scale; email capture to Scale
+- Public taps/email signup via `record_tap` / `join_list` RPCs only
+- Stripe Checkout + webhook + billing portal deployed
+- Broadcasts require Scale + Resend secrets (not configured yet → safe 503)
 
-1. Download `LinkUp-netlify.zip` from the repo
-2. Drag onto https://app.netlify.com/drop (or reconnect the GitHub repo)
+## Redeploy frontend
 
-## Security
+If `api.js` changed, re-upload `LinkUp-netlify.zip` to Netlify Drop
+(or connect the GitHub branch for continuous deploys).
 
-Rotate the Supabase access token that was pasted in chat (Dashboard → Account → Access Tokens).
+Download:
+https://github.com/paidilyons6-gif/Linkup/raw/cursor/linkup-static-redesign-daef/LinkUp-netlify.zip
+
+## Still optional
+
+- Resend (`RESEND_API_KEY`, `BROADCAST_FROM`) for Scale email broadcasts
+- Rotate the Supabase personal access token that was pasted in chat
