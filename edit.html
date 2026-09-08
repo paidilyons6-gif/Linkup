@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Studio — LinkUp</title>
+<meta name="theme-color" content="#f5f6f8" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="editor.css" />
+<style>
+  .mode-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .mode-toggle button {
+    border: 1px solid var(--line-strong); background: var(--stage-elev); color: var(--paper);
+    border-radius: 12px; padding: 14px 12px; cursor: pointer; text-align: left;
+    font: 600 13.5px var(--sans);
+  }
+  .mode-toggle button small { display: block; margin-top: 4px; font-weight: 500; color: var(--fog); font-size: 12px; }
+  .mode-toggle button[aria-pressed="true"] {
+    border-color: var(--citrus); box-shadow: 0 0 0 1px var(--citrus) inset; background: var(--citrus-soft);
+  }
+  .q-card, .r-card, .hub-card {
+    border: 1px solid var(--line-strong); border-radius: 14px; background: var(--stage-elev);
+    padding: 14px; margin-bottom: 12px;
+  }
+  .q-card h3, .r-card h3 { font-size: 13px; margin-bottom: 10px; color: var(--mist); }
+  .opt-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .benefit-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 6px; }
+  textarea {
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
+    background: var(--stage-soft); padding: 11px 13px; font-size: 14.5px; color: var(--paper); resize: vertical;
+  }
+</style>
+</head>
+<body class="editor">
+
+<div class="panel">
+  <div class="top">
+    <a class="home" href="index.html"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <button class="out" id="signout">Sign out</button>
+  </div>
+
+  <div class="setup" id="setup" hidden>
+    <strong>Not connected yet.</strong> Add your Supabase URL and anon key to
+    <code>config.js</code> and redeploy.
+  </div>
+
+  <div class="plan" id="svcBanner" hidden style="margin-bottom:22px">
+    <div class="plan-now">
+      <span class="badge">Done for you</span>
+      <span class="hint" style="margin:0">Need a sales page or domain? We build & host — you upload content.</span>
+    </div>
+    <div class="buy">
+      <a class="btn pink sm" href="services.html?package=sales">Sales page €1,490</a>
+      <a class="btn ghost sm" href="services.html?package=site">Site + domain €2,900</a>
+    </div>
+  </div>
+
+  <h1>Studio</h1>
+  <p class="sub" id="who">Guide visitors to the right programme.</p>
+
+  <div id="app" hidden>
+
+    <h2>Your address</h2>
+    <div class="field">
+      <div class="addr">
+        <span class="pre" id="origin">yoursite.com/</span>
+        <input id="f-slug" type="text" maxlength="30" autocapitalize="none" spellcheck="false" />
+      </div>
+      <p class="hint" id="slugMsg">This is the link you put in Instagram, TikTok, everywhere.</p>
+    </div>
+
+    <h2>Identity</h2>
+    <div class="field"><label for="f-name">Name</label><input id="f-name" type="text" /></div>
+    <div class="row">
+      <div class="field"><label for="f-handle">Handle</label><input id="f-handle" type="text" placeholder="@you" /></div>
+      <div class="field">
+        <label>Photo</label>
+        <div class="up">
+          <img class="thumb" id="avatarThumb" alt="" hidden />
+          <label class="btn ghost sm" for="up-avatar">Upload</label>
+          <input id="up-avatar" type="file" accept="image/*" data-kind="avatar" data-target="avatar_url" />
+          <button class="btn ghost sm" data-clear="avatar_url" type="button">Clear</button>
+        </div>
+      </div>
+    </div>
+    <div class="field"><label for="f-tagline">One line about you</label><input id="f-tagline" type="text" /></div>
+
+    <h2>Page mode</h2>
+    <div class="mode-toggle" id="modeToggle">
+      <button type="button" data-mode="quiz" aria-pressed="true">
+        Sales quiz
+        <small>Questions → matched programme</small>
+      </button>
+      <button type="button" data-mode="hub" aria-pressed="false">
+        Link hub
+        <small>Curated destinations</small>
+      </button>
+    </div>
+    <p class="hint">Coaches selling programmes almost always win with the quiz. The hub is for simple lists.</p>
+
+    <h2>Stage</h2>
+    <div class="field"><label>Theme</label><div class="themes" id="themes"></div></div>
+    <p class="hint" style="margin:18px 0 10px;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;font-weight:700;color:var(--fog)">Background</p>
+    <div class="row">
+      <div class="field">
+        <label>Background video</label>
+        <div class="up">
+          <label class="btn ghost sm" for="up-bgvideo">Upload</label>
+          <input id="up-bgvideo" type="file" accept="video/*" data-kind="bg" data-target="background_video_url" />
+          <button class="btn ghost sm" data-clear="background_video_url" type="button">Clear</button>
+          <span class="hint" id="bgvName" style="margin:0"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Background photo</label>
+        <div class="up">
+          <img class="thumb" id="bgiThumb" alt="" hidden />
+          <label class="btn ghost sm" for="up-bgimage">Upload</label>
+          <input id="up-bgimage" type="file" accept="image/*" data-kind="bgimg" data-target="background_image_url" />
+          <button class="btn ghost sm" data-clear="background_image_url" type="button">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="locked" id="welcomeBox">
+      <div class="veil" id="welcomeVeil" hidden>
+        <p>Welcome video is part of Guide.</p>
+        <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
+      </div>
+      <p class="hint" style="margin:18px 0 10px;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;font-weight:700;color:var(--fog)">Welcome video</p>
+      <div class="field">
+        <div class="up">
+          <label class="btn ghost sm" for="up-welcome">Upload</label>
+          <input id="up-welcome" type="file" accept="video/*" data-kind="welcome" data-target="welcome_video_url" />
+          <button class="btn ghost sm" data-clear="welcome_video_url" type="button">Clear</button>
+          <span class="hint" id="welName" style="margin:0"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizEditor">
+      <h2>Sales quiz</h2>
+      <div class="locked" id="quizBox">
+        <div class="veil" id="quizVeil" hidden>
+          <p>The sales quiz is the Guide plan — route every visitor to the right offer.</p>
+          <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
+        </div>
+        <div class="field"><label for="f-introTitle">Intro headline</label><input id="f-introTitle" type="text" /></div>
+        <div class="field"><label for="f-introSub">Intro line</label><textarea id="f-introSub" rows="2"></textarea></div>
+        <div class="field"><label for="f-introCta">Start button</label><input id="f-introCta" type="text" /></div>
+
+        <h2 style="margin-top:22px">Questions</h2>
+        <div id="questions"></div>
+        <button class="btn ghost" id="addQ" type="button">+ Add question</button>
+
+        <h2>Programmes (results)</h2>
+        <p class="hint">Each result is a destination — usually a checkout or sales page.</p>
+        <div id="results"></div>
+        <div class="up" style="margin-top:8px">
+          <input id="newResultKey" type="text" placeholder="result-id (e.g. trim1)" style="max-width:180px" />
+          <button class="btn ghost sm" id="addResult" type="button">+ Add programme</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="hubEditor" hidden>
+      <h2>Destinations</h2>
+      <div id="links"></div>
+      <button class="btn ghost" id="addLink" type="button">+ Add link</button>
+    </div>
+
+    <h2>Email list</h2>
+    <div class="locked" id="captureBox">
+      <div class="veil" id="captureVeil" hidden>
+        <p>Collecting emails is part of Scale.</p>
+        <button class="btn pink sm" data-buy="business" type="button">Upgrade to Scale — €29/mo</button>
+      </div>
+      <div class="field">
+        <label class="check" style="margin:0 0 10px 0">
+          <input type="checkbox" id="f-capture" /> Collect email addresses
+        </label>
+        <input id="f-captureHeading" type="text" placeholder="What they get for signing up" />
+        <p class="hint" id="listCount"></p>
+      </div>
+    </div>
+
+    <h2>Taps</h2>
+    <div class="locked" id="tapsBox">
+      <div class="veil" id="tapsVeil" hidden>
+        <p>Tap insights are part of Guide.</p>
+        <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
+      </div>
+      <div id="taps" class="hint">Nothing tapped yet.</div>
+    </div>
+
+    <h2>Send to your list</h2>
+    <div class="locked" id="sendBox">
+      <div class="veil" id="sendVeil" hidden>
+        <p>Sending is part of Scale.</p>
+        <button class="btn pink sm" data-buy="business" type="button">Upgrade to Scale — €29/mo</button>
+      </div>
+      <div class="field"><label for="b-subject">Subject</label><input id="b-subject" type="text" maxlength="200" /></div>
+      <div class="field">
+        <label for="b-body">Message</label>
+        <textarea id="b-body" rows="5"></textarea>
+      </div>
+      <div class="up">
+        <button class="btn pink sm" id="sendBtn" type="button">Send</button>
+        <button class="btn ghost sm" id="exportBtn" type="button">Download list (CSV)</button>
+        <span class="hint" id="sendMsg" style="margin:0"></span>
+      </div>
+    </div>
+
+    <h2>Plan</h2>
+    <div class="plan">
+      <div class="plan-now">
+        <span class="badge off" id="planBadge">No plan</span>
+        <span class="hint" id="planNote" style="margin:0">Build free. Publish with a plan.</span>
+      </div>
+      <div class="buy" id="buy"></div>
+    </div>
+
+    <h2>Account</h2>
+    <div class="up" style="margin-bottom:6px">
+      <button class="btn ghost sm" id="billing" type="button">Manage billing</button>
+      <button class="btn ghost sm" id="wipe" type="button">Delete my account</button>
+    </div>
+
+    <div class="save-bar">
+      <button class="btn pink" id="publish" type="button">Publish</button>
+      <a class="btn ghost" id="viewLive" href="#" target="_blank" rel="noopener" hidden>View live page</a>
+      <button class="btn ghost" id="copyLink" type="button" hidden>Copy my link</button>
+      <span class="saved" id="saved">Saved</span>
+      <span class="hint err" id="saveErr" style="margin:0"></span>
+    </div>
+  </div>
+</div>
+
+<div class="preview" id="previewPane">
+  <div class="phone"><iframe id="preview" src="page.html?preview=1" title="Preview"></iframe></div>
+</div>
+<button class="btn pink preview-toggle" id="previewToggle" type="button">Preview</button>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script src="linkup.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  let row = null;
+  let plan = 'none';
+  let previewReady = false;
+  let saveTimer = null;
+
+  if (!API.configured()) $('setup').hidden = false;
+  else if (!API.signedIn()) location.replace('account.html?mode=signin');
+
+  function ensureQuiz(r) {
+    if (!r.quiz || typeof r.quiz !== 'object') r.quiz = structuredClone(LinkUp.DEMO.quiz);
+    if (!Array.isArray(r.quiz.questions)) r.quiz.questions = structuredClone(LinkUp.DEMO.quiz.questions);
+    if (!r.quiz.results || typeof r.quiz.results !== 'object') r.quiz.results = structuredClone(LinkUp.DEMO.quiz.results);
+    if (!Array.isArray(r.links)) r.links = [];
+    if (r.mode !== 'hub' && r.mode !== 'quiz') r.mode = 'quiz';
+    r.quiz.enabled = r.mode === 'quiz';
+  }
+
+  const toView = r => {
+    ensureQuiz(r);
+    return {
+      name: r.name, handle: r.handle, tagline: r.tagline,
+      avatar: r.avatar_url || '', theme: r.theme || 'midnight',
+      mode: r.mode || 'quiz',
+      welcomeVideo: r.welcome_video_url || '',
+      backgroundVideo: r.background_video_url || '',
+      backgroundImage: r.background_image_url || '',
+      links: r.links, captureEnabled: !!r.capture_enabled,
+      captureHeading: r.capture_heading || '',
+      quiz: r.quiz,
+    };
+  };
+
+  addEventListener('message', e => {
+    if (e.data?.type === 'linkup:ready') { previewReady = true; pushPreview(); }
+  });
+
+  function pushPreview() {
+    const profile = toView(row);
+    LinkUp.save(profile);
+    const frame = $('preview')?.contentWindow;
+    if (previewReady && frame) frame.postMessage({ type: 'linkup:profile', profile }, '*');
+  }
+
+  function touch(patch) {
+    Object.assign(row, patch);
+    if (patch.quiz) row.quiz = patch.quiz;
+    pushPreview();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 700);
+  }
+
+  async function save() {
+    $('saveErr').textContent = '';
+    try {
+      ensureQuiz(row);
+      const body = {
+        name: row.name, handle: row.handle, tagline: row.tagline, slug: row.slug,
+        theme: row.theme, mode: row.mode, links: row.links, quiz: row.quiz,
+        avatar_url: row.avatar_url, welcome_video_url: row.welcome_video_url,
+        background_video_url: row.background_video_url, background_image_url: row.background_image_url,
+        capture_enabled: row.capture_enabled, capture_heading: row.capture_heading,
+        published: row.published, bubble_style: row.bubble_style || 'glass',
+      };
+      await API.saveProfile(body);
+      $('saved').classList.add('on');
+      setTimeout(() => $('saved').classList.remove('on'), 1400);
+    } catch (e) { $('saveErr').textContent = e.message; }
+  }
+
+  function bind(id, col) {
+    const el = $(id);
+    el.value = row[col] ?? '';
+    el.addEventListener('input', () => touch({ [col]: el.value }));
+  }
+
+  const PLAN_LABEL = { none: 'No plan', basic: 'Launch', premium: 'Guide', business: 'Scale' };
+  function drawPlan() {
+    const b = $('planBadge');
+    b.textContent = PLAN_LABEL[plan];
+    b.className = 'badge' + (plan === 'none' ? ' off' : '');
+    $('planNote').textContent = plan === 'none'
+      ? 'Build free. You need a plan to publish.'
+      : 'Your page can go live.';
+    const buys = [];
+    if (plan === 'none') buys.push(['basic','Launch — €9/mo'],['premium','Guide — €19/mo'],['business','Scale — €29/mo']);
+    if (plan === 'basic') buys.push(['premium','Upgrade Guide — €19/mo'],['business','Scale — €29/mo']);
+    if (plan === 'premium') buys.push(['business','Upgrade Scale — €29/mo']);
+    $('buy').innerHTML = buys.map(([p,t]) =>
+      `<button class="btn ${p==='premium'?'pink':'ghost'} sm" data-buy="${p}" type="button">${t}</button>`).join('');
+
+    $('welcomeVeil').hidden = API.allows(plan, 'welcome_video');
+    $('quizVeil').hidden = API.allows(plan, 'quiz');
+    $('captureVeil').hidden = API.allows(plan, 'email_capture');
+    $('tapsVeil').hidden = API.allows(plan, 'welcome_video');
+    $('sendVeil').hidden = API.allows(plan, 'email_capture');
+    $('publish').disabled = !API.allows(plan, 'page');
+    $('publish').textContent = row.published ? 'Unpublish' : (API.allows(plan,'page') ? 'Publish' : 'Pick a plan to publish');
+    const live = `${location.origin}/${row.slug}`;
+    $('viewLive').hidden = !row.published; $('viewLive').href = live;
+    $('copyLink').hidden = !row.published;
+  }
+
+  document.addEventListener('click', async (e) => {
+    const p = e.target.closest('[data-buy]')?.dataset.buy;
+    if (!p) return;
+    e.target.disabled = true;
+    try { await API.checkout(p); }
+    catch (err) { alert(err.message); e.target.disabled = false; }
+  });
+
+  function setMode(mode) {
+    row.mode = mode;
+    row.quiz.enabled = mode === 'quiz';
+    $('modeToggle').querySelectorAll('button').forEach(b =>
+      b.setAttribute('aria-pressed', b.dataset.mode === mode));
+    $('quizEditor').hidden = mode !== 'quiz';
+    $('hubEditor').hidden = mode !== 'hub';
+    touch({ mode, quiz: row.quiz });
+  }
+
+  function nextOptions() {
+    const qIds = (row.quiz.questions || []).map(q => [`q:${q.id}`, `Question: ${q.text.slice(0,28)}`]);
+    const rIds = Object.keys(row.quiz.results || {}).map(k => [`result:${k}`, `Result: ${k}`]);
+    return [...qIds, ...rIds];
+  }
+
+  function drawQuestions() {
+    const wrap = $('questions');
+    wrap.innerHTML = '';
+    (row.quiz.questions || []).forEach((q, qi) => {
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      const opts = nextOptions();
+      card.innerHTML = `
+        <div class="up" style="justify-content:space-between;margin-bottom:8px">
+          <h3>Question ${qi + 1}</h3>
+          <button class="btn ghost sm" data-del-q="${qi}" type="button">Remove</button>
+        </div>
+        <div class="field"><label>Prompt</label>
+          <input type="text" data-q-text="${qi}" value="${LinkUp.esc(q.text || '')}" /></div>
+        <div class="field"><label>Options</label>
+          ${(q.options || []).map((o, oi) => `
+            <div class="opt-row">
+              <input type="text" data-o-label="${qi}:${oi}" value="${LinkUp.esc(o.label || '')}" placeholder="Answer" />
+              <select data-o-next="${qi}:${oi}">
+                ${opts.map(([v,l]) => `<option value="${LinkUp.esc(v)}" ${o.next===v?'selected':''}>${LinkUp.esc(l)}</option>`).join('')}
+              </select>
+              <button class="icon" data-del-o="${qi}:${oi}" type="button" title="Remove">×</button>
+            </div>`).join('')}
+          <button class="btn ghost sm" data-add-o="${qi}" type="button">+ Option</button>
+        </div>`;
+      wrap.appendChild(card);
+    });
+
+    wrap.querySelectorAll('[data-q-text]').forEach(el => {
+      el.oninput = () => { row.quiz.questions[el.dataset.qText].text = el.value; touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-o-label]').forEach(el => {
+      const [qi, oi] = el.dataset.oLabel.split(':').map(Number);
+      el.oninput = () => { row.quiz.questions[qi].options[oi].label = el.value; touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-o-next]').forEach(el => {
+      const [qi, oi] = el.dataset.oNext.split(':').map(Number);
+      el.onchange = () => { row.quiz.questions[qi].options[oi].next = el.value; touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-del-q]').forEach(btn => {
+      btn.onclick = () => { row.quiz.questions.splice(Number(btn.dataset.delQ), 1); drawQuestions(); touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-del-o]').forEach(btn => {
+      btn.onclick = () => {
+        const [qi, oi] = btn.dataset.delO.split(':').map(Number);
+        row.quiz.questions[qi].options.splice(oi, 1);
+        drawQuestions(); touch({ quiz: row.quiz });
+      };
+    });
+    wrap.querySelectorAll('[data-add-o]').forEach(btn => {
+      btn.onclick = () => {
+        const qi = Number(btn.dataset.addO);
+        const keys = Object.keys(row.quiz.results || {});
+        row.quiz.questions[qi].options.push({
+          id: Math.random().toString(36).slice(2, 5),
+          label: 'New option',
+          next: keys[0] ? `result:${keys[0]}` : 'intro',
+        });
+        drawQuestions(); touch({ quiz: row.quiz });
+      };
+    });
+  }
+
+  function drawResults() {
+    const wrap = $('results');
+    wrap.innerHTML = '';
+    Object.entries(row.quiz.results || {}).forEach(([key, r]) => {
+      const card = document.createElement('div');
+      card.className = 'r-card';
+      card.innerHTML = `
+        <div class="up" style="justify-content:space-between;margin-bottom:8px">
+          <h3>${LinkUp.esc(key)}</h3>
+          <button class="btn ghost sm" data-del-r="${LinkUp.esc(key)}" type="button">Remove</button>
+        </div>
+        <div class="field"><label>Title</label><input data-r="title:${key}" value="${LinkUp.esc(r.title || '')}" /></div>
+        <div class="field"><label>Subtitle</label><input data-r="subtitle:${key}" value="${LinkUp.esc(r.subtitle || '')}" /></div>
+        <div class="field"><label>Price line</label><input data-r="price:${key}" value="${LinkUp.esc(r.price || '')}" /></div>
+        <div class="field"><label>Button label</label><input data-r="cta:${key}" value="${LinkUp.esc(r.cta || '')}" /></div>
+        <div class="field"><label>Destination URL</label><input data-r="url:${key}" value="${LinkUp.esc(r.url || '')}" /></div>
+        <div class="field"><label>Benefits</label>
+          ${(r.benefits || []).map((b, bi) => `
+            <div class="benefit-row">
+              <input data-b="${key}:${bi}" value="${LinkUp.esc(b)}" />
+              <button class="icon" data-del-b="${key}:${bi}" type="button">×</button>
+            </div>`).join('')}
+          <button class="btn ghost sm" data-add-b="${key}" type="button">+ Benefit</button>
+        </div>`;
+      wrap.appendChild(card);
+    });
+
+    wrap.querySelectorAll('[data-r]').forEach(el => {
+      const [field, key] = el.dataset.r.split(':');
+      el.oninput = () => { row.quiz.results[key][field] = el.value; touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-b]').forEach(el => {
+      const [key, bi] = el.dataset.b.split(':');
+      el.oninput = () => { row.quiz.results[key].benefits[Number(bi)] = el.value; touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-del-r]').forEach(btn => {
+      btn.onclick = () => { delete row.quiz.results[btn.dataset.delR]; drawResults(); drawQuestions(); touch({ quiz: row.quiz }); };
+    });
+    wrap.querySelectorAll('[data-del-b]').forEach(btn => {
+      btn.onclick = () => {
+        const [key, bi] = btn.dataset.delB.split(':');
+        row.quiz.results[key].benefits.splice(Number(bi), 1);
+        drawResults(); touch({ quiz: row.quiz });
+      };
+    });
+    wrap.querySelectorAll('[data-add-b]').forEach(btn => {
+      btn.onclick = () => {
+        (row.quiz.results[btn.dataset.addB].benefits ||= []).push('New benefit');
+        drawResults(); touch({ quiz: row.quiz });
+      };
+    });
+  }
+
+  function drawLinks() {
+    const wrap = $('links');
+    wrap.innerHTML = '';
+    (row.links || []).forEach((l, i) => {
+      const card = document.createElement('div');
+      card.className = 'hub-card';
+      card.innerHTML = `
+        <div class="row">
+          <div class="field" style="margin:0"><label>Label</label>
+            <input data-l="label:${i}" value="${LinkUp.esc(l.label || '')}" /></div>
+          <div class="field" style="margin:0"><label>Emoji</label>
+            <input data-l="emoji:${i}" value="${LinkUp.esc(l.emoji || '')}" maxlength="4" /></div>
+        </div>
+        <div class="field"><label>URL</label><input data-l="url:${i}" value="${LinkUp.esc(l.url || '')}" /></div>
+        <div class="field"><label>Note</label><input data-l="note:${i}" value="${LinkUp.esc(l.note || '')}" /></div>
+        <button class="btn ghost sm" data-del-l="${i}" type="button">Remove</button>`;
+      wrap.appendChild(card);
+    });
+    wrap.querySelectorAll('[data-l]').forEach(el => {
+      const [field, i] = el.dataset.l.split(':');
+      el.oninput = () => { row.links[Number(i)][field] = el.value; touch({ links: row.links }); };
+    });
+    wrap.querySelectorAll('[data-del-l]').forEach(btn => {
+      btn.onclick = () => { row.links.splice(Number(btn.dataset.delL), 1); drawLinks(); touch({ links: row.links }); };
+    });
+  }
+
+  $('addQ').onclick = () => {
+    row.quiz.questions.push(LinkUp.emptyQuestion());
+    drawQuestions(); touch({ quiz: row.quiz });
+  };
+  $('addResult').onclick = () => {
+    let key = $('newResultKey').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    if (!key) key = 'programme' + Math.random().toString(36).slice(2, 5);
+    if (row.quiz.results[key]) return alert('That id already exists.');
+    row.quiz.results[key] = LinkUp.emptyResult(key);
+    $('newResultKey').value = '';
+    drawResults(); drawQuestions(); touch({ quiz: row.quiz });
+  };
+  $('addLink').onclick = () => {
+    (row.links ||= []).push({ label: '', url: '', note: '', emoji: '', shape: 'pill', size: 'm' });
+    drawLinks(); touch({ links: row.links });
+  };
+
+  $('modeToggle').onclick = (e) => {
+    const b = e.target.closest('[data-mode]');
+    if (b) setMode(b.dataset.mode);
+  };
+
+  let slugTimer = null;
+  function wireSlug() {
+    $('origin').textContent = location.host + '/';
+    const el = $('f-slug');
+    el.value = row.slug || '';
+    el.addEventListener('input', () => {
+      const wanted = el.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      if (wanted !== el.value) el.value = wanted;
+      clearTimeout(slugTimer);
+      slugTimer = setTimeout(async () => {
+        const msg = $('slugMsg');
+        if (wanted.length < 2) { msg.textContent = 'A bit longer, please.'; msg.className = 'hint err'; return; }
+        try {
+          const free = await API.slugFree(wanted);
+          if (free) { msg.textContent = `${location.host}/${wanted} is yours.`; msg.className = 'hint ok'; touch({ slug: wanted }); }
+          else { msg.textContent = 'That one is taken.'; msg.className = 'hint err'; }
+        } catch {}
+      }, 400);
+    });
+  }
+
+  document.querySelectorAll('input[type=file]').forEach(input => {
+    input.addEventListener('change', async () => {
+      const file = input.files?.[0]; if (!file) return;
+      const col = input.dataset.target;
+      const near = input.closest('.up').querySelector('.hint');
+      if (near) near.textContent = 'Uploading…';
+      try {
+        const url = await API.upload(file, input.dataset.kind);
+        touch({ [col]: url }); await save(); drawMedia();
+        if (near) near.textContent = 'Done';
+      } catch (err) {
+        if (near) { near.textContent = err.message; near.classList.add('err'); }
+      } finally { input.value = ''; }
+    });
+  });
+  document.querySelectorAll('[data-clear]').forEach(btn => {
+    btn.onclick = () => { touch({ [btn.dataset.clear]: null }); drawMedia(); };
+  });
+  function drawMedia() {
+    const a = $('avatarThumb'); a.hidden = !row.avatar_url; if (row.avatar_url) a.src = row.avatar_url;
+    const b = $('bgiThumb'); b.hidden = !row.background_image_url; if (row.background_image_url) b.src = row.background_image_url;
+    $('bgvName').textContent = row.background_video_url ? 'Video added' : '';
+    $('welName').textContent = row.welcome_video_url ? 'Video added' : '';
+  }
+
+  function celebrate() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colours = ['#0f6b5c', '#2a9d8f', '#14171f', '#7a8294', '#0a5246'];
+    const host = document.createElement('div'); host.className = 'confetti';
+    for (let i = 0; i < 70; i++) {
+      const bit = document.createElement('i');
+      bit.style.left = Math.random() * 100 + 'vw';
+      bit.style.background = colours[i % colours.length];
+      bit.style.animationDelay = (Math.random() * 0.5).toFixed(2) + 's';
+      bit.style.animationDuration = (1.8 + Math.random() * 1.4).toFixed(2) + 's';
+      host.appendChild(bit);
+    }
+    document.body.appendChild(host);
+    setTimeout(() => host.remove(), 3600);
+  }
+
+  $('publish').onclick = async () => {
+    if (!row.published && !String(row.name || '').trim()) return alert('Put your name in first.');
+    const goingLive = !row.published;
+    touch({ published: goingLive });
+    await save(); drawPlan();
+    if (goingLive && row.published) celebrate();
+  };
+  $('copyLink').onclick = async () => {
+    const url = `${location.origin}/${row.slug}`;
+    try { await navigator.clipboard.writeText(url); $('copyLink').textContent = 'Copied!'; }
+    catch { prompt('Your link:', url); }
+    setTimeout(() => { $('copyLink').textContent = 'Copy my link'; }, 1600);
+  };
+  $('signout').onclick = () => API.signOut();
+
+  const previewPane = $('previewPane');
+  $('previewToggle').onclick = () => {
+    const open = previewPane.classList.toggle('open');
+    $('previewToggle').textContent = open ? 'Close preview' : 'Preview';
+  };
+
+  (async () => {
+    if (!API.configured() || !API.signedIn()) return;
+    try {
+      row = await API.myProfile();
+      if (!row) throw new Error('No page found for this account.');
+      ({ plan } = await API.myPlan());
+    } catch (e) {
+      $('who').textContent = e.message; $('who').className = 'sub err'; return;
+    }
+    ensureQuiz(row);
+    $('app').hidden = false;
+    $('who').textContent = API.user()?.email || '';
+    const interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null');
+    if (!interest || interest.package === 'software') $('svcBanner').hidden = false;
+    ['name','handle','tagline'].forEach(k => bind('f-'+k, k));
+    bind('f-captureHeading', 'capture_heading');
+    $('f-capture').checked = !!row.capture_enabled;
+    $('f-capture').onchange = e => touch({ capture_enabled: e.target.checked });
+
+    $('f-introTitle').value = row.quiz.introTitle || '';
+    $('f-introSub').value = row.quiz.introSub || '';
+    $('f-introCta').value = row.quiz.introCta || '';
+    ['introTitle','introSub','introCta'].forEach(k => {
+      const el = $('f-' + k);
+      el.addEventListener('input', () => { row.quiz[k] = el.value; touch({ quiz: row.quiz }); });
+    });
+
+    const themeWrap = $('themes');
+    Object.entries(LinkUp.THEMES).forEach(([name, t]) => {
+      const b = document.createElement('button');
+      b.className = 'swatch'; b.type = 'button'; b.title = t.label; b.dataset.theme = name;
+      b.setAttribute('aria-pressed', (row.theme || 'midnight') === name);
+      b.style.background = `radial-gradient(110% 110% at 32% 24%, #fff 0%, ${t.light} 22%, ${t.accent} 55%, ${t.deep} 100%)`;
+      b.onclick = () => {
+        themeWrap.querySelectorAll('.swatch').forEach(el => el.setAttribute('aria-pressed', el.dataset.theme === name));
+        touch({ theme: name });
+      };
+      themeWrap.appendChild(b);
+    });
+
+    setMode(row.mode || 'quiz');
+    wireSlug(); drawQuestions(); drawResults(); drawLinks(); drawMedia(); drawPlan(); pushPreview();
+
+    if (new URLSearchParams(location.search).get('paid') === '1') {
+      const recheck = async () => { ({ plan } = await API.myPlan()); drawPlan(); };
+      setTimeout(recheck, 1500); setTimeout(recheck, 5000);
+      history.replaceState({}, '', 'edit.html');
+    }
+    drawExtras();
+  })();
+
+  async function drawExtras() {
+    if (API.allows(plan, 'welcome_video')) {
+      try {
+        const rows = await API.tapCounts();
+        $('taps').innerHTML = rows?.length
+          ? '<table style="width:100%;border-collapse:collapse;font-size:14px">' +
+            rows.map(r => `<tr><td style="padding:6px 0;border-top:1px solid var(--line)">${LinkUp.esc(r.label)}</td>` +
+            `<td style="padding:6px 0;border-top:1px solid var(--line);text-align:right;font-weight:600">${r.taps}</td></tr>`).join('') +
+            '</table>'
+          : 'Nothing tapped yet.';
+      } catch { $('taps').textContent = 'Could not load taps.'; }
+    }
+    if (API.allows(plan, 'email_capture')) {
+      try {
+        const list = await API.myList();
+        const live = list.filter(x => !x.unsubscribed_at).length;
+        const used = await API.sentThisMonth();
+        $('listCount').textContent = `${live} on your list. ${used} emails sent this month.`;
+      } catch {}
+    }
+  }
+
+  $('sendBtn').onclick = async () => {
+    const subject = $('b-subject').value.trim();
+    const body = $('b-body').value.trim();
+    if (!subject || !body) return alert('Subject and message, please.');
+    if (!confirm(`Send "${subject}" to everyone on your list?`)) return;
+    $('sendBtn').disabled = true; $('sendMsg').textContent = 'Sending…';
+    try {
+      const out = await API.sendBroadcast(subject, body);
+      $('sendMsg').textContent = `Sent to ${out.sent}. ${out.remaining} left this month.`;
+      $('b-subject').value = ''; $('b-body').value = ''; drawExtras();
+    } catch (e) { $('sendMsg').textContent = e.message; $('sendMsg').classList.add('err'); }
+    finally { $('sendBtn').disabled = false; }
+  };
+  $('exportBtn').onclick = async () => {
+    try {
+      const list = await API.myList();
+      const rows = [['email','joined','unsubscribed']].concat(list.map(r => [r.email, r.created_at, r.unsubscribed_at || '']));
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      const a = document.createElement('a'); a.href = url; a.download = 'linkup-list.csv'; a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) { alert(e.message); }
+  };
+  $('billing').onclick = async () => { try { await API.billingPortal(); } catch (e) { alert(e.message); } };
+  $('wipe').onclick = async () => {
+    if (!confirm('Deletes your page, list and history. Cannot be undone.')) return;
+    if (prompt('Type DELETE to confirm') !== 'DELETE') return;
+    try { await API.deleteAccount(); API.signOut(); }
+    catch (e) { alert(e.message); }
+  };
+</script>
+</body>
+</html>

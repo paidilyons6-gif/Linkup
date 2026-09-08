@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy — LinkUp</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  .doc { padding: 40px 0 80px; }
+  .doc h1 { font-family: var(--serif); font-size: 38px; letter-spacing: -.03em; margin-bottom: 8px; }
+  .doc .when { color: var(--ink-soft); font-size: 14px; margin-bottom: 34px; }
+  .doc h2 { font-family: var(--serif); font-size: 23px; letter-spacing: -.02em; margin: 32px 0 10px; }
+  .doc p, .doc li { color: var(--ink-soft); font-size: 15.5px; line-height: 1.65; }
+  .doc p { margin-bottom: 12px; }
+  .doc ul { margin: 0 0 12px 20px; }
+  .doc li { margin-bottom: 6px; }
+  .review {
+    background: rgba(240, 194, 75, 0.12); border: 1px solid rgba(240, 194, 75, 0.35);
+    border-radius: var(--r-md); padding: 16px 18px; font-size: 14.5px; line-height: 1.55;
+    margin-bottom: 30px; color: var(--mist);
+  }
+  .doc strong { color: var(--paper); }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <a class="link" href="terms.html">Terms</a>
+</div></header>
+
+<main class="narrow doc">
+  <div class="review">
+    <strong>Read this before publishing.</strong> This describes accurately what the
+    software does with data. It has not been reviewed by a solicitor, and the
+    company name, address and contact email below are placeholders. Fill those in
+    and have it checked before you take money.
+  </div>
+
+  <h1>Privacy</h1>
+  <p class="when">Last updated: <span id="d"></span></p>
+
+  <p>LinkUp is operated by <strong>[YOUR COMPANY NAME]</strong>, [ADDRESS], Ireland.
+     For anything on this page, write to <strong><a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a></strong>.</p>
+  <p>There are two kinds of people here, and they're treated differently:
+     <strong>creators</strong>, who have an account and a page, and <strong>visitors</strong>,
+     who open somebody's page.</p>
+
+  <h2>If you're a visitor</h2>
+  <p>Opening someone's LinkUp page sets no cookies and runs no tracking. We do not
+     profile you, and nothing is shared with advertisers.</p>
+  <p>Two things are recorded:</p>
+  <ul>
+    <li><strong>Which bubble was tapped.</strong> Just the label and the time — no IP
+        address, no device details, nothing that identifies you. It's a counter, so
+        the creator can see what people are interested in.</li>
+    <li><strong>Your email address, only if you type it in</strong> and submit the form.
+        That goes to the creator whose page you were on, so they can email you.
+        They control it, not us — we store it for them.</li>
+  </ul>
+  <p>Every email sent through LinkUp carries an unsubscribe link that works
+     immediately. You can also ask us directly at the address above.</p>
+
+  <h2>If you're a creator</h2>
+  <p>We hold your email address and password (hashed — we can't read it), whatever
+     you put on your page, the files you upload, and your subscription status.</p>
+  <p><strong>Payment card details never reach us.</strong> Stripe handles payment and
+     stores the card; we keep only a customer reference and whether you're paid up.</p>
+  <p>The email addresses collected through your page are <strong>yours</strong>. You can
+     download them at any time, and you're the data controller for that list — which
+     means you're responsible for only mailing people who agreed, and for honouring
+     unsubscribes. We record when and where each person agreed so you can show it.</p>
+
+  <h2>Where it's kept</h2>
+  <p>In the European Union. The database, files and authentication are hosted by
+     Supabase in an EU region; the site is served by Netlify; payments by Stripe;
+     email delivery by Resend. Stripe and Resend are US companies and transfer data
+     under the EU–US Data Privacy Framework and standard contractual clauses.</p>
+
+  <h2>How long</h2>
+  <p>Your account and page stay until you delete them. Deleting your account removes
+     your page, your uploads, your email list and your history — immediately and
+     permanently. Tap counts older than 30 days aren't shown and are periodically
+     cleared. Records we're required to keep for accounting are kept for six years.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask for a copy of what we hold, ask us to correct it, or ask us to
+     delete it. Deletion is a button in your account; the rest, email us and we'll
+     answer within a month. If you're unhappy you can complain to the Irish Data
+     Protection Commission at <strong>dataprotection.ie</strong>.</p>
+
+  <h2>Cookies</h2>
+  <p>None for advertising or analytics. Signing in stores a token in your browser so
+     you stay signed in — that's necessary for the service to work and isn't used for
+     anything else.</p>
+</main>
+
+<footer class="foot"><div class="wrap nav-in" style="height:auto;padding-block:8px">
+  <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <span>© <span id="y"></span></span>
+</div></footer>
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
+  document.getElementById('d').textContent = new Date().toLocaleDateString('en-IE', { day:'numeric', month:'long', year:'numeric' });
+</script>
+</body>
+</html>

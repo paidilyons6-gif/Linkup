@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>LinkUp</title>
+<meta name="theme-color" content="#111629" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="linkup.css" />
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="welcome" id="welcome" hidden>
+  <video id="welcomeVideo" playsinline preload="metadata"></video>
+  <div class="welcome-cover" id="welcomeCover">
+    <img class="welcome-avatar" id="welcomeAvatar" alt="" hidden />
+    <button class="play" id="playBtn" aria-label="Play welcome video"></button>
+    <p id="welcomeName"></p>
+  </div>
+  <button class="skip" id="skipBtn">Skip</button>
+</div>
+
+<main class="page" id="page"></main>
+<div class="missing" id="missing" hidden>
+  <h1>Nothing here yet</h1>
+  <p>This address isn't taken, or the page behind it hasn't been published.</p>
+  <a href="/">Make one of your own</a>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script src="linkup.js"></script>
+<script>
+  const slug = (new URLSearchParams(location.search).get('u')
+             || location.pathname.replace(/^\/+|\/+$/g, '').split('/').pop() || '')
+             .toLowerCase();
+
+  const page    = document.getElementById('page');
+  const welcome = document.getElementById('welcome');
+  const video   = document.getElementById('welcomeVideo');
+  const cover   = document.getElementById('welcomeCover');
+
+  function reveal() {
+    welcome.classList.add('gone');
+    page.classList.add('show');
+    try { video.pause(); } catch {}
+    setTimeout(() => { welcome.hidden = true; video.removeAttribute('src'); video.load(); }, 800);
+  }
+
+  function notFound() {
+    page.hidden = true;
+    document.getElementById('missing').hidden = false;
+  }
+
+  /* DB snake_case → renderer shape */
+  function toView(r) {
+    const quiz = typeof r.quiz === 'string' ? JSON.parse(r.quiz || 'null') : r.quiz;
+    return LinkUp.mergeProfile({
+      name: r.name, handle: r.handle, tagline: r.tagline,
+      avatar: r.avatar_url || '', theme: r.theme || 'midnight',
+      mode: r.mode || (quiz?.enabled === false ? 'hub' : 'quiz'),
+      bubbleStyle: r.bubble_style || 'glass',
+      welcomeVideo: r.welcome_video_url || '',
+      backgroundVideo: r.background_video_url || '',
+      backgroundImage: r.background_image_url || '',
+      links: Array.isArray(r.links) ? r.links : [],
+      captureEnabled: !!r.capture_enabled,
+      captureHeading: r.capture_heading || '',
+      quiz: quiz || undefined,
+      badge: r.badge !== false,
+    });
+  }
+
+  (async () => {
+    if (!API.configured() || !slug || slug === 'u.html') return notFound();
+
+    let raw = null;
+    try { raw = await API.publicProfile(slug); } catch { return notFound(); }
+    if (!raw) return notFound();
+
+    const p = toView(raw);
+    document.title = p.name ? `${p.name} — LinkUp` : 'LinkUp';
+    LinkUp.render(p);
+
+    if (!raw.badge) {
+      page.dataset.hideBadge = '1';
+      document.querySelector('.foot')?.remove();
+    }
+
+    page.addEventListener('click', (e) => {
+      const hit = e.target.closest('.quiz-option, .hub-item, .quiz-cta[href]');
+      if (!hit || !raw.id) return;
+      const label = hit.textContent?.trim().slice(0, 80) || 'tap';
+      API.recordTap(raw.id, label);
+    });
+
+    const form = document.querySelector('.capture');
+    if (form) {
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const input = form.querySelector('input[name=email]');
+        const btn = form.querySelector('button');
+        btn.disabled = true;
+        try {
+          await API.joinList(raw.id, input.value.trim());
+          form.closest('.capture-wrap').innerHTML =
+            `<p class="capture-note">Thanks — you're on the list.</p>`;
+        } catch {
+          btn.disabled = false;
+          alert("That didn't send. Try again in a moment.");
+        }
+      };
+    }
+
+    if (p.welcomeVideo) {
+      welcome.hidden = false;
+      video.src = p.welcomeVideo;
+      document.getElementById('welcomeName').textContent =
+        p.name ? `A quick hello from ${p.name}` : '';
+      if (p.avatar) {
+        const a = document.getElementById('welcomeAvatar');
+        a.src = p.avatar; a.hidden = false;
+      }
+      document.getElementById('playBtn').onclick = () => {
+        cover.classList.add('gone');
+        video.play().catch(reveal);
+      };
+      document.getElementById('skipBtn').onclick = reveal;
+      video.onended = reveal;
+      video.onerror = reveal;
+    } else {
+      page.classList.add('show');
+    }
+  })();
+</script>
+</body>
+</html>

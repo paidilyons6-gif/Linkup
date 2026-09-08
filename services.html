@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Done-for-you websites — LinkUp</title>
+<meta name="description" content="Need a sales page or full site for your offers? We build it, host it, and wire it to your LinkUp quiz. You upload the content." />
+<meta name="theme-color" content="#f5f6f8" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  .svc-hero { padding: clamp(48px, 8vw, 88px) 0 24px; }
+  .svc-hero h1 {
+    font-family: var(--display); font-size: clamp(34px, 5vw, 52px);
+    letter-spacing: -.03em; line-height: 1.05; max-width: 14ch;
+  }
+  .svc-hero p { margin-top: 16px; color: var(--ink-soft); font-size: 17px; max-width: 42ch; }
+  .pkg-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    margin: 40px 0 64px;
+  }
+  @media (max-width: 900px) { .pkg-grid { grid-template-columns: 1fr; } }
+  .pkg {
+    border: 1px solid var(--line-strong); border-radius: 18px;
+    background: var(--surface); padding: 26px 24px; display: flex; flex-direction: column;
+  }
+  .pkg.featured {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 45%);
+  }
+  .pkg .flag {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--citrus); margin-bottom: 10px;
+  }
+  .pkg h2 { font-family: var(--display); font-size: 28px; letter-spacing: -.02em; }
+  .pkg .price {
+    margin: 14px 0 6px; font-family: var(--display); font-size: 34px; letter-spacing: -.03em;
+  }
+  .pkg .price span { font-size: 14px; color: var(--ink-soft); font-family: var(--sans); }
+  .pkg .care { color: var(--ink-soft); font-size: 14px; margin-bottom: 18px; }
+  .pkg ul { list-style: none; display: grid; gap: 10px; flex: 1; margin-bottom: 22px; }
+  .pkg li {
+    padding-left: 22px; position: relative; font-size: 14.5px; color: var(--ink); line-height: 1.4;
+  }
+  .pkg li::before {
+    content: ''; position: absolute; left: 0; top: .4em; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--citrus);
+  }
+  .flow {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 28px 0 56px;
+  }
+  @media (max-width: 800px) { .flow { grid-template-columns: 1fr 1fr; } }
+  .flow article h3 { font-family: var(--display); font-size: 20px; margin-bottom: 8px; }
+  .flow article p { color: var(--ink-soft); font-size: 14.5px; }
+  .flow .n { color: var(--citrus); font-family: var(--display); font-size: 28px; }
+  .intake {
+    max-width: 520px; margin: 0 auto 80px;
+    border: 1px solid var(--line-strong); border-radius: 18px;
+    background: var(--surface); padding: 28px 26px;
+  }
+  .intake h2 { font-family: var(--display); font-size: 28px; letter-spacing: -.02em; margin-bottom: 8px; }
+  .intake .sub { color: var(--ink-soft); margin-bottom: 20px; font-size: 14.5px; }
+  .intake .field { margin-bottom: 12px; }
+  .intake label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  .intake input, .intake select, .intake textarea {
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
+    background: var(--surface-2); color: var(--ink); padding: 11px 13px; font: inherit;
+  }
+  .checks { display: grid; gap: 8px; margin: 8px 0 16px; }
+  .checks label {
+    display: flex; gap: 10px; align-items: flex-start; color: var(--ink);
+    font-size: 14px; font-weight: 500; margin: 0; cursor: pointer;
+  }
+  .checks input { width: auto; margin-top: 3px; }
+  .ok { color: var(--accent); text-align: center; margin-top: 12px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <a class="link" href="/#pricing">Software pricing</a>
+    <a class="link" href="account.html?mode=signin">Sign in</a>
+    <a class="btn pink sm" href="#intake">Request a build</a>
+  </div>
+</header>
+
+<main>
+  <section class="svc-hero">
+    <div class="wrap">
+      <span class="kicker" style="display:block;color:var(--citrus);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px">Done for you</span>
+      <h1>Need a website for your offers?</h1>
+      <p>
+        LinkUp is the quiz in your bio. If you also need a sales page or a small site —
+        with your own domain — we can build and maintain it. You upload videos and copy;
+        visitors just click and buy.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="pkg-grid">
+        <article class="pkg">
+          <h2>Software only</h2>
+          <div class="price">€0<span> extra</span></div>
+          <p class="care">Just your LinkUp plan (€9–€29/mo)</p>
+          <ul>
+            <li>Sales quiz or link hub</li>
+            <li>You point buttons at Stripe, Kajabi, Stan, etc.</li>
+            <li>No custom website from us</li>
+            <li>Best if you already have a checkout link</li>
+          </ul>
+          <a class="btn ghost" href="account.html">Start with LinkUp</a>
+        </article>
+
+        <article class="pkg featured">
+          <div class="flag">Most popular add-on</div>
+          <h2>Sales page</h2>
+          <div class="price">€1,490<span> setup</span></div>
+          <p class="care">+ €79/mo care (hosting, SSL, backups, small edits)</p>
+          <ul>
+            <li>One high-converting offer page</li>
+            <li>Wired to your LinkUp quiz result buttons</li>
+            <li>Stripe Payment Link or your checkout embedded</li>
+            <li>You upload images, video, and programme copy</li>
+            <li>Mobile-first, fast, on our managed hosting</li>
+          </ul>
+          <a class="btn pink" href="#intake">Request Sales page</a>
+        </article>
+
+        <article class="pkg">
+          <h2>Site + domain</h2>
+          <div class="price">€2,900<span> setup</span></div>
+          <p class="care">+ €129/mo care (site + domain + upkeep)</p>
+          <ul>
+            <li>Up to 5 pages (home, offers, about, FAQ, contact)</li>
+            <li>Your own domain (we register & renew it)</li>
+            <li>All quiz CTAs pointed at the right pages</li>
+            <li>Storage for page media; you still own long-form video hosts if needed</li>
+            <li>Monthly tweaks included (fair use)</li>
+          </ul>
+          <a class="btn ghost" href="#intake">Request Site + domain</a>
+        </article>
+      </div>
+
+      <div class="section-head">
+        <span class="kicker">How delivery works</span>
+        <h2>You own the business. We own the build headache.</h2>
+      </div>
+      <div class="flow">
+        <article>
+          <div class="n">01</div>
+          <h3>You choose</h3>
+          <p>Software only, Sales page, or Site + domain — at signup or anytime later.</p>
+        </article>
+        <article>
+          <div class="n">02</div>
+          <h3>We build</h3>
+          <p>Design, develop, host. Domain and SSL if you took that package.</p>
+        </article>
+        <article>
+          <div class="n">03</div>
+          <h3>You upload</h3>
+          <p>Videos, photos, programme details. We give you a simple place to drop them.</p>
+        </article>
+        <article>
+          <div class="n">04</div>
+          <h3>Visitors buy</h3>
+          <p>Bio → LinkUp quiz → your page → checkout. One path, no guessing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap narrow" style="max-width:720px">
+      <div class="section-head">
+        <span class="kicker">What’s included in care</span>
+        <h2>Maintenance is the real product.</h2>
+        <p>Setup gets you live. Care keeps you selling — hosting, certificates, backups, uptime, and small content swaps each month.</p>
+      </div>
+      <ul class="contrast-list" style="margin-bottom:48px">
+        <li>Managed hosting + HTTPS</li>
+        <li>Database / form / quiz wiring kept working</li>
+        <li>Storage for page assets (fair use)</li>
+        <li>Domain renewal on Site + domain</li>
+        <li>YouTube / Vimeo / Kajabi for heavy course video — we embed; you upload</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="intake">
+    <div class="wrap">
+      <form class="intake" id="form">
+        <h2>Tell us what you need</h2>
+        <p class="sub">Email goes straight to Paulie (paidilyons6@gmail.com). Website builds are quoted by email — you only pay in-app for LinkUp quiz/software plans.</p>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="business">Business / brand</label>
+          <input id="business" name="business" placeholder="e.g. studio name" />
+        </div>
+        <div class="field">
+          <label for="package">Package</label>
+          <select id="package" name="package">
+            <option value="software">Software only — I’ll use my own links</option>
+            <option value="sales" selected>Sales page — €1,490 + €79/mo</option>
+            <option value="site">Site + domain — €2,900 + €129/mo</option>
+            <option value="unsure">Not sure — help me choose</option>
+          </select>
+        </div>
+
+        <p style="font-size:12.5px;font-weight:600;color:var(--fog);margin:4px 0 6px">Also interested in</p>
+        <div class="checks">
+          <label><input type="checkbox" name="need" value="domain" /> My own custom domain</label>
+          <label><input type="checkbox" name="need" value="stripe" /> Help connecting Stripe / checkout</label>
+          <label><input type="checkbox" name="need" value="multi" /> Multiple programme pages</label>
+          <label><input type="checkbox" name="need" value="content" /> Guidance on what to upload</label>
+        </div>
+
+        <div class="field">
+          <label for="notes">Anything else</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="What you sell, deadline, existing domain…"></textarea>
+        </div>
+        <button class="btn pink" type="submit" style="width:100%">Email Paulie</button>
+        <p class="ok" id="ok" hidden>Got it — we’ll be in touch shortly.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap nav-in">
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const pre = params.get('package');
+  if (pre && document.getElementById('package').querySelector(`option[value="${pre}"]`)) {
+    document.getElementById('package').value = pre;
+  }
+  const emailPre = params.get('email');
+  if (emailPre) document.getElementById('email').value = emailPre;
+
+  document.getElementById('form').onsubmit = (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const needs = [...e.target.querySelectorAll('input[name=need]:checked')].map(x => x.value);
+    const lead = {
+      at: new Date().toISOString(),
+      name: fd.get('name'),
+      email: fd.get('email'),
+      business: fd.get('business'),
+      package: fd.get('package'),
+      needs,
+      notes: fd.get('notes'),
+    };
+    const all = JSON.parse(localStorage.getItem('linkup.serviceLeads') || '[]');
+    all.push(lead);
+    localStorage.setItem('linkup.serviceLeads', JSON.stringify(all));
+    localStorage.setItem('linkup.serviceInterest', JSON.stringify(lead));
+    document.getElementById('ok').hidden = false;
+    e.target.querySelector('button[type=submit]').disabled = true;
+    // mailto fallback so you actually receive it before a CRM exists
+    const body = encodeURIComponent(
+      `Name: ${lead.name}\nEmail: ${lead.email}\nBusiness: ${lead.business}\nPackage: ${lead.package}\nNeeds: ${needs.join(', ') || '—'}\n\n${lead.notes || ''}`
+    );
+    location.href = `mailto:paidilyons6@gmail.com?subject=${encodeURIComponent('LinkUp website request — ' + lead.package)}&body=${body}`;
+  };
+</script>
+</body>
+</html>

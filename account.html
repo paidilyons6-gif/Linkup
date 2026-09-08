@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign in — LinkUp</title>
+<meta name="theme-color" content="#f5f6f8" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  body { background: var(--bg); }
+  .auth-wrap {
+    min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px;
+  }
+  .card {
+    width: min(420px, 100%);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 36px 30px;
+    box-shadow: var(--shadow-md);
+  }
+  .card .logo { justify-content: center; margin: 0 0 22px; }
+  .card h1 {
+    font-family: var(--display); font-size: 28px; letter-spacing: -0.03em; text-align: center;
+  }
+  .card .sub {
+    text-align: center; color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 26px; font-weight: 500;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft);
+  }
+  .field input {
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
+    padding: 12px 14px; font-size: 15px; background: var(--surface-2); color: var(--ink);
+  }
+  .field input:focus { outline: 2px solid var(--citrus); border-color: transparent; }
+  .card .btn { width: 100%; margin-top: 6px; }
+  .swap { text-align: center; margin-top: 18px; font-size: 14px; color: var(--ink-soft); }
+  .swap button {
+    background: none; border: none; cursor: pointer; color: var(--citrus);
+    font-weight: 600; text-decoration: underline; padding: 0;
+  }
+  .msg { margin-top: 14px; font-size: 14px; text-align: center; line-height: 1.45; }
+  .msg.bad { color: #b42318; }
+  .msg.good { color: #0f6b5c; }
+  .forgot {
+    display: block; text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--ink-soft);
+  }
+  .setup {
+    background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-radius: var(--r-md); padding: 16px 18px; font-size: 14px; line-height: 1.5;
+    margin-bottom: 20px; color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <div class="card">
+    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+
+    <div class="setup" id="setup" hidden>
+      <strong>Not connected yet.</strong> Add your Supabase URL and anon key to
+      <code>config.js</code> and redeploy. Until then nobody can sign up.
+    </div>
+
+    <h1 id="title">Create your account</h1>
+    <p class="sub" id="sub">Free to build. You only pay when you publish.</p>
+
+    <form id="form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required minlength="8" />
+      </div>
+      <div id="svcAsk" hidden>
+        <p style="font-size:12.5px;font-weight:600;color:var(--fog);margin:4px 0 10px">Do you also need a website?</p>
+        <div class="field">
+          <label for="svcPackage" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Website package</label>
+          <select id="svcPackage" style="width:100%;border:1px solid var(--line-strong);border-radius:10px;background:var(--stage-soft);color:var(--paper);padding:12px 14px;font:inherit">
+            <option value="software">No — I’ll use my own links / checkout</option>
+            <option value="sales">Yes — a sales page (€1,490 + €79/mo)</option>
+            <option value="site">Yes — full site + domain (€2,900 + €129/mo)</option>
+            <option value="unsure">Not sure — tell me more</option>
+          </select>
+        </div>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--mist);font-weight:500;margin:0 0 12px;cursor:pointer">
+          <input type="checkbox" id="svcDomain" style="width:auto;margin-top:3px" />
+          I want my own custom domain
+        </label>
+        <p style="font-size:12px;color:var(--fog);line-height:1.45;margin-bottom:8px">
+          Website builds are quoted by email — nothing charged online except LinkUp software.
+          <a href="services.html" style="color:var(--citrus)">See packages</a>
+        </p>
+      </div>
+      <button class="btn pink" id="go" type="submit">Create account</button>
+    </form>
+
+    <p class="msg" id="msg"></p>
+
+    <p class="swap" id="swap">
+      Already have one? <button type="button" id="toggle">Sign in</button>
+    </p>
+    <a class="forgot" href="#" id="forgot">Forgotten your password?</a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+  let mode = new URLSearchParams(location.search).get('mode') === 'signin' ? 'signin' : 'signup';
+  const $ = id => document.getElementById(id);
+
+  if (!API.configured()) { $('setup').hidden = false; $('go').disabled = true; }
+  if (API.signedIn()) location.replace('edit.html');
+
+  let recoveryToken = null;
+  if (location.hash.includes('type=recovery')) {
+    const p = new URLSearchParams(location.hash.slice(1));
+    recoveryToken = p.get('access_token');
+    if (recoveryToken) {
+      mode = 'recover';
+      history.replaceState({}, '', location.pathname);
+    }
+  }
+
+  const TITLES = { signup: 'Create your account', signin: 'Welcome back', recover: 'Choose a new password' };
+  const SUBS = {
+    signup: 'Free to build. You only pay when you publish.',
+    signin: 'Sign in to edit your page.',
+    recover: 'Pick something you\'ll remember. At least 8 characters.',
+  };
+  function draw() {
+    $('title').textContent = TITLES[mode];
+    $('sub').textContent = SUBS[mode];
+    $('go').textContent = mode === 'recover' ? 'Save new password'
+                        : mode === 'signup'  ? 'Create account' : 'Sign in';
+    $('email').closest('.field').hidden = mode === 'recover';
+    $('email').required = mode !== 'recover';
+    $('password').setAttribute('autocomplete', mode === 'signin' ? 'current-password' : 'new-password');
+    $('forgot').hidden = mode === 'recover';
+    $('swap').hidden = mode === 'recover';
+    $('svcAsk').hidden = mode !== 'signup';
+    if (mode === 'recover') return;
+    $('swap').innerHTML = mode === 'signup'
+      ? 'Already have one? <button type="button" id="toggle">Sign in</button>'
+      : "No account yet? <button type=\"button\" id=\"toggle\">Create one</button>";
+    $('toggle').onclick = () => { mode = mode === 'signup' ? 'signin' : 'signup'; show(''); draw(); };
+  }
+  draw();
+
+  function show(text, kind = 'bad') {
+    const el = $('msg');
+    el.textContent = text;
+    el.className = 'msg ' + (text ? kind : '');
+  }
+
+  function rememberServiceInterest(email) {
+    if (mode !== 'signup') return;
+    const pkg = $('svcPackage').value;
+    const lead = {
+      at: new Date().toISOString(),
+      email,
+      package: pkg,
+      needs: $('svcDomain').checked ? ['domain'] : [],
+      source: 'signup',
+    };
+    localStorage.setItem('linkup.serviceInterest', JSON.stringify(lead));
+    if (pkg !== 'software') {
+      const all = JSON.parse(localStorage.getItem('linkup.serviceLeads') || '[]');
+      all.push(lead);
+      localStorage.setItem('linkup.serviceLeads', JSON.stringify(all));
+    }
+  }
+
+  function afterAuth(email) {
+    rememberServiceInterest(email);
+    const interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null');
+    if (interest && interest.package && interest.package !== 'software') {
+      location.href = `services.html?package=${encodeURIComponent(interest.package)}&email=${encodeURIComponent(email || '')}#intake`;
+    } else {
+      location.href = 'edit.html';
+    }
+  }
+
+  $('form').onsubmit = async (e) => {
+    e.preventDefault();
+    show('');
+    $('go').disabled = true;
+    try {
+      const email = $('email').value.trim();
+      const pass  = $('password').value;
+      if (mode === 'recover') {
+        await API.setPassword(recoveryToken, pass);
+        show('Saved. Sign in with your new password.', 'good');
+        recoveryToken = null; mode = 'signin'; draw();
+        return;
+      }
+      const out = mode === 'signup' ? await API.signUp(email, pass) : await API.signIn(email, pass);
+      if (out.needsConfirmation) {
+        rememberServiceInterest(email);
+        show('Check your email to confirm your address, then sign in.', 'good');
+        mode = 'signin'; draw();
+      } else {
+        afterAuth(email);
+      }
+    } catch (err) {
+      show(err.message);
+    } finally {
+      $('go').disabled = false;
+    }
+  };
+
+  $('forgot').onclick = async (e) => {
+    e.preventDefault();
+    const email = $('email').value.trim();
+    if (!email) return show('Put your email in the box first, then tap this.');
+    try {
+      await API.resetPassword(email);
+      show("If that address has an account, a reset link is on its way.", 'good');
+    } catch (err) { show(err.message); }
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+/* Shared foundations — light premium.
+ * Public quiz pages keep their own theme colours in linkup.css. */
+
+:root {
+  --bg:           #f5f6f8;
+  --bg-warm:      #eef1f5;
+  --surface:      #ffffff;
+  --surface-2:    #f0f2f6;
+  --ink:          #14171f;
+  --ink-soft:     #5a6172;
+  --muted:        #7a8294;
+  --line:         #e3e6ee;
+  --line-strong:  #d0d5e0;
+
+  --accent:       #0f6b5c;
+  --accent-deep:  #0a5246;
+  --accent-soft:  rgba(15, 107, 92, 0.1);
+  --accent-glow:  rgba(15, 107, 92, 0.18);
+
+  /* Aliases used across marketing / editor / legacy class names */
+  --stage:        var(--bg);
+  --stage-elev:   var(--surface);
+  --stage-soft:   var(--surface-2);
+  --fog:          var(--ink-soft);
+  --mist:         var(--ink);
+  --paper:        var(--ink);
+  --paper-dim:    var(--muted);
+  --citrus:       var(--accent);
+  --citrus-deep:  var(--accent-deep);
+  --citrus-soft:  var(--accent-soft);
+  --teal:         #2a9d8f;
+  --pink:         var(--accent);
+  --pink-deep:    var(--accent-deep);
+  --pink-soft:    var(--accent-soft);
+  --plum:         var(--ink);
+
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans:    ui-sans-serif, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:   var(--display);
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 23, 31, 0.05), 0 1px 3px rgba(20, 23, 31, 0.04);
+  --shadow-md: 0 8px 24px rgba(20, 23, 31, 0.08), 0 2px 6px rgba(20, 23, 31, 0.04);
+  --shadow-lg: 0 24px 48px rgba(20, 23, 31, 0.12), 0 8px 16px rgba(20, 23, 31, 0.06);
+
+  --ease: cubic-bezier(0.22, 0.9, 0.28, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+
+  --contact-email: paidilyons6@gmail.com;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
