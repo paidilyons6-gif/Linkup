@@ -1,20 +1,28 @@
 # Deploy to Netlify (drag & drop)
 
-1. Download **LinkUp-netlify.zip**
+1. Download LinkUp-netlify.zip from this repo
 2. Go to https://app.netlify.com/drop
-3. Drag the zip onto the page (or unzip and drag the folder that contains `index.html`)
-4. Netlify gives you a live URL like `https://something.netlify.app`
+3. Drag the zip onto the page
+4. Rename the site to something like `linkup-show` (Site settings → Change site name)
+   so the URL matches what Auth expects: https://linkup-show.netlify.app
+5. Share that URL with Becca
 
-That’s enough to show Becca the marketing site + demo quiz.
+## Backend (already live)
 
-## What takes payment online
+- Supabase project `linkup` (ldaajbuumgjujfwmlcwm) — restored and healthy
+- Quiz columns (`mode`, `quiz`) applied
+- Stripe Checkout works for Launch/Guide/Scale (live keys already in secrets)
+- Signups auto-create a blank page
+- Website build inquiries → paidilyons6@gmail.com (no online charge)
 
-- **Only LinkUp software** (Launch €9 / Guide €19 / Scale €29) via Stripe, when someone publishes.
-- **Website builds** never charge online — inquiries email **paidilyons6@gmail.com**.
+## After Netlify is live
 
-## Before real customers
+In Supabase → Authentication → URL Configuration:
+- Site URL = your Netlify URL
+- Redirect URLs include `https://YOUR-SITE.netlify.app/**`
 
-- Finish Stripe prices (€9 / €19 / €29) in Supabase secrets — see `setup.md`
-- Add `mode` + `quiz` columns (SQL in `setup.md`)
-- Put your company name/address in privacy & terms
-- Turn on your custom domain in Netlify when ready
+And set Edge Function secret SITE_URL to the same Netlify URL.
+
+## Security
+
+Rotate the Supabase access token you pasted in chat (Dashboard → Account → Access Tokens).
