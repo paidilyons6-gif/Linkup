@@ -3,8 +3,7 @@
 1. Download LinkUp-netlify.zip from this repo
 2. Go to https://app.netlify.com/drop
 3. Drag the zip onto the page
-4. Rename the site to something like `linkup-show` (Site settings → Change site name)
-   so the URL matches what Auth expects: https://linkup-show.netlify.app
+4. Live site: **https://linkupping.netlify.app**
 5. Share that URL with Becca
 
 ## Backend (already live)
