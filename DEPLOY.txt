@@ -1,27 +1,22 @@
-# Deploy to Netlify (drag & drop)
+# LinkUp — live
 
-1. Download LinkUp-netlify.zip from this repo
-2. Go to https://app.netlify.com/drop
-3. Drag the zip onto the page
-4. Live site: **https://linkupping.netlify.app**
-5. Share that URL with Becca
+**Site:** https://linkupping.netlify.app  
+**Demo quiz:** https://linkupping.netlify.app/demo
 
-## Backend (already live)
+## Backend
 
-- Supabase project `linkup` (ldaajbuumgjujfwmlcwm) — restored and healthy
+- Supabase project `linkup` (`ldaajbuumgjujfwmlcwm`) — healthy
+- Auth Site URL + Stripe `SITE_URL` → https://linkupping.netlify.app
 - Quiz columns (`mode`, `quiz`) applied
-- Stripe Checkout works for Launch/Guide/Scale (live keys already in secrets)
+- Stripe Checkout works for Launch / Guide / Scale
 - Signups auto-create a blank page
 - Website build inquiries → paidilyons6@gmail.com (no online charge)
 
-## After Netlify is live
+## Redeploy
 
-In Supabase → Authentication → URL Configuration:
-- Site URL = your Netlify URL
-- Redirect URLs include `https://YOUR-SITE.netlify.app/**`
-
-And set Edge Function secret SITE_URL to the same Netlify URL.
+1. Download `LinkUp-netlify.zip` from the repo
+2. Drag onto https://app.netlify.com/drop (or reconnect the GitHub repo)
 
 ## Security
 
-Rotate the Supabase access token you pasted in chat (Dashboard → Account → Access Tokens).
+Rotate the Supabase access token that was pasted in chat (Dashboard → Account → Access Tokens).
