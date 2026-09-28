@@ -25,7 +25,8 @@ body {
 }
 .bg video, .bg img {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: center 30%;
+  object-fit: cover; object-position: center 28%;
+  transform: scale(1.02);
 }
 .bg::after {
   content: ''; position: absolute; inset: 0;

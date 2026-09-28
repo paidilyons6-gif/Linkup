@@ -81,9 +81,14 @@
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
-    <a class="link" href="/#pricing">Software pricing</a>
-    <a class="link" href="account.html?mode=signin">Sign in</a>
-    <a class="btn pink sm" href="#intake">Request a build</a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a class="link" href="/#pricing">Software pricing</a>
+      <a class="link" href="account.html?mode=signin">Sign in</a>
+    </nav>
+    <a class="btn pink sm nav-cta" href="#intake">Request a build</a>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -256,6 +261,24 @@
   }
   const emailPre = params.get('email');
   if (emailPre) document.getElementById('email').value = emailPre;
+
+  
+  const nav = document.getElementById('nav');
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+  }
+  if (toggle && links) {
+    const closeMenu = () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  }
 
   document.getElementById('form').onsubmit = (e) => {
     e.preventDefault();

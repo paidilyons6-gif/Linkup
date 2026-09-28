@@ -7,23 +7,63 @@
 const LinkUp = (() => {
   const KEY = 'linkup.profile';
 
-  /* Demo is a generic coach — not a real client brand. Shows the quiz product. */
+  /* Demo is a generic coach — not a real client brand. Shows the quiz product.
+   * Avatar + backdrop are inline SVGs so the hero iframe looks finished offline. */
+  const DEMO_AVATAR = "data:image/svg+xml," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+      <defs>
+        <linearGradient id="g" x1="20%" y1="10%" x2="80%" y2="90%">
+          <stop offset="0%" stop-color="#c2e6ca"/>
+          <stop offset="45%" stop-color="#8fc79b"/>
+          <stop offset="100%" stop-color="#4fa068"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#g)"/>
+      <circle cx="120" cy="92" r="42" fill="rgba(255,255,255,.92)"/>
+      <ellipse cx="120" cy="196" rx="72" ry="58" fill="rgba(255,255,255,.92)"/>
+      <text x="120" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700" fill="#1d2620">M</text>
+    </svg>`
+  );
+  const DEMO_BACKDROP = "data:image/svg+xml," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2400" viewBox="0 0 1600 2400">
+      <defs>
+        <radialGradient id="a" cx="18%" cy="8%" r="60%">
+          <stop offset="0%" stop-color="#8fc79b" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#1d2620" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="b" cx="92%" cy="22%" r="50%">
+          <stop offset="0%" stop-color="#4fa068" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#1d2620" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#24302a"/>
+          <stop offset="55%" stop-color="#1d2620"/>
+          <stop offset="100%" stop-color="#121814"/>
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="2400" fill="url(#c)"/>
+      <rect width="1600" height="2400" fill="url(#a)"/>
+      <rect width="1600" height="2400" fill="url(#b)"/>
+      <circle cx="1180" cy="520" r="220" fill="#8fc79b" fill-opacity=".08"/>
+      <circle cx="320" cy="980" r="280" fill="#c2e6ca" fill-opacity=".05"/>
+    </svg>`
+  );
   const DEMO = {
     name: 'Maya Chen',
     handle: '@maya.moves',
     tagline: 'Strength, pregnancy fitness, and training that fits real life.',
-    avatar: '',
+    avatar: DEMO_AVATAR,
     welcomeVideo: '',
     backgroundVideo: '',
-    backgroundImage: '',
-    theme: 'midnight',
+    backgroundImage: DEMO_BACKDROP,
+    theme: 'sage',
     mode: 'quiz', // 'quiz' | 'hub'
     bubbleStyle: 'glass',
     captureEnabled: false,
     captureHeading: 'Get weekly tips',
     links: [
-      { label: 'Instagram', note: '', url: 'https://instagram.com', size: 'm', emoji: '📸', shape: 'pill' },
-      { label: 'Free guide', note: 'PDF', url: '#', size: 'm', emoji: '📘', shape: 'sticker' },
+      { label: 'Instagram', note: '', url: 'https://instagram.com', size: 'm', emoji: '', shape: 'pill' },
+      { label: 'Free guide', note: 'PDF', url: '#', size: 'm', emoji: '', shape: 'sticker' },
     ],
     quiz: {
       enabled: true,

@@ -10,17 +10,23 @@
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="site.css" />
 <style>
-  body { background: var(--bg); }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(80% 50% at 100% 0%, rgba(15, 107, 92, 0.08), transparent 55%),
+      radial-gradient(60% 40% at 0% 20%, rgba(42, 157, 143, 0.06), transparent 50%);
+  }
   .auth-wrap {
     min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px;
   }
   .card {
     width: min(420px, 100%);
-    background: var(--surface);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
     border: 1px solid var(--line);
     border-radius: var(--r-lg);
     padding: 36px 30px;
     box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
   }
   .card .logo { justify-content: center; margin: 0 0 22px; }
   .card h1 {

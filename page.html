@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>LinkUp</title>
 <meta name="description" content="Find the right next step." />
-<meta name="theme-color" content="#111629" />
+<meta name="theme-color" content="#1d2620" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="linkup.css" />
@@ -28,7 +28,9 @@
 
 <script src="linkup.js"></script>
 <script>
-  const profile = LinkUp.load();
+  const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+  /* Preview frames (home hero + editor) start from DEMO so local drafts can't stain marketing. */
+  const profile = isPreview ? structuredClone(LinkUp.DEMO) : LinkUp.load();
   LinkUp.render(profile);
   const page = document.getElementById('page');
   const welcome = document.getElementById('welcome');
@@ -41,8 +43,6 @@
     try { video.pause(); } catch {}
     setTimeout(() => { welcome.hidden = true; video.removeAttribute('src'); video.load(); }, 800);
   }
-
-  const isPreview = new URLSearchParams(location.search).get('preview') === '1';
 
   if (profile.welcomeVideo && !isPreview) {
     welcome.hidden = false;
