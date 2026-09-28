@@ -15,13 +15,15 @@ Live site: https://linkupping.netlify.app
 
 ## You must do (blocking)
 
-### 1. Restore Supabase project
-DNS for `ldaajbuumgjujfwmlcwm.supabase.co` currently returns **NXDOMAIN** — Auth/API will not work until the project is restored or a new project is created and `config.js` is updated.
+### 1. Paste a fresh Supabase access token
+Project **linkup** is online again (Auth health OK). The old `sbp_…` token is **rejected (401)**.
 
-1. Open https://supabase.com/dashboard
-2. Restore / unpause project **linkup** (or create a new one)
-3. Paste a fresh **Personal Access Token** (`sbp_…`) here so the agent can re-apply schema + secrets
-4. Re-deploy Netlify zip if `config.js` changes
+1. Open https://supabase.com/dashboard/account/tokens  
+2. Create a token and paste it in the agent chat  
+3. Agent will install the new Stripe webhook secret (`STRIPE_WEBHOOK_SECRET`) — without this, **paid plans never activate** after Checkout
+
+A replacement Stripe webhook endpoint is already created and waiting:
+`we_1UKaSHFYCRiWqwhQ8DCmQDhm` → `…/functions/v1/stripe-webhook`
 
 ### 2. Rotate secrets pasted in chat
 - Stripe → Developers → API keys → roll the restricted key, send the new `rk_live_…` (or `sk_live_…`)
