@@ -12,31 +12,35 @@ Live site: https://linkupping.netlify.app
 - [x] Prices Launch €9 / Guide €19 / Scale €29
 - [x] Scale copy notes broadcasts need sending domain
 - [x] Website builds inquiry-only to paidilyons6@gmail.com
+- [x] `STRIPE_WEBHOOK_SECRET` installed; live Stripe → `stripe-webhook` activates plans
+- [x] Webhook handler supports Stripe API `2026-03-25.dahlia` (`current_period_end` on items)
 
-## You must do (blocking)
+## Verified (live)
 
-### 1. Paste a fresh Supabase access token
-Project **linkup** is online again (Auth health OK). The old `sbp_…` token is **rejected (401)**.
+- Auth health OK; signup → profile OK
+- `create-checkout` returns live Stripe Checkout URL
+- Unpaid publish blocked (`Publish requires an active Launch, Guide, or Scale plan`)
+- Trial subscription via Stripe → webhook sets `subscriptions.plan=premium` within seconds
+- Paid publish → `public_profile` + `https://linkupping.netlify.app/<slug>` OK
+- Live site `/`, `/privacy.html`, `/terms.html`, `/demo` OK
 
-1. Open https://supabase.com/dashboard/account/tokens  
-2. Create a token and paste it in the agent chat  
-3. Agent will install the new Stripe webhook secret (`STRIPE_WEBHOOK_SECRET`) — without this, **paid plans never activate** after Checkout
+Active Stripe webhook: `we_1UKbVsFYCRiWqwhQFNZFfoyY` →  
+`https://ldaajbuumgjujfwmlcwm.supabase.co/functions/v1/stripe-webhook`
 
-A replacement Stripe webhook endpoint is already created and waiting:
-`we_1UKaSHFYCRiWqwhQ8DCmQDhm` → `…/functions/v1/stripe-webhook`
+## You should still do
 
-### 2. Rotate secrets pasted in chat
-- Stripe → Developers → API keys → roll the restricted key, send the new `rk_live_…` (or `sk_live_…`)
-- Supabase → Account → Access Tokens → revoke the old `sbp_…`, create a new one
+### 1. Rotate secrets pasted in chat
+- Stripe → Developers → API keys → roll the restricted/secret key; update Edge Function `STRIPE_SECRET_KEY`
+- Supabase → Account → Access Tokens → revoke old `sbp_…` tokens
 
-### 3. One paid path test (after Supabase is back)
+### 2. Optional smoke test with a real card
 1. Sign up at /account.html  
-2. Buy Guide (€19) with your card  
+2. Buy Guide (€19)  
 3. Confirm plan badge shows Guide  
 4. Publish → open `https://linkupping.netlify.app/yourslug`  
 5. Cancel in Stripe Customer Portal → page should stop resolving  
 
-### 4. Resend (only if selling Scale broadcasts)
+### 3. Resend (only if selling Scale broadcasts)
 Add Edge Function secrets:
 - `RESEND_API_KEY`
 - `BROADCAST_FROM` (e.g. `LinkUp <hello@yourdomain.com>`)

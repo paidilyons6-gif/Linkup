@@ -5,7 +5,7 @@
 set -euo pipefail
 REF="${SUPABASE_PROJECT_REF:-ldaajbuumgjujfwmlcwm}"
 TOKEN="${SUPABASE_ACCESS_TOKEN:?Set SUPABASE_ACCESS_TOKEN}"
-SECRET="${1:?Pass whsec_... as first argument}"
+SECRET="$(printf %s "${1:?Pass whsec_... as first argument}" | tr -d '[:space:]')"
 
 curl -sS -A 'Mozilla/5.0' -X POST "https://api.supabase.com/v1/projects/${REF}/secrets" \
   -H "Authorization: Bearer ${TOKEN}" \

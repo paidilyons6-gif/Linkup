@@ -31,22 +31,32 @@ async function saveSubscription(row: Record<string, unknown>) {
   if (!res.ok) console.error('subscription write failed:', await res.text());
 }
 
+function periodEndUnix(sub: Stripe.Subscription): number | null {
+  // Stripe API 2025+ moved current_period_end onto subscription items.
+  const fromItem = (sub.items?.data?.[0] as { current_period_end?: number } | undefined)
+    ?.current_period_end;
+  const fromSub = (sub as { current_period_end?: number }).current_period_end;
+  return fromItem ?? fromSub ?? sub.trial_end ?? null;
+}
+
 async function fromSubscription(sub: Stripe.Subscription) {
   const userId = sub.metadata?.user_id;
   if (!userId) {
     console.error('subscription without user_id:', sub.id);
     return;
   }
-  const priceId = sub.items.data[0]?.price?.id ?? '';
+  const item = sub.items.data[0];
+  const priceId = item?.price?.id ?? (item as { plan?: { id?: string } } | undefined)?.plan?.id ?? '';
   const plan = PLAN_BY_PRICE[priceId];
   if (!plan) console.error('unmapped price:', priceId);
+  const endUnix = periodEndUnix(sub);
   await saveSubscription({
     user_id: userId,
     plan: sub.status === 'canceled' ? 'none' : plan ?? 'none',
     status: sub.status,
     stripe_customer_id: typeof sub.customer === 'string' ? sub.customer : sub.customer?.id,
     stripe_subscription_id: sub.id,
-    current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+    current_period_end: endUnix ? new Date(endUnix * 1000).toISOString() : null,
     updated_at: new Date().toISOString(),
   });
 }
