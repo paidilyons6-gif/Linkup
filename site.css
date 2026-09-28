@@ -82,8 +82,9 @@ body {
 .nav-toggle {
   display: none; width: 42px; height: 42px; margin: 0; padding: 0;
   border: 1px solid var(--line-strong); border-radius: 10px;
-  background: var(--surface); cursor: pointer; place-items: center; gap: 5px;
-  flex-direction: column;
+  background: var(--surface); cursor: pointer;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+  flex: none; z-index: 2;
 }
 .nav-toggle span {
   display: block; width: 16px; height: 1.5px; background: var(--ink);
@@ -92,20 +93,23 @@ body {
 .nav.open .nav-toggle span:first-child { transform: translateY(3.25px) rotate(45deg); }
 .nav.open .nav-toggle span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
 @media (max-width: 720px) {
-  .nav-toggle { display: grid; }
+  .nav-toggle { display: inline-flex; }
   .nav-links {
-    display: none; position: absolute; top: calc(100% + 1px); left: 0; right: 0;
+    display: none; position: absolute; top: 100%; left: 50%;
+    width: 100vw; margin-left: -50vw;
     flex-direction: column; align-items: stretch; gap: 0;
-    padding: 10px 0 14px;
-    background: color-mix(in srgb, var(--bg) 96%, transparent);
-    backdrop-filter: blur(16px) saturate(140%);
+    padding: 8px max(20px, calc((100vw - min(1120px, 100vw - 40px)) / 2 + 20px)) 16px;
+    background: var(--bg);
     border-bottom: 1px solid var(--line);
     box-shadow: var(--shadow-md);
   }
   .nav.open .nav-links { display: flex; }
+  .nav.open { background: var(--bg); }
   .nav-links .link {
-    padding: 12px 4px; font-size: 15px; font-weight: 600; color: var(--ink);
+    padding: 13px 0; font-size: 15px; font-weight: 600; color: var(--ink);
+    border-bottom: 1px solid var(--line);
   }
+  .nav-links .link:last-child { border-bottom: none; }
 }
 
 .btn {
@@ -144,20 +148,22 @@ body {
 .hero-stage iframe {
   width: 100%; height: 100%; border: 0; display: block;
   pointer-events: none;
-  transform-origin: 65% 40%;
+  transform-origin: 75% 32%;
+  transform: scale(1.18) translate(16%, -3%);
   animation: stageDrift 18s var(--ease) both;
 }
 .hero-veil {
   position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(105deg,
-      color-mix(in srgb, var(--bg) 92%, transparent) 0%,
-      color-mix(in srgb, var(--bg) 72%, transparent) 34%,
-      color-mix(in srgb, var(--bg) 18%, transparent) 68%,
-      color-mix(in srgb, var(--bg) 42%, transparent) 100%),
+    linear-gradient(90deg,
+      var(--bg) 0%,
+      var(--bg) 32%,
+      color-mix(in srgb, var(--bg) 70%, transparent) 46%,
+      color-mix(in srgb, var(--bg) 8%, transparent) 66%,
+      color-mix(in srgb, var(--bg) 18%, transparent) 100%),
     linear-gradient(180deg,
-      color-mix(in srgb, var(--bg) 22%, transparent) 0%,
-      transparent 38%,
+      color-mix(in srgb, var(--bg) 18%, transparent) 0%,
+      transparent 48%,
       color-mix(in srgb, var(--bg) 88%, transparent) 100%);
 }
 .hero-copy {
@@ -166,6 +172,18 @@ body {
   margin: 0 auto;
   padding: clamp(48px, 10vh, 96px) 0 clamp(52px, 8vh, 80px);
   max-width: 34rem;
+}
+.hero-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -28px -48px -36px -28px;
+  background: linear-gradient(90deg,
+    var(--bg) 0%,
+    var(--bg) 62%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 88%,
+    transparent 100%);
+  pointer-events: none;
 }
 .hero-anim {
   animation: heroIn 780ms var(--ease) both;
@@ -180,8 +198,8 @@ body {
   to   { opacity: 1; }
 }
 @keyframes stageDrift {
-  from { transform: scale(1.04); }
-  to   { transform: scale(1.08); }
+  from { transform: scale(1.18) translate(16%, -3%); }
+  to   { transform: scale(1.22) translate(16%, -4%); }
 }
 .brand-hero {
   font-family: var(--display); font-weight: 700;
@@ -206,23 +224,41 @@ body {
     min-height: calc(100dvh - 68px);
     min-height: calc(100svh - 68px);
   }
+  /* Atmosphere only on mobile — blur the quiz UI so it can't compete with copy */
+  .hero-stage iframe {
+    transform-origin: 50% 0%;
+    transform: scale(1.35) translateY(-18%);
+    filter: blur(10px) saturate(1.15);
+    opacity: 0.9;
+    animation: stageDriftMobile 18s var(--ease) both;
+  }
   .hero-veil {
     background:
       linear-gradient(180deg,
-        color-mix(in srgb, var(--bg) 55%, transparent) 0%,
-        color-mix(in srgb, var(--bg) 28%, transparent) 35%,
-        color-mix(in srgb, var(--bg) 78%, transparent) 72%,
-        color-mix(in srgb, var(--bg) 96%, transparent) 100%),
-      linear-gradient(90deg,
-        color-mix(in srgb, var(--bg) 70%, transparent) 0%,
-        transparent 55%);
+        color-mix(in srgb, var(--bg) 45%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 30%, transparent) 32%,
+        color-mix(in srgb, var(--bg) 92%, transparent) 64%,
+        var(--bg) 100%);
   }
   .hero-copy {
     max-width: none;
     padding: clamp(28px, 8vh, 48px) 0 clamp(36px, 7vh, 56px);
   }
+  .hero-copy::before {
+    inset: -40px -20px -40px -20px;
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--bg) 40%, transparent) 0%,
+      var(--bg) 38%,
+      var(--bg) 100%);
+  }
   .brand-hero { font-size: clamp(48px, 14vw, 72px); }
-  .hero-stage iframe { transform-origin: 50% 30%; }
+}
+@keyframes stageDriftMobile {
+  from { transform: scale(1.35) translateY(-18%); }
+  to   { transform: scale(1.4) translateY(-20%); }
+}
+@media (max-width: 780px) and (prefers-reduced-motion: reduce) {
+  .hero-stage iframe { filter: blur(8px); animation: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

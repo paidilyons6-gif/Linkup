@@ -12,16 +12,14 @@ const LinkUp = (() => {
   const DEMO_AVATAR = "data:image/svg+xml," + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
       <defs>
-        <linearGradient id="g" x1="20%" y1="10%" x2="80%" y2="90%">
+        <linearGradient id="g" x1="18%" y1="12%" x2="86%" y2="90%">
           <stop offset="0%" stop-color="#c2e6ca"/>
-          <stop offset="45%" stop-color="#8fc79b"/>
+          <stop offset="55%" stop-color="#8fc79b"/>
           <stop offset="100%" stop-color="#4fa068"/>
         </linearGradient>
       </defs>
-      <rect width="240" height="240" fill="url(#g)"/>
-      <circle cx="120" cy="92" r="42" fill="rgba(255,255,255,.92)"/>
-      <ellipse cx="120" cy="196" rx="72" ry="58" fill="rgba(255,255,255,.92)"/>
-      <text x="120" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700" fill="#1d2620">M</text>
+      <rect width="240" height="240" rx="120" fill="url(#g)"/>
+      <text x="120" y="158" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#1d2620" fill-opacity=".88">M</text>
     </svg>`
   );
   const DEMO_BACKDROP = "data:image/svg+xml," + encodeURIComponent(
