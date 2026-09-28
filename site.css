@@ -177,11 +177,12 @@ body {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -28px -48px -36px -28px;
+  inset: -32px -20px -40px -32px;
+  width: min(36rem, calc(100% + 52px));
   background: linear-gradient(90deg,
     var(--bg) 0%,
-    var(--bg) 62%,
-    color-mix(in srgb, var(--bg) 55%, transparent) 88%,
+    var(--bg) 78%,
+    color-mix(in srgb, var(--bg) 40%, transparent) 94%,
     transparent 100%);
   pointer-events: none;
 }
