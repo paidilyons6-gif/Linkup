@@ -1,0 +1,44 @@
+[build]
+  publish = "."
+
+# Someone's page is their address: /becca serves u.html, which looks the slug
+# up. Status 200 rewrites rather than redirects, so the URL people share stays
+# clean. The negative lookahead keeps the real pages and assets reachable.
+[[redirects]]
+  from = "/:slug"
+  to = "/u.html"
+  status = 200
+  force = false
+  conditions = {}
+
+[[redirects]]
+  from = "/build"
+  to = "/edit.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    # Nothing loads from a third party except Supabase, which serves the API,
+    # the uploaded photos and the videos. Stripe is a top-level redirect, not
+    # an embed, so it needs no entry here.
+    Content-Security-Policy = "default-src 'self'; img-src 'self' https://*.supabase.co data:; media-src 'self' https://*.supabase.co blob:; connect-src 'self' https://*.supabase.co; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/config.js"
+  [headers.values]
+    Cache-Control = "no-store"

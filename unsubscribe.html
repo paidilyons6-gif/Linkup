@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unsubscribe — LinkUp</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  .box { min-height: 100dvh; display: grid; place-content: center; justify-items: center;
+         gap: 14px; text-align: center; padding: 32px; }
+  .box h1 { font-family: var(--serif); font-size: 30px; letter-spacing: -.025em; }
+  .box p { color: var(--ink-soft); max-width: 40ch; line-height: 1.55; }
+</style>
+</head>
+<body>
+<div class="box">
+  <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <h1 id="title">One moment…</h1>
+  <p id="msg">Taking you off that list.</p>
+</div>
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+  /* Gmail and Outlook fire this as a one-click POST behind the scenes, and
+     people also click the link by hand. Both land here and both must work
+     without anyone signing in to anything. */
+  const token = new URLSearchParams(location.search).get('t');
+  const title = document.getElementById('title');
+  const msg = document.getElementById('msg');
+
+  (async () => {
+    if (!token || !API.configured()) {
+      title.textContent = 'That link looks wrong';
+      msg.textContent = 'Try the unsubscribe link at the bottom of the email again.';
+      return;
+    }
+    try {
+      const ok = await API.rpc('unsubscribe', { p_token: token });
+      title.textContent = ok ? "You're unsubscribed" : 'That link looks wrong';
+      msg.textContent = ok
+        ? "You won't get any more emails from that list. Nothing else changes."
+        : 'It may have already been used. You can safely ignore this.';
+    } catch {
+      title.textContent = "That didn't work";
+      msg.textContent = 'Try again in a moment, or reply to the email and ask to be removed.';
+    }
+  })();
+</script>
+</body>
+</html>
