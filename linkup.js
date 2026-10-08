@@ -13,37 +13,37 @@ const LinkUp = (() => {
     `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
       <defs>
         <linearGradient id="g" x1="18%" y1="12%" x2="86%" y2="90%">
-          <stop offset="0%" stop-color="#c2e6ca"/>
-          <stop offset="55%" stop-color="#8fc79b"/>
-          <stop offset="100%" stop-color="#4fa068"/>
+          <stop offset="0%" stop-color="#f3b6bf"/>
+          <stop offset="55%" stop-color="#e8677a"/>
+          <stop offset="100%" stop-color="#b8273b"/>
         </linearGradient>
       </defs>
       <rect width="240" height="240" rx="120" fill="url(#g)"/>
-      <text x="120" y="158" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#1d2620" fill-opacity=".88">M</text>
+      <text x="120" y="158" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#fbf3e6" fill-opacity=".95">M</text>
     </svg>`
   );
   const DEMO_BACKDROP = "data:image/svg+xml," + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2400" viewBox="0 0 1600 2400">
       <defs>
         <radialGradient id="a" cx="18%" cy="8%" r="60%">
-          <stop offset="0%" stop-color="#8fc79b" stop-opacity=".55"/>
-          <stop offset="100%" stop-color="#1d2620" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#e8677a" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#1f0d12" stop-opacity="0"/>
         </radialGradient>
         <radialGradient id="b" cx="92%" cy="22%" r="50%">
-          <stop offset="0%" stop-color="#4fa068" stop-opacity=".4"/>
-          <stop offset="100%" stop-color="#1d2620" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#b8273b" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#1f0d12" stop-opacity="0"/>
         </radialGradient>
         <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#24302a"/>
-          <stop offset="55%" stop-color="#1d2620"/>
-          <stop offset="100%" stop-color="#121814"/>
+          <stop offset="0%" stop-color="#2c1219"/>
+          <stop offset="55%" stop-color="#1f0d12"/>
+          <stop offset="100%" stop-color="#140709"/>
         </linearGradient>
       </defs>
       <rect width="1600" height="2400" fill="url(#c)"/>
       <rect width="1600" height="2400" fill="url(#a)"/>
       <rect width="1600" height="2400" fill="url(#b)"/>
-      <circle cx="1180" cy="520" r="220" fill="#8fc79b" fill-opacity=".08"/>
-      <circle cx="320" cy="980" r="280" fill="#c2e6ca" fill-opacity=".05"/>
+      <circle cx="1180" cy="520" r="220" fill="#e8677a" fill-opacity=".08"/>
+      <circle cx="320" cy="980" r="280" fill="#f3b6bf" fill-opacity=".05"/>
     </svg>`
   );
   const DEMO = {
@@ -54,7 +54,7 @@ const LinkUp = (() => {
     welcomeVideo: '',
     backgroundVideo: '',
     backgroundImage: DEMO_BACKDROP,
-    theme: 'sage',
+    theme: 'royal',
     mode: 'quiz', // 'quiz' | 'hub'
     bubbleStyle: 'glass',
     captureEnabled: false,
@@ -168,6 +168,7 @@ const LinkUp = (() => {
   };
 
   const THEMES = {
+    royal:    { label: 'Royal',    bg: '#1f0d12', accent: '#e8677a', deep: '#b8273b', light: '#f3b6bf' },
     blush:    { label: 'Blush',    bg: '#2e1b2b', accent: '#ff7fb8', deep: '#ef4e97', light: '#ffb3d4' },
     midnight: { label: 'Midnight', bg: '#111629', accent: '#7f9dff', deep: '#4e6ce8', light: '#b3c4ff' },
     sage:     { label: 'Sage',     bg: '#1d2620', accent: '#8fc79b', deep: '#4fa068', light: '#c2e6ca' },

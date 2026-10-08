@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Studio — LinkUp</title>
-<meta name="theme-color" content="#f5f6f8" />
+<meta name="theme-color" content="#faf7f2" />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
@@ -46,16 +46,12 @@
     <code>config.js</code> and redeploy.
   </div>
 
-  <div class="plan" id="svcBanner" hidden style="margin-bottom:22px">
-    <div class="plan-now">
-      <span class="badge">Done for you</span>
-      <span class="hint" style="margin:0">Need a sales page or domain? We build & host — you upload content.</span>
-    </div>
-    <div class="buy">
-      <a class="btn pink sm" href="services.html?package=sales">Sales page €1,490</a>
-      <a class="btn ghost sm" href="services.html?package=site">Site + domain €2,900</a>
-    </div>
-  </div>
+  <a class="invite" id="svcBanner" href="services.html" hidden>
+    <span class="invite-kicker">Done for you</span>
+    <strong>Want a sales page or full website?</strong>
+    <span class="invite-line">We design, build and host it — you just add your content.</span>
+    <span class="invite-cta">See how it works <span aria-hidden="true">→</span></span>
+  </a>
 
   <h1>Studio</h1>
   <p class="sub" id="who">Guide visitors to the right programme.</p>
@@ -587,7 +583,7 @@
 
   function celebrate() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const colours = ['#0f6b5c', '#2a9d8f', '#14171f', '#7a8294', '#0a5246'];
+    const colours = ['#9b1c2e', '#b8925a', '#1c1616', '#e8677a', '#6e1020'];
     const host = document.createElement('div'); host.className = 'confetti';
     for (let i = 0; i < 70; i++) {
       const bit = document.createElement('i');

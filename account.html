@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sign in — LinkUp</title>
-<meta name="theme-color" content="#f5f6f8" />
+<meta name="theme-color" content="#faf7f2" />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="tokens.css" />
@@ -13,8 +13,8 @@
   body {
     background: var(--bg);
     background-image:
-      radial-gradient(80% 50% at 100% 0%, rgba(15, 107, 92, 0.08), transparent 55%),
-      radial-gradient(60% 40% at 0% 20%, rgba(42, 157, 143, 0.06), transparent 50%);
+      radial-gradient(90% 60% at 100% 0%, rgba(155, 28, 46, 0.07), transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
   }
   .auth-wrap {
     min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px;
@@ -23,14 +23,15 @@
     width: min(420px, 100%);
     background: color-mix(in srgb, var(--surface) 94%, transparent);
     border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 36px 30px;
+    border-top: 2px solid var(--accent);
+    border-radius: var(--r-md);
+    padding: 40px 32px 34px;
     box-shadow: var(--shadow-md);
     backdrop-filter: blur(10px);
   }
   .card .logo { justify-content: center; margin: 0 0 22px; }
   .card h1 {
-    font-family: var(--display); font-size: 28px; letter-spacing: -0.03em; text-align: center;
+    font-family: var(--display); font-size: 34px; letter-spacing: -0.035em; line-height: 1.05; text-align: center;
   }
   .card .sub {
     text-align: center; color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 26px; font-weight: 500;
@@ -40,8 +41,8 @@
     display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft);
   }
   .field input {
-    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
-    padding: 12px 14px; font-size: 15px; background: var(--surface-2); color: var(--ink);
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 6px;
+    padding: 12px 14px; font-size: 15px; background: var(--bg); color: var(--ink);
   }
   .field input:focus { outline: 2px solid var(--citrus); border-color: transparent; }
   .card .btn { width: 100%; margin-top: 6px; }
@@ -52,7 +53,7 @@
   }
   .msg { margin-top: 14px; font-size: 14px; text-align: center; line-height: 1.45; }
   .msg.bad { color: #b42318; }
-  .msg.good { color: #0f6b5c; }
+  .msg.good { color: #2f6b45; }
   .forgot {
     display: block; text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--ink-soft);
   }
@@ -90,10 +91,10 @@
         <p style="font-size:12.5px;font-weight:600;color:var(--fog);margin:4px 0 10px">Do you also need a website?</p>
         <div class="field">
           <label for="svcPackage" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Website package</label>
-          <select id="svcPackage" style="width:100%;border:1px solid var(--line-strong);border-radius:10px;background:var(--stage-soft);color:var(--paper);padding:12px 14px;font:inherit">
+          <select id="svcPackage" style="width:100%;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--paper);padding:12px 14px;font:inherit">
             <option value="software">No — I’ll use my own links / checkout</option>
-            <option value="sales">Yes — a sales page (€1,490 + €79/mo)</option>
-            <option value="site">Yes — full site + domain (€2,900 + €129/mo)</option>
+            <option value="sales">Yes — a sales page</option>
+            <option value="site">Yes — full site + domain</option>
             <option value="unsure">Not sure — tell me more</option>
           </select>
         </div>
@@ -103,7 +104,7 @@
         </label>
         <p style="font-size:12px;color:var(--fog);line-height:1.45;margin-bottom:8px">
           Website builds are quoted by email — nothing charged online except LinkUp software.
-          <a href="services.html" style="color:var(--citrus)">See packages</a>
+          <a href="services.html" style="color:var(--citrus)">See how it works</a>
         </p>
       </div>
       <button class="btn pink" id="go" type="submit">Create account</button>
