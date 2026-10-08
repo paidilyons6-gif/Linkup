@@ -28,10 +28,17 @@
     # an embed, so it needs no entry here.
     Content-Security-Policy = "default-src 'self'; img-src 'self' https://*.supabase.co data:; media-src 'self' https://*.supabase.co blob:; connect-src 'self' https://*.supabase.co; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'"
 
+# Browsers revalidate CSS/JS on every load (cheap 304s via ETag), so a fresh
+# deploy reaches phones immediately instead of after a stale cache expires.
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/fonts/*"
