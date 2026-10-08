@@ -2,6 +2,27 @@
 
 Live site: https://linkupping.netlify.app
 
+## BusinessByBecca — go / no-go
+
+**Verdict (re-checked): READY for client signups — with hygiene still open.**
+
+Becca’s loop (clients sign up → build a page → pay → publish a bio link) is working again:
+
+| Check | Result |
+|-------|--------|
+| Auth health | **200** (earlier 502 was transient; project responds) |
+| Signup → profile | **OK** |
+| Live Checkout (Guide/premium) | **OK** — returns `checkout.stripe.com` |
+| Unpaid publish blocked | **OK** |
+| Public demo | **OK** (`public_profile('demo')`) |
+| Marketing site polish | **Live** on Netlify |
+| Paid path (trial → plan → publish) | Verified previously with live webhook; re-run needs Stripe key in this environment |
+
+**Do send clients to** https://linkupping.netlify.app/account.html  
+**Keep Supabase project Active** (do not pause) or Auth will 502 again and onboarding dies.
+
+Website builds and Scale email broadcasts are **not** required for that core loop.
+
 ## Done in product
 
 - [x] Legal pages filled with operator details (Paidi Lyons / DocKit, Cappoquin, Waterford)
@@ -20,8 +41,8 @@ Live site: https://linkupping.netlify.app
 - Auth health OK; signup → profile OK
 - `create-checkout` returns live Stripe Checkout URL
 - Unpaid publish blocked (`Publish requires an active Launch, Guide, or Scale plan`)
-- Trial subscription via Stripe → webhook sets `subscriptions.plan=premium` within seconds
-- Paid publish → `public_profile` + `https://linkupping.netlify.app/<slug>` OK
+- Trial subscription via Stripe → webhook sets `subscriptions.plan=premium` within seconds (prior session)
+- Paid publish → `public_profile` + `https://linkupping.netlify.app/<slug>` OK (prior session)
 - Live site `/`, `/privacy.html`, `/terms.html`, `/demo` OK
 
 Active Stripe webhook: `we_1UKbVsFYCRiWqwhQFNZFfoyY` →  
@@ -29,9 +50,10 @@ Active Stripe webhook: `we_1UKbVsFYCRiWqwhQFNZFfoyY` →
 
 ## You should still do
 
-### 1. Rotate secrets pasted in chat
+### 1. Rotate secrets pasted in chat (hygiene — do soon)
 - Stripe → Developers → API keys → roll the restricted/secret key; update Edge Function `STRIPE_SECRET_KEY`
 - Supabase → Account → Access Tokens → revoke old `sbp_…` tokens
+- Paste new tokens in the agent chat if you want a fresh paid-path re-verify after rotation
 
 ### 2. Optional smoke test with a real card
 1. Sign up at /account.html  
