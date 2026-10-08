@@ -1,6 +1,8 @@
 /* Shared foundations — light premium.
  * Public quiz pages keep their own theme colours in linkup.css. */
 
+[hidden] { display: none !important; }
+
 :root {
   --bg:           #f5f6f8;
   --bg-warm:      #eef1f5;
