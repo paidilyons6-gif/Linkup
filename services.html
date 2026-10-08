@@ -15,7 +15,7 @@
   @media (max-width: 860px) { .svc-hero .wrap { grid-template-columns: 1fr; } }
   .svc-hero h1 {
     font-family: var(--display); font-weight: 700;
-    font-size: clamp(44px, 7.4vw, 92px); letter-spacing: -.045em; line-height: .95;
+    font-size: clamp(42px, 5.8vw, 76px); letter-spacing: -.045em; line-height: .98; max-width: 13ch;
   }
   .svc-hero h1 em { font-style: italic; font-weight: 600; color: var(--accent); }
   .svc-hero .aside p { color: var(--ink-soft); font-size: 17px; line-height: 1.6; max-width: 38ch; }
@@ -103,7 +103,7 @@
   .m1 .m-btn { background: #2a1d19; color: #f6efe6; justify-self: start; }
   .m1 .m-tags { display: flex; gap: 6px; flex-wrap: wrap; }
   .m1 .m-tags span { font-size: 9px; padding: 4px 8px; border: 1px solid #c9b2a2; border-radius: 99px; }
-  .m1 .m-strip { position: absolute; left: 0; right: 0; bottom: 0; height: 0; }
+  @media (max-width: 520px) { .m1 .m-nav span { display: none; } }
 
   .m2 { background: #10151c; color: #eef0f2; }
   .m2 .m-body { padding: 8px 18px; display: grid; gap: 10px; }
@@ -192,7 +192,7 @@
     <div class="wrap">
       <div>
         <span class="kicker hero-anim">Done for you</span>
-        <h1 class="hero-anim" style="--d:80ms">The page your<br />quiz sends people<br />to — <em>built for you.</em></h1>
+        <h1 class="hero-anim" style="--d:80ms">The page your quiz sends people to, <em>built for you.</em></h1>
       </div>
       <div class="aside hero-anim" style="--d:180ms">
         <p>Your LinkUp quiz finds the right programme. We design the sales page or full website that closes the sale — then host it and keep it running. You send us your content. That’s it.</p>
