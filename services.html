@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Done-for-you websites — LinkUp</title>
+<meta name="description" content="Sales pages and full websites for coaches and creators. We design, build and host it — wired to your LinkUp quiz. You just add your content." />
+<meta name="theme-color" content="#faf7f2" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css?v=20261008b" />
+<link rel="stylesheet" href="site.css?v=20261008b" />
+<style>
+  .svc-hero { padding: clamp(56px, 10vw, 120px) 0 clamp(48px, 7vw, 80px); border-bottom: 1px solid var(--line); }
+  .svc-hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: end; }
+  @media (max-width: 860px) { .svc-hero .wrap { grid-template-columns: 1fr; } }
+  .svc-hero h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(42px, 5.8vw, 76px); letter-spacing: -.045em; line-height: .98; max-width: 13ch;
+  }
+  .svc-hero h1 em { font-style: italic; font-weight: 600; color: var(--accent); }
+  .svc-hero .aside p { color: var(--ink-soft); font-size: 17px; line-height: 1.6; max-width: 38ch; }
+  .svc-hero .aside .hero-cta { margin-top: 24px; }
+
+  /* Offer — two editorial columns */
+  .offers { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink); }
+  @media (max-width: 860px) { .offers { grid-template-columns: 1fr; } }
+  .offer { padding: 32px 0 8px; }
+  .offer + .offer { border-left: 1px solid var(--line); padding-left: clamp(24px, 4vw, 56px); }
+  .offer:first-child { padding-right: clamp(24px, 4vw, 56px); }
+  @media (max-width: 860px) {
+    .offer + .offer { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; margin-top: 24px; }
+    .offer:first-child { padding-right: 0; }
+  }
+  .offer .no { font-family: var(--display); font-style: italic; font-weight: 600; color: var(--accent); font-size: 15px; }
+  .offer h3 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 38px); letter-spacing: -.03em; line-height: 1.05; margin: 14px 0 12px; }
+  .offer > p { color: var(--ink-soft); font-size: 16px; max-width: 42ch; margin-bottom: 22px; }
+  .offer ul { list-style: none; border-top: 1px solid var(--line); }
+  .offer li {
+    display: grid; grid-template-columns: 22px 1fr; gap: 10px;
+    padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.45;
+  }
+  .offer li::before { content: ""; width: 12px; height: 1.5px; background: var(--accent); margin-top: .72em; }
+  .offer .best { margin-top: 18px; font-size: 13.5px; color: var(--muted); }
+  .offer .best strong { color: var(--ink); font-weight: 600; }
+
+  /* Process timeline */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 36px); counter-reset: s; }
+  @media (max-width: 860px) { .timeline { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .timeline { grid-template-columns: 1fr; } }
+  .timeline article { position: relative; padding-top: 30px; border-top: 1px solid var(--line-strong); }
+  .timeline article::before {
+    content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 0 4px var(--bg-warm);
+  }
+  .timeline .n { font-family: var(--display); font-style: italic; font-weight: 600; color: var(--accent); font-size: 14px; }
+  .timeline h3 { font-family: var(--display); font-size: 23px; letter-spacing: -.02em; margin: 8px 0 8px; }
+  .timeline p { color: var(--ink-soft); font-size: 14.5px; max-width: 30ch; }
+
+  /* Care */
+  .care-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
+  @media (max-width: 860px) { .care-grid { grid-template-columns: 1fr; } }
+  .care-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+  @media (max-width: 560px) { .care-list { grid-template-columns: 1fr; } }
+  .care-list li { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .care-list li strong { display: block; font-family: var(--display); font-size: 18px; letter-spacing: -.01em; margin-bottom: 4px; color: var(--ink); }
+  .care-list li span { color: var(--ink-soft); font-size: 14px; }
+
+  /* Sample designs */
+  .samples { display: grid; grid-template-columns: 1.3fr 1fr; grid-template-rows: auto auto; gap: clamp(18px, 2.4vw, 28px); }
+  .samples .sample:first-child { grid-row: span 2; }
+  @media (max-width: 860px) { .samples { grid-template-columns: 1fr; } .samples .sample:first-child { grid-row: auto; } }
+  .sample figcaption { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-top: 14px; }
+  .sample figcaption strong { font-family: var(--display); font-size: 20px; letter-spacing: -.02em; }
+  .sample figcaption span { font-size: 13px; color: var(--muted); text-align: right; }
+  .browser {
+    border-radius: 10px; overflow: hidden; background: #fff;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.25);
+  }
+  .browser .bar { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: #2a2224; }
+  .browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: #5a4c4f; }
+  .browser .bar b { margin-left: 10px; flex: 1; height: 14px; border-radius: 4px; background: #3a2f32; font: 500 9px/14px var(--sans); color: #a8979a; padding-left: 8px; letter-spacing: .02em; }
+  .mock { position: relative; aspect-ratio: 16 / 11; overflow: hidden; font-family: var(--sans); }
+  .samples .sample:first-child .mock { aspect-ratio: 4 / 4.2; }
+  .mock .m-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+  .mock .m-nav em { font-family: var(--display); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; }
+  .mock .m-h { font-family: var(--display); font-weight: 700; letter-spacing: -.035em; line-height: .98; }
+  .mock .m-p { font-size: 11px; line-height: 1.5; opacity: .75; max-width: 30ch; }
+  .mock .m-btn { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 9px 14px; border-radius: 3px; }
+
+  .m1 { background: #f6efe6; color: #2a1d19; }
+  .m1 .m-img {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 46%;
+    background:
+      radial-gradient(60% 45% at 50% 38%, #e9c3a8 0%, transparent 70%),
+      radial-gradient(70% 60% at 50% 100%, #b97f63 0%, transparent 70%),
+      linear-gradient(180deg, #d8b59b, #a46e55);
+  }
+  .m1 .m-img::after { content: ""; position: absolute; left: 24%; right: 24%; top: 18%; height: 44%; border-radius: 50% 50% 46% 46%; background: linear-gradient(180deg, #f0d2bc, #d6a587); opacity: .7; }
+  .m1 .m-body { position: absolute; left: 18px; bottom: 24px; width: 50%; display: grid; gap: 12px; }
+  .m1 .m-h { font-size: clamp(26px, 3.6vw, 44px); }
+  .m1 .m-h i { font-weight: 600; color: #9b4a35; }
+  .m1 .m-btn { background: #2a1d19; color: #f6efe6; justify-self: start; }
+  .m1 .m-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .m1 .m-tags span { font-size: 9px; padding: 4px 8px; border: 1px solid #c9b2a2; border-radius: 99px; }
+  @media (max-width: 520px) { .m1 .m-nav span { display: none; } }
+
+  .m2 { background: #10151c; color: #eef0f2; }
+  .m2 .m-body { padding: 8px 18px; display: grid; gap: 10px; }
+  .m2 .m-h { font-size: clamp(22px, 2.6vw, 30px); text-transform: uppercase; letter-spacing: -.02em; font-family: var(--sans); font-weight: 700; }
+  .m2 .m-h span { color: #d8ff5e; }
+  .m2 .m-btn { background: #d8ff5e; color: #10151c; justify-self: start; }
+  .m2 .m-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
+  .m2 .m-cards div { aspect-ratio: 3 / 4; border-radius: 4px; background: linear-gradient(180deg, #2b3542, #1a212b); position: relative; }
+  .m2 .m-cards div::after { content: ""; position: absolute; left: 8px; right: 30%; bottom: 10px; height: 5px; border-radius: 2px; background: rgba(255,255,255,.35); }
+  .m2 .m-cards div:nth-child(2) { background: linear-gradient(180deg, #3d4a35, #1f2a1a); }
+
+  .m3 { background: #e8ecf0; color: #1d2733; display: grid; place-items: center; text-align: center; }
+  .m3 .m-nav { position: absolute; top: 0; left: 0; right: 0; }
+  .m3 .m-body { display: grid; gap: 10px; justify-items: center; padding: 0 18px; }
+  .m3 .m-ring { width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #a9bccd 60%, #6f8aa3); box-shadow: 0 10px 30px -8px rgba(29,39,51,.4); }
+  .m3 .m-h { font-size: clamp(22px, 2.6vw, 30px); font-weight: 600; font-style: italic; }
+  .m3 .m-btn { background: #1d2733; color: #e8ecf0; border-radius: 99px; }
+  .m3 .m-count { display: flex; gap: 8px; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
+  .m3 .m-count b { display: block; font-family: var(--display); font-size: 18px; letter-spacing: 0; opacity: 1; }
+
+  .samples-note { margin-top: 28px; font-size: 13.5px; color: var(--muted); max-width: 60ch; }
+
+  /* Pricing — last */
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.4vw, 24px); }
+  @media (max-width: 760px) { .price-grid { grid-template-columns: 1fr; } }
+  .pcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
+    padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; gap: 6px;
+    box-shadow: var(--shadow-sm);
+  }
+  .pcard.featured { border-top: 2px solid var(--accent); box-shadow: var(--shadow-md); }
+  .pcard .flag { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); min-height: 16px; }
+  .pcard h3 { font-family: var(--display); font-size: 26px; letter-spacing: -.02em; }
+  .pcard .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; font-family: var(--display); font-weight: 700; font-size: clamp(44px, 5vw, 60px); letter-spacing: -.04em; line-height: 1; }
+  .pcard .amt span { font-family: var(--sans); font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--muted); }
+  .pcard .care { font-size: 14.5px; color: var(--ink-soft); padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .pcard .care strong { color: var(--ink); }
+  .pcard .btn { margin-top: auto; align-self: flex-start; }
+  .soft-note { margin-top: 22px; font-size: 14px; color: var(--ink-soft); }
+  .soft-note a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+
+  /* Intake */
+  .intake {
+    max-width: 560px; margin: 0 auto;
+    border: 1px solid var(--line); border-radius: var(--r-md);
+    background: var(--surface); padding: clamp(24px, 4vw, 40px); box-shadow: var(--shadow-md);
+  }
+  .intake h2 { font-family: var(--display); font-size: 34px; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 10px; }
+  .intake .sub { color: var(--ink-soft); margin-bottom: 24px; font-size: 14.5px; }
+  .intake .field { margin-bottom: 14px; }
+  .intake label { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 7px; }
+  .intake input, .intake select, .intake textarea {
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 6px;
+    background: var(--bg); color: var(--ink); padding: 12px 14px; font: inherit;
+  }
+  .intake input:focus, .intake select:focus, .intake textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  .checks { display: grid; gap: 10px; margin: 8px 0 18px; }
+  .checks label {
+    display: flex; gap: 10px; align-items: flex-start; color: var(--ink);
+    font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; margin: 0; cursor: pointer;
+  }
+  .checks input { width: auto; margin-top: 3px; accent-color: var(--accent); }
+  .ok { color: var(--accent); text-align: center; margin-top: 12px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a class="link" href="#offer">What you get</a>
+      <a class="link" href="#examples">Examples</a>
+      <a class="link" href="#pricing">Pricing</a>
+      <a class="link" href="account.html?mode=signin">Sign in</a>
+    </nav>
+    <a class="btn pink sm nav-cta" href="#intake">Start a project</a>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="svc-hero">
+    <div class="wrap">
+      <div>
+        <span class="kicker hero-anim">Done for you</span>
+        <h1 class="hero-anim" style="--d:80ms">The page your quiz sends people to, <em>built for you.</em></h1>
+      </div>
+      <div class="aside hero-anim" style="--d:180ms">
+        <p>Your LinkUp quiz finds the right programme. We design the sales page or full website that closes the sale — then host it and keep it running. You send us your content. That’s it.</p>
+        <div class="hero-cta">
+          <a class="btn pink" href="#examples">See examples <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn ghost" href="#offer">What’s included</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="offer">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">What you get</span>
+        <h2>Two ways to <em>finish the sale.</em></h2>
+      </div>
+      <div class="offers">
+        <article class="offer reveal">
+          <span class="no">i.</span>
+          <h3>Sales page</h3>
+          <p>One focused page for one offer. Written around what your buyer wants to hear, designed to look like you, and wired straight to checkout.</p>
+          <ul>
+            <li>A single long-form page for your programme or offer</li>
+            <li>Every matching quiz result points straight to it</li>
+            <li>Your Stripe Payment Link or existing checkout embedded</li>
+            <li>Your photos, video and testimonials, laid out for mobile first</li>
+            <li>Fast, secure hosting — we look after it</li>
+          </ul>
+          <p class="best"><strong>Best for</strong> launching or relaunching one signature programme.</p>
+        </article>
+        <article class="offer reveal">
+          <span class="no">ii.</span>
+          <h3>Site + domain</h3>
+          <p>A small, polished website on your own domain — home, offers, about, FAQ and contact — with every quiz button leading to the right page.</p>
+          <ul>
+            <li>Up to five pages, designed as one brand</li>
+            <li>Your own domain, registered and renewed by us</li>
+            <li>Each programme gets its own page, linked from your quiz</li>
+            <li>Space for your media — long video stays on YouTube or Vimeo</li>
+            <li>Small monthly changes included</li>
+          </ul>
+          <p class="best"><strong>Best for</strong> coaches with several offers who want a proper home online.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="process">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">How it works</span>
+        <h2>You run the business. <em>We handle the build.</em></h2>
+      </div>
+      <div class="timeline">
+        <article class="reveal"><span class="n">01</span><h3>Tell us</h3><p>Fill in the short form below. We reply by email with questions and a plan.</p></article>
+        <article class="reveal"><span class="n">02</span><h3>We design</h3><p>A first draft built around your brand, your offer and your quiz results.</p></article>
+        <article class="reveal"><span class="n">03</span><h3>You add content</h3><p>Drop in photos, videos and programme details. We place everything.</p></article>
+        <article class="reveal"><span class="n">04</span><h3>You go live</h3><p>Bio → quiz → your page → checkout. One clear path for every visitor.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="care">
+    <div class="wrap care-grid">
+      <div class="section-head" style="margin-bottom:0">
+        <span class="kicker">Ongoing care</span>
+        <h2>Launch is day one. <em>We stay on.</em></h2>
+        <p>Every build comes with monthly care, so your page keeps working and keeps selling while you get on with coaching.</p>
+      </div>
+      <ul class="care-list">
+        <li class="reveal"><strong>Hosting & security</strong><span>Fast hosting, HTTPS and certificates, always on.</span></li>
+        <li class="reveal"><strong>Backups</strong><span>Regular backups, so nothing is ever lost.</span></li>
+        <li class="reveal"><strong>Quiz wiring</strong><span>Buttons, forms and checkout links kept working.</span></li>
+        <li class="reveal"><strong>Small edits</strong><span>Price changes, new photos, updated copy.</span></li>
+        <li class="reveal"><strong>Domain renewal</strong><span>Handled for you on Site + domain.</span></li>
+        <li class="reveal"><strong>Video, done right</strong><span>We embed from YouTube, Vimeo or Kajabi.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ink" id="examples">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Sample designs</span>
+        <h2>A taste of the <em>finish.</em></h2>
+        <p>Three concept designs showing the range we build — from soft and personal to bold and high-energy. Yours is designed from scratch around your brand.</p>
+      </div>
+
+      <div class="samples">
+        <figure class="sample reveal">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><b>bloomprenatal.com</b></div>
+            <div class="mock m1">
+              <div class="m-nav"><em>Bloom</em><span>Programmes · About · Join</span></div>
+              <div class="m-img"></div>
+              <div class="m-body">
+                <div class="m-tags"><span>Trimester 1–3</span><span>12 weeks</span><span>Home workouts</span></div>
+                <div class="m-h">Strong, calm <i>&amp; ready</i> for birth.</div>
+                <p class="m-p">A gentle 12-week programme that moves with your body, one trimester at a time.</p>
+                <span class="m-btn">Join the programme</span>
+              </div>
+            </div>
+          </div>
+          <figcaption><strong>Prenatal coach</strong><span>Sales page · warm, personal</span></figcaption>
+        </figure>
+
+        <figure class="sample reveal">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><b>northfield.fit</b></div>
+            <div class="mock m2">
+              <div class="m-nav"><span>Northfield</span><span>Train · Coaches · Shop</span></div>
+              <div class="m-body">
+                <div class="m-h">Build <span>real</span> strength.</div>
+                <span class="m-btn">Find your plan</span>
+                <div class="m-cards"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <figcaption><strong>Strength studio</strong><span>Site + domain · bold</span></figcaption>
+        </figure>
+
+        <figure class="sample reveal">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><b>thecalmmethod.co</b></div>
+            <div class="mock m3">
+              <div class="m-nav"><em>The Calm Method</em><span>Course</span></div>
+              <div class="m-body">
+                <div class="m-ring"></div>
+                <div class="m-h">Doors open Monday.</div>
+                <div class="m-count"><span><b>04</b>days</span><span><b>11</b>hrs</span><span><b>32</b>min</span></div>
+                <span class="m-btn">Save my seat</span>
+              </div>
+            </div>
+          </div>
+          <figcaption><strong>Course launch</strong><span>Sales page · minimal</span></figcaption>
+        </figure>
+      </div>
+      <p class="samples-note">These are concept designs made to show our style — not client sites.</p>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Pricing</span>
+        <h2>One setup fee. <em>Simple monthly care.</em></h2>
+        <p>Quoted and invoiced by email — there’s no online checkout for builds.</p>
+      </div>
+      <div class="price-grid">
+        <article class="pcard featured reveal">
+          <span class="flag">Most popular</span>
+          <h3>Sales page</h3>
+          <div class="amt">€1,490 <span>one-time setup</span></div>
+          <p class="care">then <strong>€79/month</strong> for hosting, security, backups and small edits</p>
+          <a class="btn pink" href="#intake" data-pkg="sales">Request a sales page <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+        <article class="pcard reveal">
+          <span class="flag"></span>
+          <h3>Site + domain</h3>
+          <div class="amt">€2,900 <span>one-time setup</span></div>
+          <p class="care">then <strong>€129/month</strong> for the site, your domain and ongoing upkeep</p>
+          <a class="btn ghost" href="#intake" data-pkg="site">Request a full site <span class="arrow" aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <p class="soft-note">Already have a checkout link? You might only need the quiz — <a href="/#pricing">see LinkUp plans from €9/month</a>.</p>
+    </div>
+  </section>
+
+  <section class="band" id="intake">
+    <div class="wrap">
+      <form class="intake" id="form">
+        <span class="kicker">Start a project</span>
+        <h2>Tell us what you need.</h2>
+        <p class="sub">This goes straight to Paulie at paidilyons6@gmail.com. You’ll get a reply with next steps — usually within a day.</p>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="business">Business / brand</label>
+          <input id="business" name="business" placeholder="e.g. studio name" />
+        </div>
+        <div class="field">
+          <label for="package">What are you after?</label>
+          <select id="package" name="package">
+            <option value="sales" selected>A sales page</option>
+            <option value="site">A full site + domain</option>
+            <option value="software">Just the quiz — I’ll use my own links</option>
+            <option value="unsure">Not sure — help me choose</option>
+          </select>
+        </div>
+
+        <label style="margin:6px 0 2px">Also interested in</label>
+        <div class="checks">
+          <label><input type="checkbox" name="need" value="domain" /> My own custom domain</label>
+          <label><input type="checkbox" name="need" value="stripe" /> Help connecting Stripe / checkout</label>
+          <label><input type="checkbox" name="need" value="multi" /> Multiple programme pages</label>
+          <label><input type="checkbox" name="need" value="content" /> Guidance on what to upload</label>
+        </div>
+
+        <div class="field">
+          <label for="notes">Anything else</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="What you sell, deadline, existing domain…"></textarea>
+        </div>
+        <button class="btn pink" type="submit" style="width:100%">Send to Paulie</button>
+        <p class="ok" id="ok" hidden>Got it — we’ll be in touch shortly.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap nav-in">
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const pkgSelect = document.getElementById('package');
+  const pre = params.get('package');
+  if (pre && pkgSelect.querySelector(`option[value="${pre}"]`)) pkgSelect.value = pre;
+  const emailPre = params.get('email');
+  if (emailPre) document.getElementById('email').value = emailPre;
+  document.querySelectorAll('[data-pkg]').forEach(a => a.addEventListener('click', () => { pkgSelect.value = a.dataset.pkg; }));
+
+  const nav = document.getElementById('nav');
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+  }
+  if (toggle && links) {
+    const closeMenu = () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  }
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = document.querySelectorAll('.reveal');
+  if (reduced || !('IntersectionObserver' in window)) items.forEach(el => el.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    items.forEach(el => io.observe(el));
+  }
+
+  document.getElementById('form').onsubmit = (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const needs = [...e.target.querySelectorAll('input[name=need]:checked')].map(x => x.value);
+    const lead = {
+      at: new Date().toISOString(),
+      name: fd.get('name'),
+      email: fd.get('email'),
+      business: fd.get('business'),
+      package: fd.get('package'),
+      needs,
+      notes: fd.get('notes'),
+    };
+    const all = JSON.parse(localStorage.getItem('linkup.serviceLeads') || '[]');
+    all.push(lead);
+    localStorage.setItem('linkup.serviceLeads', JSON.stringify(all));
+    localStorage.setItem('linkup.serviceInterest', JSON.stringify(lead));
+    document.getElementById('ok').hidden = false;
+    e.target.querySelector('button[type=submit]').disabled = true;
+    // mailto fallback so you actually receive it before a CRM exists
+    const body = encodeURIComponent(
+      `Name: ${lead.name}\nEmail: ${lead.email}\nBusiness: ${lead.business}\nPackage: ${lead.package}\nNeeds: ${needs.join(', ') || '—'}\n\n${lead.notes || ''}`
+    );
+    location.href = `mailto:paidilyons6@gmail.com?subject=${encodeURIComponent('LinkUp website request — ' + lead.package)}&body=${body}`;
+  };
+</script>
+</body>
+</html>

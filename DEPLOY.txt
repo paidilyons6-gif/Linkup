@@ -1,0 +1,29 @@
+# LinkUp — live
+
+**Site:** https://linkupping.netlify.app  
+**Demo quiz:** https://linkupping.netlify.app/demo  
+
+See **PRODUCTION.md** for the go-live checklist.
+
+## Operator
+
+Paidi Lyons trading as LinkUp (DocKit)  
+Kilbree, Cappoquin, Co. Waterford, P51 P403, Ireland  
+paidilyons6@gmail.com  
+
+## Backend
+
+- Stripe live: Launch €9 / Guide €19 / Scale €29 (Tax on, webhook configured)
+- Stripe business URL + support → this Netlify site
+- Website builds: inquiry email only (no online charge)
+- Scale broadcasts: need Resend secrets (see PRODUCTION.md)
+
+## Critical right now
+
+If Auth/sign-up fails, the Supabase project may be paused or removed.
+Restore it in the Supabase dashboard, then paste a new access token to the agent.
+
+## Redeploy frontend
+
+1. Download `LinkUp-netlify.zip` from this branch  
+2. Drag onto https://app.netlify.com/drop (overwrites the site)
