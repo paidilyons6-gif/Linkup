@@ -1,0 +1,64 @@
+/* Shared foundations.
+ *
+ * No webfont. The page people open from an Instagram bio has one job — be
+ * there instantly — and a font request to a third party costs a round trip
+ * before anything renders. It is also the tidier answer under GDPR: no
+ * visitor IP goes to Google before they've agreed to anything. The stacks
+ * below are on every device that matters and were chosen to sit together. */
+
+:root {
+  /* Brand */
+  --ink:        #241726;
+  --ink-soft:   #4a3a4c;
+  --paper:      #fbf7f8;
+  --paper-warm: #f3ecee;
+  --line:       #e6dade;
+
+  --plum:       #2e1b2b;
+  --pink:       #ff7fb8;
+  --pink-deep:  #ef4e97;
+  --pink-soft:  #ffdcec;
+
+  /* Type */
+  --serif: ui-serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --sans:  system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Rhythm */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(36,23,38,.06), 0 1px 2px rgba(36,23,38,.04);
+  --shadow-md: 0 12px 32px rgba(36,23,38,.10), 0 2px 8px rgba(36,23,38,.06);
+  --shadow-lg: 0 30px 70px rgba(36,23,38,.18), 0 6px 18px rgba(36,23,38,.08);
+
+  --ease: cubic-bezier(.2, .9, .3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--pink-deep);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keep hidden UI hidden even when a component sets display. */
+[hidden] { display: none !important; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 100; padding: 12px 18px; background: var(--paper); color: var(--ink); border-radius: 8px; transform: translateY(-150%); }
+.skip-link:focus { transform: none; }
+button:disabled { cursor: wait; opacity: .65; }

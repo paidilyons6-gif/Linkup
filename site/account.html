@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign in — LinkUp</title>
+<meta name="theme-color" content="#fbf7f8" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="site.css" />
+<style>
+  .auth-wrap { min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px; }
+  .card {
+    width: min(400px, 100%); background: #fff; border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 34px 30px; box-shadow: var(--shadow-md);
+  }
+  .card .logo { justify-content: center; margin: 0 0 20px; }
+  .card h1 { font-family: var(--serif); font-size: 26px; letter-spacing: -.025em; text-align: center; }
+  .card .sub { text-align: center; color: var(--ink-soft); font-size: 14.5px; margin: 6px 0 24px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft); }
+  .field input {
+    width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 12px 14px; font-size: 15px; background: #fff;
+  }
+  .field input:focus { outline: 2px solid var(--pink); border-color: transparent; }
+  .card .btn { width: 100%; margin-top: 6px; }
+  .swap { text-align: center; margin-top: 18px; font-size: 14px; color: var(--ink-soft); }
+  .swap button {
+    background: none; border: none; cursor: pointer; color: var(--pink-deep);
+    font-weight: 600; text-decoration: underline; padding: 0;
+  }
+  .msg { margin-top: 14px; font-size: 14px; text-align: center; line-height: 1.45; }
+  .msg.bad { color: #c0392b; }
+  .msg.good { color: #1e7a4b; }
+  .forgot { display: block; text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--ink-soft); }
+  .setup {
+    background: #fff6d6; border: 1px solid #e8d48a; border-radius: var(--r-md);
+    padding: 16px 18px; font-size: 14px; line-height: 1.5; margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <div class="card">
+    <a class="logo" href="index.html"><span class="logo-mark"></span>LinkUp</a>
+
+    <div class="setup" id="setup" hidden>
+      <strong>Not connected yet.</strong> Add your Supabase URL and anon key to
+      <code>config.js</code> and redeploy. Until then nobody can sign up.
+    </div>
+
+    <h1 id="title">Create your account</h1>
+    <p class="sub" id="sub">Free to build. You only pay when you publish.</p>
+
+    <form id="form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required minlength="8" />
+      </div>
+      <button class="btn pink" id="go" type="submit">Create account</button>
+    </form>
+
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+
+    <p class="swap" id="swap">
+      Already have one? <button type="button" id="toggle">Sign in</button>
+    </p>
+    <a class="forgot" href="#" id="forgot">Forgotten your password?</a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+  let mode = new URLSearchParams(location.search).get('mode') === 'signin' ? 'signin' : 'signup';
+  const $ = id => document.getElementById(id);
+
+  if (!API.configured()) { $('setup').hidden = false; $('go').disabled = true; }
+
+
+  /* Supabase sends a one-shot token back in the URL fragment. Holding it means
+     they clicked a reset link, so the form becomes "choose a new password"
+     rather than a sign-in — and the token is cleared out of the address bar so
+     it isn't left sitting in history. */
+  let recoveryToken = null;
+  if (location.hash.includes('type=recovery')) {
+    const p = new URLSearchParams(location.hash.slice(1));
+    recoveryToken = p.get('access_token');
+    if (recoveryToken) {
+      mode = 'recover';
+      history.replaceState({}, '', location.pathname);
+    }
+  }
+
+  if (API.signedIn() && mode !== 'recover') location.replace('edit.html');
+
+  const TITLES = { signup: 'Create your account', signin: 'Welcome back', recover: 'Choose a new password' };
+  const SUBS = {
+    signup: 'Free to build. You only pay when you publish.',
+    signin: 'Sign in to edit your page.',
+    recover: 'Pick something you\'ll remember. At least 8 characters.',
+  };
+  function draw() {
+    $('title').textContent = TITLES[mode];
+    document.title = TITLES[mode] + ' — LinkUp';
+    $('sub').textContent = SUBS[mode];
+    $('go').textContent = mode === 'recover' ? 'Save new password'
+                        : mode === 'signup'  ? 'Create account' : 'Sign in';
+    $('email').closest('.field').hidden = mode === 'recover';
+    $('email').required = mode !== 'recover';
+    $('password').setAttribute('autocomplete', mode === 'signin' ? 'current-password' : 'new-password');
+    $('forgot').hidden = mode === 'recover';
+    $('swap').hidden = mode === 'recover';
+    if (mode === 'recover') return;
+    $('swap').innerHTML = mode === 'signup'
+      ? 'Already have one? <button type="button" id="toggle">Sign in</button>'
+      : "No account yet? <button type=\"button\" id=\"toggle\">Create one</button>";
+    $('toggle').onclick = () => { mode = mode === 'signup' ? 'signin' : 'signup'; show(''); draw(); };
+  }
+  draw();
+
+  function show(text, kind = 'bad') {
+    const el = $('msg');
+    el.textContent = text;
+    el.className = 'msg ' + (text ? kind : '');
+  }
+
+  $('form').onsubmit = async (e) => {
+    e.preventDefault();
+    show('');
+    $('go').disabled = true;
+    try {
+      const email = $('email').value.trim();
+      const pass  = $('password').value;
+      if (mode === 'recover') {
+        await API.setPassword(recoveryToken, pass);
+        show('Saved. Sign in with your new password.', 'good');
+        recoveryToken = null; mode = 'signin'; draw();
+        return;
+      }
+      const out = mode === 'signup' ? await API.signUp(email, pass) : await API.signIn(email, pass);
+      if (out.needsConfirmation) {
+        show('Check your email to confirm your address, then sign in.', 'good');
+        mode = 'signin'; draw();
+      } else {
+        location.href = 'edit.html';
+      }
+    } catch (err) {
+      show(err.message);
+    } finally {
+      $('go').disabled = false;
+    }
+  };
+
+  $('forgot').onclick = async (e) => {
+    e.preventDefault();
+    const email = $('email').value.trim();
+    if (!email) return show('Put your email in the box first, then tap this.');
+    try {
+      await API.resetPassword(email);
+      show("If that address has an account, a reset link is on its way.", 'good');
+    } catch (err) { show(err.message); }
+  };
+</script>
+</body>
+</html>
