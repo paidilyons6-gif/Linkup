@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>LinkUp</title>
+<meta name="description" content="Find the right next step." />
+<meta name="theme-color" content="#1f0d12" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css?v=20261121b" />
+<link rel="stylesheet" href="linkup.css?v=20261121b" />
+</head>
+<body>
+
+<div class="bg"></div>
+
+<main class="page" id="page"></main>
+
+<script src="linkup.js?v=20261121b"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const editing = params.get('preview') === '1';
+  if (params.get('embed') === '1') document.documentElement.dataset.embed = 'true';
+  const page = document.getElementById('page');
+  LinkUp.render(LinkUp.DEMO, { demo: !editing });
+  page.classList.add('show');
+
+  if (editing) {
+    addEventListener('keydown', event => {
+      if (event.key === 'Escape') parent.postMessage({ type: 'linkup:close-preview' }, location.origin);
+    });
+    addEventListener('message', event => {
+      if (event.origin !== location.origin || event.source !== parent || event.data?.type !== 'linkup:profile') return;
+      if (!event.data.profile || typeof event.data.profile !== 'object') return;
+      LinkUp.render(event.data.profile);
+    });
+    parent.postMessage({ type: 'linkup:ready' }, location.origin);
+  }
+</script>
+</body>
+</html>

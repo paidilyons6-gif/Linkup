@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Create your account — LinkUp</title>
+<meta name="theme-color" content="#fbf7f0" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css?v=20261121b" />
+<link rel="stylesheet" href="site.css?v=20261121b" />
+<style>
+  .auth-wrap {
+    min-height: 100dvh; display: grid; align-items: center; padding: 24px;
+    background: radial-gradient(ellipse at 0% 100%, #f0dcda, transparent 72%);
+  }
+  .auth-layout {
+    width: min(1030px, 100%); margin: auto;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-lg);
+  }
+  .auth-art {
+    position: relative; display: flex; flex-direction: column; justify-content: end;
+    min-height: 560px; padding: clamp(23px, 4vw, 48px);
+    background: linear-gradient(180deg, transparent 24%, #3d0d22f0 100%),
+                #59142a url("images/hero-coach.webp") 17% center / cover;
+    color: #fff8f5;
+  }
+  .auth-art strong { font: 700 clamp(32px, 5vw, 61px)/1 var(--display); letter-spacing: -.045em; max-width: 11ch; }
+  .auth-art a { color: #ffe4e0; font-weight: 600; margin-top: 14px; text-underline-offset: 4px; }
+  .card { width: min(100%, 470px); margin: auto; padding: clamp(24px, 5vw, 57px); }
+  .card .logo { width: fit-content; margin: 0 0 24px; }
+  .card h1 { font: 700 clamp(30px, 5vw, 42px)/1.02 var(--display); letter-spacing: -.04em; }
+  .sub { color: var(--ink-soft); margin: 9px 0 22px; font-size: 15px; }
+  .field { margin-bottom: 15px; }
+  .field label { display: block; font-size: 13px; font-weight: 650; margin-bottom: 6px; }
+  .field input, .field select {
+    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
+    padding: 12px; font-size: 16px; background: var(--bg); color: var(--ink);
+  }
+  .password-field { display: flex; gap: 7px; align-items: stretch; }
+  .password-field input { min-width: 0; }
+  .password-field .btn { border-radius: 10px; }
+  #go { width: 100%; margin-top: 6px; }
+  .swap, .forgot { font-size: 14px; color: var(--ink-soft); margin-top: 14px; }
+  .swap button, .forgot {
+    background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent);
+    font-weight: 650; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .msg { margin-top: 14px; padding: 10px 12px; border-radius: 8px; font-size: 14px; }
+  .msg:empty { display: none; }
+  .msg.bad { color: #922820; background: #fae8e5; }
+  .msg.good { color: #256445; background: #e5efe7; }
+  .setup { padding: 12px; margin: 0 0 16px; border-radius: 10px; background: var(--accent-soft); }
+  #svcAsk { margin: 0 0 8px; }
+  #svcAsk summary { font-size: 14px; }
+  #svcAsk .field { margin-top: 12px; }
+  #svcAsk label.domain-option { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+  @media (max-width: 720px) {
+    .auth-wrap { padding: 16px; }
+    .auth-layout { grid-template-columns: 1fr; border-radius: 21px; }
+    .auth-art { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="auth-wrap">
+  <div class="auth-layout">
+  <div class="auth-art">
+    <strong>One link for all your offers.</strong>
+    <a href="page.html?demo=1">Try the interactive demo →</a>
+  </div>
+  <div class="card">
+    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+
+    <div class="setup" id="setup" hidden>
+      <strong>Not connected yet.</strong> Add your Supabase URL and anon key to
+      <code>config.js</code> and redeploy. Until then nobody can sign up.
+    </div>
+
+    <h1 id="title">Create your account</h1>
+    <p class="sub" id="sub">Free to build. You only pay when you publish.</p>
+
+    <form id="form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-field">
+          <input id="password" type="password" autocomplete="new-password" required minlength="8" />
+          <button class="btn ghost sm" id="showPassword" type="button" aria-controls="password">Show</button>
+        </div>
+      </div>
+      <details id="svcAsk" hidden>
+        <summary>Need a website as well?</summary>
+        <div class="field">
+          <label for="svcPackage" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Website package</label>
+          <select id="svcPackage">
+            <option value="software">No — I’ll use my own links / checkout</option>
+            <option value="sales">Yes — a sales page</option>
+            <option value="site">Yes — full site + domain</option>
+            <option value="unsure">Not sure — tell me more</option>
+          </select>
+        </div>
+        <label class="domain-option">
+          <input type="checkbox" id="svcDomain" style="width:auto;margin-top:3px" />
+          I want my own custom domain
+        </label>
+        <p style="font-size:12px;color:var(--fog);line-height:1.45;margin-bottom:8px">
+          Website builds are quoted by email — nothing charged online except LinkUp software.
+          <a href="services.html" style="color:var(--citrus)">See how it works</a>
+        </p>
+      </details>
+      <button class="btn pink" id="go" type="submit">Create account</button>
+    </form>
+
+    <p class="msg" id="msg" role="status"></p>
+
+    <p class="swap" id="swap">
+      Already have one? <button type="button" id="toggle">Sign in</button>
+    </p>
+    <button class="forgot" type="button" id="forgot">Forgotten your password?</button>
+  </div>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script src="api.js?v=20261121b"></script>
+<script>
+  let mode = new URLSearchParams(location.search).get('mode') === 'signin' ? 'signin' : 'signup';
+  const $ = id => document.getElementById(id);
+
+  if (!API.configured()) { $('setup').hidden = false; $('go').disabled = true; }
+
+  const callback = new URLSearchParams(location.hash.slice(1));
+  const recoveryToken = callback.get('type') === 'recovery' ? callback.get('access_token') : null;
+  const expired = callback.get('error_code') === 'otp_expired';
+  if (recoveryToken || expired) {
+    mode = recoveryToken ? 'recover' : 'reset';
+    history.replaceState({}, '', location.pathname);
+  } else if (API.signedIn()) {
+    location.replace('/build');
+  }
+
+  const TITLES = { signup: 'Create your account', signin: 'Welcome back', recover: 'Choose a new password', reset: 'Reset your password' };
+  const SUBS = {
+    signup: 'Free to build. You only pay when you publish.',
+    signin: 'Sign in to edit your page.',
+    recover: 'Use at least 8 characters.',
+    reset: 'Enter your email and we’ll send you a reset link.',
+  };
+  function draw() {
+    $('title').textContent = TITLES[mode];
+    document.title = `${TITLES[mode]} — LinkUp`;
+    $('sub').textContent = SUBS[mode];
+    $('go').textContent = { recover: 'Save new password', reset: 'Send reset link', signup: 'Create account', signin: 'Sign in' }[mode];
+    $('email').closest('.field').hidden = mode === 'recover';
+    $('email').required = mode !== 'recover';
+    const password = $('password');
+    password.closest('.field').hidden = mode === 'reset';
+    password.required = mode !== 'reset';
+    password.minLength = mode === 'signin' ? 0 : 8;
+    password.autocomplete = mode === 'signin' ? 'current-password' : 'new-password';
+    password.type = 'password';
+    $('showPassword').textContent = 'Show';
+    $('showPassword').setAttribute('aria-label', 'Show password');
+    $('forgot').hidden = mode !== 'signin';
+    $('swap').hidden = mode === 'recover';
+    $('svcAsk').hidden = mode !== 'signup';
+    if (mode === 'recover') return;
+    $('swap').innerHTML = mode === 'signup'
+      ? 'Already have one? <button type="button" id="toggle">Sign in</button>'
+      : mode === 'reset' ? '<button type="button" id="toggle">Back to sign in</button>'
+      : 'No account yet? <button type="button" id="toggle">Create one</button>';
+    $('toggle').onclick = () => {
+      mode = mode === 'signin' ? 'signup' : 'signin';
+      show('');
+      draw();
+      $('email').focus();
+    };
+  }
+  draw();
+  if (expired) show('This reset link expired. Request a new one below.');
+
+  function show(text, kind = 'bad') {
+    const el = $('msg');
+    el.textContent = text;
+    el.className = 'msg ' + (text ? kind : '');
+  }
+
+  function rememberServiceInterest(email) {
+    if (mode !== 'signup') return;
+    const pkg = $('svcPackage').value;
+    const lead = {
+      at: new Date().toISOString(),
+      email,
+      package: pkg,
+      needs: $('svcDomain').checked ? ['domain'] : [],
+      source: 'signup',
+    };
+    try { localStorage.setItem('linkup.serviceInterest', JSON.stringify(lead)); } catch {}
+    return lead;
+  }
+
+  function afterAuth(email) {
+    let interest = rememberServiceInterest(email);
+    if (!interest) {
+      try { interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null'); } catch {}
+      if (interest?.email?.toLowerCase() !== email.toLowerCase()) interest = null;
+    }
+    if (interest && interest.package && interest.package !== 'software') {
+      location.href = `services.html?package=${encodeURIComponent(interest.package)}#intake`;
+    } else {
+      location.href = '/build';
+    }
+  }
+
+  $('form').onsubmit = async (e) => {
+    e.preventDefault();
+    show('');
+    if ($('go').disabled) return;
+    $('go').disabled = true;
+    $('forgot').disabled = true;
+    if ($('toggle')) $('toggle').disabled = true;
+    try {
+      const email = $('email').value.trim();
+      const pass  = $('password').value;
+      if (mode === 'reset') {
+        await API.resetPassword(email);
+        show('If that address has an account, a reset link is on its way.', 'good');
+        return;
+      }
+      if (mode === 'recover') {
+        await API.setPassword(recoveryToken, pass);
+        show('Saved. Sign in with your new password.', 'good');
+        $('password').value = ''; mode = 'signin'; draw();
+        return;
+      }
+      const out = mode === 'signup' ? await API.signUp(email, pass) : await API.signIn(email, pass);
+      if (out.needsConfirmation) {
+        rememberServiceInterest(email);
+        show('Check your email to confirm your address, then sign in.', 'good');
+        mode = 'signin'; draw();
+      } else {
+        afterAuth(email);
+      }
+    } catch (err) {
+      show(err.message);
+    } finally {
+      $('go').disabled = false;
+      $('forgot').disabled = false;
+      if ($('toggle')) $('toggle').disabled = false;
+    }
+  };
+
+  $('forgot').onclick = () => {
+    mode = 'reset';
+    show('');
+    draw();
+    $('email').focus();
+  };
+  $('showPassword').onclick = () => {
+    const showing = $('password').type === 'password';
+    $('password').type = showing ? 'text' : 'password';
+    $('showPassword').textContent = showing ? 'Hide' : 'Show';
+    $('showPassword').setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+  };
+</script>
+</body>
+</html>
