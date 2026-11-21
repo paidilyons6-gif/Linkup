@@ -227,3 +227,96 @@ input:focus, select:focus, textarea:focus {
   .preview-toggle { display: inline-flex; }
   .panel { padding-bottom: 100px; }
 }
+
+/* Studio workspace. */
+body.editor { grid-template-columns: minmax(0, 1fr) minmax(390px, .73fr); }
+.panel { width: min(100%, 780px); max-width: none; margin-inline: auto; padding-top: 28px; }
+.top { margin-bottom: 30px; }
+h1 { font-size: clamp(40px, 5vw, 58px); }
+.sub { overflow-wrap: anywhere; }
+.save-bar {
+  z-index: 10; top: 0; bottom: auto; margin: 18px -8px 14px; padding: 11px 8px;
+  background: var(--bg); border-bottom: 1px solid var(--line); gap: 7px;
+}
+.save-bar .btn { padding: 9px 13px; }
+.page-status {
+  padding: 5px 9px; border-radius: 999px; background: #eae0d6;
+  color: var(--ink-soft); font-size: 12px; font-weight: 700;
+}
+.page-status.is-live { background: #dcecdf; color: #286140; }
+.saved { opacity: 1; margin-inline-start: auto; }
+#saveErr:not(:empty) { flex-basis: 100%; }
+.studio-nav {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 9px;
+  margin: 12px 0 16px;
+}
+.studio-nav a {
+  padding: 7px 10px; color: var(--ink); font-size: 13px; font-weight: 600;
+  text-decoration: none; border-radius: 6px;
+}
+.studio-nav a:hover { color: var(--accent); background: var(--accent-soft); }
+.studio-section {
+  margin-top: 12px; padding: clamp(16px, 3.3vw, 28px);
+  border: 1px solid var(--line); background: var(--surface); border-radius: 21px;
+}
+.studio-section, .destinations { scroll-margin-top: 64px; }
+.studio-section h2 {
+  margin: 0 0 18px; color: var(--ink); font: 700 clamp(24px, 3.4vw, 30px)/1.12 var(--display);
+  letter-spacing: -.03em; text-transform: none;
+}
+.studio-section h2::after { display: none; }
+.studio-subheading { margin: 22px 0 12px; font: 700 17px/1.25 var(--sans); }
+.studio-section .field:last-child { margin-bottom: 0; }
+.studio-section input:not([type=file]), .studio-section select, .studio-section textarea { background: var(--bg); }
+.studio-section .row > .field { min-width: min(160px, 100%); }
+.q-card, .r-card, .hub-card { padding: 14px; }
+.opt-row, .benefit-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; align-items: center; margin-bottom: 7px; }
+.opt-row input { grid-column: 1; }
+.opt-row select { grid-column: 1; }
+.opt-row button { grid-column: 2; grid-row: 1 / span 2; }
+textarea { resize: vertical; }
+.destinations > .hint:last-of-type { margin-bottom: 12px; }
+.quiz-check { background: #faf0df; color: #624826; padding: 10px 12px; border-radius: 10px; }
+#newResultKey { width: min(100%, 218px); }
+.up input[type=file] {
+  display: block; position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden;
+}
+.up:has(input[type=file]:focus-visible) label.btn { outline: 2px solid var(--accent); outline-offset: 3px; }
+.invite { margin: 18px 0 0; }
+.preview {
+  flex-direction: column; justify-content: center; gap: 12px;
+  height: 100dvh; padding: 20px;
+  background: radial-gradient(ellipse at 90% 0%, #eadbd4, transparent 70%), var(--bg-warm);
+}
+.preview-label { font-size: 13px; color: var(--ink-soft); font-weight: 650; }
+.phone { width: min(100%, 350px); height: min(735px, 84dvh); border-color: #26161c; border-width: 8px; }
+
+@media (max-width: 1050px) {
+  body.editor { grid-template-columns: minmax(0, 1fr); }
+  .preview {
+    inset: 0; height: 100dvh; justify-content: center; padding: 12px 12px 68px;
+    transform: none; visibility: hidden;
+  }
+  .preview.open { visibility: visible; }
+  .phone { width: min(100%, 390px); height: min(745px, 85dvh); }
+  body.editor.preview-open { overflow: hidden; }
+}
+@media (min-width: 1051px) { .preview-toggle { display: none; } }
+@media (max-width: 560px) {
+  .save-bar .btn { min-height: 36px; font-size: 12px; padding-inline: 9px; }
+  .save-bar .saved { font-size: 11.5px; }
+  .studio-nav { gap: 1px 5px; }
+  .studio-nav a { padding: 8px 6px; }
+}
+.upgrade-note {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 8px 12px; margin-bottom: 12px; padding: 10px 12px;
+  border-radius: 10px; background: var(--accent-soft); color: var(--ink-soft);
+  font-size: 13px;
+}
+.upgrade-note p { flex: 1 1 185px; }
+#sendBox .veil, #tapsBox .veil { inset: -5px; padding: 9px; }
+#tapsBox { min-height: 82px; }
+.media-preview { margin-top: 10px; }
+.media-preview summary { cursor: pointer; color: var(--accent); font-size: 13px; font-weight: 650; }
+.media-preview video { width: min(100%, 340px); margin-top: 10px; border-radius: 12px; background: #21141c; }

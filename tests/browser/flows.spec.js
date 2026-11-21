@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 const session = { access_token: 'test-access', refresh_token: 'test-refresh', expires_at: 9999999999, user: { id: 'test-user', email: 'test@example.com' } };
 const profile = { id: 'test-id', user_id: 'test-user', name: 'Test Creator', slug: 'creator', links: [{ label: 'My website', url: 'https://example.com' }], published: false, theme: 'blush', mode: 'hub', quiz: {} };
-async function editor(page, failSave = false, initialProfile = profile) {
+async function editor(page, failSave = false, initialProfile = profile, initialPlan = 'premium') {
   let stored = structuredClone(initialProfile);
   await page.addInitScript(s => localStorage.setItem('linkup.session', JSON.stringify(s)), session);
   await page.route('https://*.supabase.co/**', async route => {
@@ -13,7 +13,7 @@ async function editor(page, failSave = false, initialProfile = profile) {
       return route.fulfill({ json: [stored] });
     }
     if (url.includes('/profiles?')) await new Promise(r => setTimeout(r, 300));
-    const json = url.includes('/subscriptions?') ? [{ plan: 'premium', status: 'active' }] :
+    const json = url.includes('/subscriptions?') ? [{ plan: initialPlan, status: 'active' }] :
       url.includes('/profiles?') ? [stored] :
       url.includes('/rpc/public_profile') && stored.published ? stored : null;
     await route.fulfill({ json });
@@ -72,7 +72,11 @@ test('editing updates the preview and successful publishing exposes the saved li
   if (await previewButton.isVisible()) await previewButton.click();
   await expect(page.frameLocator('#preview').locator('.name')).toHaveText('New Creator');
   const closePreview = page.getByRole('button', { name: 'Close preview', exact: true });
-  if (await closePreview.isVisible()) await closePreview.click();
+  if (await closePreview.isVisible()) {
+    await page.frameLocator('#preview').getByRole('link', { name: 'My website' }).press('Escape');
+    await expect(previewButton).toBeFocused();
+    await expect(previewButton).toHaveAttribute('aria-expanded', 'false');
+  }
   await page.locator('#publish').click();
   await expect(page.locator('#publish')).toHaveText('Unpublish');
   await expect(page.locator('#viewLive')).toHaveAttribute('href', 'http://127.0.0.1:4173/creator');
@@ -191,4 +195,105 @@ test('multiple Instagram destinations survive publishing and can be browsed from
   for (const link of links) {
     await expect(page.getByRole('link', { name: link.label })).toHaveAttribute('href', link.url);
   }
+});
+
+test('the demo ignores a previous draft and supports keyboard backtracking and the example checkout', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('linkup.profile', JSON.stringify({ name: 'Old draft', mode: 'hub' })));
+  await page.goto('/page.html');
+  await expect(page.locator('.quiz-kicker')).toHaveText('Maya Chen');
+  await page.getByRole('button', { name: 'Start', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'Where are you right now?' })).toBeFocused();
+  await page.getByRole('button', { name: 'Pregnant', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Which trimester?' })).toBeFocused();
+  await page.getByRole('button', { name: 'Back' }).click();
+  await expect(page.getByRole('heading', { name: 'Where are you right now?' })).toBeFocused();
+  await page.getByRole('button', { name: 'Trying to conceive' }).click();
+  await page.getByRole('button', { name: 'See the programme' }).click();
+  await expect(page.getByRole('heading', { name: 'This is where your checkout opens.' })).toBeFocused();
+  await expect(page.getByRole('link', { name: 'Build my own quiz' })).toHaveAttribute('href', '/account.html');
+});
+
+test('the reset request works as a separate form and an expired link can be replaced', async ({ page }) => {
+  let submitted;
+  await page.route('https://*.supabase.co/auth/v1/recover?**', async route => {
+    submitted = route.request().postDataJSON();
+    expect(new URL(route.request().url()).searchParams.get('redirect_to')).toMatch(/\/account\.html$/);
+    await route.fulfill({ json: {} });
+  });
+  await page.goto('/account.html?mode=signin');
+  await page.getByRole('button', { name: 'Show password' }).click();
+  await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text');
+  await page.getByRole('button', { name: 'Forgotten your password?' }).click();
+  await expect(page.getByRole('heading', { name: 'Reset your password' })).toBeVisible();
+  await expect(page.getByLabel('Password', { exact: true })).toBeHidden();
+  await page.getByLabel('Email', { exact: true }).fill('creator@example.com');
+  await page.getByRole('button', { name: 'Send reset link' }).click();
+  await expect(page.getByRole('status')).toContainText('a reset link is on its way');
+  expect(submitted).toEqual({ email: 'creator@example.com' });
+  await page.goto('/account.html#error_code=otp_expired');
+  await expect(page.getByRole('status')).toContainText('expired');
+});
+
+test('publish waits for a brand-new address to be checked', async ({ page }) => {
+  await editor(page);
+  await page.route('https://*.supabase.co/rest/v1/rpc/slug_available', async route => {
+    await new Promise(resolve => setTimeout(resolve, 450));
+    await route.fulfill({ json: route.request().postDataJSON().p_slug === 'new-address' });
+  });
+  await page.getByLabel('Page address').fill('new-address');
+  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  await expect(page.getByRole('link', { name: 'View live page' })).toHaveAttribute('href', /\/new-address$/);
+  await expect(page.locator('#pageStatus')).toHaveText('Live');
+});
+
+test('creators can build a draft quiz before subscribing', async ({ page }) => {
+  await editor(page, false, { ...profile, mode: 'quiz' }, 'none');
+  await expect(page.getByText('Guide publishes the quiz.', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Add question' }).click();
+  await page.getByRole('textbox', { name: 'Question 1 prompt' }).fill('What are you working towards?');
+  await expect(page.getByText('Choose a destination for every answer', { exact: false })).toBeVisible();
+  await expect(page.locator('#saved')).toHaveText('Saved');
+  await expect(page.getByRole('button', { name: 'Pick a plan to publish' })).toBeDisabled();
+});
+
+test('services preselect the requested package and provide an email draft fallback', async ({ page }) => {
+  await page.goto('/services.html');
+  await page.getByRole('link', { name: 'Request a full site' }).click();
+  await expect(page.getByRole('combobox')).toHaveValue('site');
+  await page.getByLabel('Name', { exact: true }).fill('Demo Creator');
+  await page.getByLabel('Email', { exact: true }).fill('creator@example.com');
+  await page.getByRole('button', { name: 'Open email draft' }).click();
+  await expect(page.getByRole('status')).toContainText('Send the draft');
+  await page.getByText('Copy the request to email it yourself').click();
+  await expect(page.getByLabel('Your website request')).toHaveValue(/Demo Creator/);
+});
+
+test('unsubscribe works without signing in and gives feedback', async ({ page }) => {
+  const token = '12345678-abcd-1234-abcd-123456789abc';
+  await page.route('https://*.supabase.co/rest/v1/rpc/unsubscribe', async route => {
+    expect(route.request().postDataJSON()).toEqual({ p_token: token });
+    await route.fulfill({ json: true });
+  });
+  await page.goto('/unsubscribe.html?t=' + token);
+  await expect(page.getByRole('heading', { name: "You're unsubscribed" })).toBeVisible();
+});
+
+test('signup can carry an optional website inquiry to the services page', async ({ page }) => {
+  await page.route('https://*.supabase.co/auth/v1/signup', async route => {
+    const input = route.request().postDataJSON();
+    expect(input.email).toBe('creator@example.com');
+    await route.fulfill({ json: { ...session, user: { ...session.user, email: input.email } } });
+  });
+  await page.goto('/account.html');
+  await page.getByText('Need a website as well?', { exact: true }).click();
+  await page.getByLabel('Website package').selectOption('site');
+  await page.getByLabel('I want my own custom domain').check();
+  await page.getByLabel('Email', { exact: true }).fill('creator@example.com');
+  await page.getByLabel('Password', { exact: true }).fill('demo-password');
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await expect(page).toHaveURL(/services\.html\?package=site#intake$/);
+  await expect(page.getByRole('combobox')).toHaveValue('site');
+  await expect(page.getByLabel('Email', { exact: true })).toHaveValue('creator@example.com');
+  await expect(page.getByLabel('My own custom domain')).toBeChecked();
 });

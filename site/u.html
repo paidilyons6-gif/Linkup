@@ -6,25 +6,25 @@
 <title>LinkUp</title>
 <meta name="theme-color" content="#111629" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="tokens.css?v=20261121" />
-<link rel="stylesheet" href="linkup.css?v=20261121" />
+<link rel="stylesheet" href="tokens.css?v=20261121b" />
+<link rel="stylesheet" href="linkup.css?v=20261121b" />
 </head>
 <body>
 
 <div class="bg"></div>
 
-<div class="welcome" id="welcome" hidden>
-  <video id="welcomeVideo" playsinline preload="metadata"></video>
+<div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-label="Welcome video" hidden>
+  <video id="welcomeVideo" playsinline preload="metadata" tabindex="0"></video>
   <div class="welcome-cover" id="welcomeCover">
     <img class="welcome-avatar" id="welcomeAvatar" alt="" hidden />
-    <button class="play" id="playBtn" aria-label="Play welcome video"></button>
+    <button type="button" class="play" id="playBtn" aria-label="Play welcome video"></button>
     <p id="welcomeName"></p>
   </div>
-  <button class="skip" id="skipBtn">Skip</button>
+  <button type="button" class="skip" id="skipBtn">Skip</button>
 </div>
 
 <p class="missing" id="loading" role="status">Loading this page…</p>
-<main class="page" id="page"></main>
+<main class="page" id="page" tabindex="-1"></main>
 <div class="missing" id="missing" hidden>
   <h1>Nothing here yet</h1>
   <p>This address isn't taken, or the page behind it hasn't been published.</p>
@@ -32,8 +32,8 @@
 </div>
 
 <script src="config.js"></script>
-<script src="api.js?v=20261121"></script>
-<script src="linkup.js?v=20261121"></script>
+<script src="api.js?v=20261121b"></script>
+<script src="linkup.js?v=20261121b"></script>
 <script>
   const slug = (new URLSearchParams(location.search).get('u')
              || location.pathname.replace(/^\/+|\/+$/g, '').split('/').pop() || '')
@@ -45,10 +45,17 @@
   const cover   = document.getElementById('welcomeCover');
 
   function reveal() {
+    if (welcome.classList.contains('gone')) return;
     welcome.classList.add('gone');
+    page.inert = false;
     page.classList.add('show');
-    try { video.pause(); } catch {}
-    setTimeout(() => { welcome.hidden = true; video.removeAttribute('src'); video.load(); }, 800);
+    page.focus();
+    video.pause();
+    setTimeout(() => {
+      welcome.hidden = true;
+      video.removeAttribute('src');
+      video.load();
+    }, 400);
   }
 
   function notFound() {
@@ -97,13 +104,8 @@
     document.title = p.name ? `${p.name} — LinkUp` : 'LinkUp';
     LinkUp.render(p);
 
-    if (raw.badge === false) {
-      page.dataset.hideBadge = '1';
-      document.querySelector('.foot')?.remove();
-    }
-
     page.addEventListener('click', (e) => {
-      const hit = e.target.closest('.quiz-option, .hub-item, .quiz-cta[href]');
+      const hit = e.target.closest('.quiz-option, a.hub-item, .quiz-cta[href]');
       if (!hit || !raw.id) return;
       const label = (hit.dataset.label || hit.textContent.trim()).slice(0, 80) || 'tap';
       API.recordTap(raw.id, label);
@@ -130,6 +132,7 @@
     }
 
     if (p.welcomeVideo) {
+      page.inert = true;
       welcome.hidden = false;
       video.src = p.welcomeVideo;
       document.getElementById('welcomeName').textContent =
@@ -138,10 +141,17 @@
         const a = document.getElementById('welcomeAvatar');
         a.src = p.avatar; a.hidden = false;
       }
-      document.getElementById('playBtn').onclick = () => {
+      const play = document.getElementById('playBtn');
+      play.onclick = () => {
         cover.classList.add('gone');
+        video.controls = true;
+        video.focus();
         video.play().catch(reveal);
       };
+      play.focus();
+      welcome.addEventListener('keydown', event => {
+        if (event.key === 'Escape') reveal();
+      });
       document.getElementById('skipBtn').onclick = reveal;
       video.onended = reveal;
       video.onerror = reveal;

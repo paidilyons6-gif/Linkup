@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Done-for-you websites — LinkUp</title>
 <meta name="description" content="Sales pages and full websites for coaches and creators. We design, build and host it — wired to your LinkUp quiz. You just add your content." />
-<meta name="theme-color" content="#faf7f2" />
+<meta name="theme-color" content="#fbf7f0" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="tokens.css?v=20261121" />
-<link rel="stylesheet" href="site.css?v=20261121" />
+<link rel="stylesheet" href="tokens.css?v=20261121b" />
+<link rel="stylesheet" href="site.css?v=20261121b" />
 <style>
-  .svc-hero { padding: clamp(56px, 10vw, 120px) 0 clamp(48px, 7vw, 80px); border-bottom: 1px solid var(--line); }
+  .svc-hero { background: radial-gradient(ellipse at 92% 100%, #f0d9d7, transparent 67%); padding: clamp(56px, 10vw, 120px) 0 clamp(48px, 7vw, 80px); border-bottom: 1px solid var(--line); }
   .svc-hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: end; }
   @media (max-width: 860px) { .svc-hero .wrap { grid-template-columns: 1fr; } }
   .svc-hero h1 {
@@ -31,7 +31,6 @@
     .offer + .offer { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; margin-top: 24px; }
     .offer:first-child { padding-right: 0; }
   }
-  .offer .no { font-family: var(--display); font-style: italic; font-weight: 600; color: var(--accent); font-size: 15px; }
   .offer h3 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 38px); letter-spacing: -.03em; line-height: 1.05; margin: 14px 0 12px; }
   .offer > p { color: var(--ink-soft); font-size: 16px; max-width: 42ch; margin-bottom: 22px; }
   .offer ul { list-style: none; border-top: 1px solid var(--line); }
@@ -90,14 +89,10 @@
 
   .m1 { background: #f6efe6; color: #2a1d19; }
   .m1 .m-img {
-    position: absolute; right: 0; top: 0; bottom: 0; width: 46%;
-    background:
-      radial-gradient(60% 45% at 50% 38%, #e9c3a8 0%, transparent 70%),
-      radial-gradient(70% 60% at 50% 100%, #b97f63 0%, transparent 70%),
-      linear-gradient(180deg, #d8b59b, #a46e55);
+    position: absolute; right: 0; top: 45px; bottom: 0; width: 47%;
+    height: calc(100% - 45px); object-fit: cover; object-position: center 26%;
   }
-  .m1 .m-img::after { content: ""; position: absolute; left: 24%; right: 24%; top: 18%; height: 44%; border-radius: 50% 50% 46% 46%; background: linear-gradient(180deg, #f0d2bc, #d6a587); opacity: .7; }
-  .m1 .m-body { position: absolute; left: 18px; bottom: 24px; width: 50%; display: grid; gap: 12px; }
+  .m1 .m-body { position: absolute; left: 15px; top: 54%; transform: translateY(-43%); width: 50%; display: grid; gap: 12px; }
   .m1 .m-h { font-size: clamp(26px, 3.6vw, 44px); }
   .m1 .m-h i { font-weight: 600; color: #9b4a35; }
   .m1 .m-btn { background: #2a1d19; color: #f6efe6; justify-self: start; }
@@ -112,7 +107,7 @@
   .m2 .m-btn { background: #d8ff5e; color: #10151c; justify-self: start; }
   .m2 .m-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
   .m2 .m-cards div { aspect-ratio: 3 / 4; border-radius: 4px; background: linear-gradient(180deg, #2b3542, #1a212b); position: relative; }
-  .m2 .m-cards div::after { content: ""; position: absolute; left: 8px; right: 30%; bottom: 10px; height: 5px; border-radius: 2px; background: rgba(255,255,255,.35); }
+  .m2 .m-cards strong { position: absolute; bottom: 10px; left: 8px; color: #edf1f4; font-size: clamp(8px, 1.2vw, 13px); }
   .m2 .m-cards div:nth-child(2) { background: linear-gradient(180deg, #3d4a35, #1f2a1a); }
 
   .m3 { background: #e8ecf0; color: #1d2733; display: grid; place-items: center; text-align: center; }
@@ -121,8 +116,6 @@
   .m3 .m-ring { width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #a9bccd 60%, #6f8aa3); box-shadow: 0 10px 30px -8px rgba(29,39,51,.4); }
   .m3 .m-h { font-size: clamp(22px, 2.6vw, 30px); font-weight: 600; font-style: italic; }
   .m3 .m-btn { background: #1d2733; color: #e8ecf0; border-radius: 99px; }
-  .m3 .m-count { display: flex; gap: 8px; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
-  .m3 .m-count b { display: block; font-family: var(--display); font-size: 18px; letter-spacing: 0; opacity: 1; }
 
   .samples-note { margin-top: 28px; font-size: 13.5px; color: var(--muted); max-width: 60ch; }
 
@@ -135,9 +128,8 @@
     box-shadow: var(--shadow-sm);
   }
   .pcard.featured { border-top: 2px solid var(--accent); box-shadow: var(--shadow-md); }
-  .pcard .flag { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); min-height: 16px; }
   .pcard h3 { font-family: var(--display); font-size: 26px; letter-spacing: -.02em; }
-  .pcard .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; font-family: var(--display); font-weight: 700; font-size: clamp(44px, 5vw, 60px); letter-spacing: -.04em; line-height: 1; }
+  .pcard .amt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-top: 14px; font-family: var(--display); font-weight: 700; font-size: clamp(44px, 5vw, 60px); letter-spacing: -.04em; line-height: 1; }
   .pcard .amt span { font-family: var(--sans); font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--muted); }
   .pcard .care { font-size: 14.5px; color: var(--ink-soft); padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
   .pcard .care strong { color: var(--ink); }
@@ -151,6 +143,7 @@
     border: 1px solid var(--line); border-radius: var(--r-md);
     background: var(--surface); padding: clamp(24px, 4vw, 40px); box-shadow: var(--shadow-md);
   }
+  .intake textarea { resize: vertical; }
   .intake h2 { font-family: var(--display); font-size: 34px; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 10px; }
   .intake .sub { color: var(--ink-soft); margin-bottom: 24px; font-size: 14.5px; }
   .intake .field { margin-bottom: 14px; }
@@ -192,10 +185,10 @@
     <div class="wrap">
       <div>
         <span class="kicker hero-anim">Done for you</span>
-        <h1 class="hero-anim" style="--d:80ms">The page your quiz sends people to, <em>built for you.</em></h1>
+        <h1 class="hero-anim" style="--d:80ms">A website built around <em>your offer.</em></h1>
       </div>
       <div class="aside hero-anim" style="--d:180ms">
-        <p>Your LinkUp quiz finds the right programme. We design the sales page or full website that closes the sale — then host it and keep it running. You send us your content. That’s it.</p>
+        <p>We design and host sales pages and small websites for coaches and creators. Bring your brand and content, and we’ll connect your quiz to the right pages.</p>
         <div class="hero-cta">
           <a class="btn pink" href="#examples">See examples <span class="arrow" aria-hidden="true">→</span></a>
           <a class="btn ghost" href="#offer">What’s included</a>
@@ -212,7 +205,6 @@
       </div>
       <div class="offers">
         <article class="offer reveal">
-          <span class="no">i.</span>
           <h3>Sales page</h3>
           <p>One focused page for one offer. Written around what your buyer wants to hear, designed to look like you, and wired straight to checkout.</p>
           <ul>
@@ -225,7 +217,6 @@
           <p class="best"><strong>Best for</strong> launching or relaunching one signature programme.</p>
         </article>
         <article class="offer reveal">
-          <span class="no">ii.</span>
           <h3>Site + domain</h3>
           <p>A small, polished website on your own domain — home, offers, about, FAQ and contact — with every quiz button leading to the right page.</p>
           <ul>
@@ -265,7 +256,7 @@
       </div>
       <ul class="care-list">
         <li class="reveal"><strong>Hosting & security</strong><span>Fast hosting, HTTPS and certificates, always on.</span></li>
-        <li class="reveal"><strong>Backups</strong><span>Regular backups, so nothing is ever lost.</span></li>
+        <li class="reveal"><strong>Backups</strong><span>Regular backups to help restore your site.</span></li>
         <li class="reveal"><strong>Quiz wiring</strong><span>Buttons, forms and checkout links kept working.</span></li>
         <li class="reveal"><strong>Small edits</strong><span>Price changes, new photos, updated copy.</span></li>
         <li class="reveal"><strong>Domain renewal</strong><span>Handled for you on Site + domain.</span></li>
@@ -288,7 +279,7 @@
             <div class="bar"><i></i><i></i><i></i><b>bloomprenatal.com</b></div>
             <div class="mock m1">
               <div class="m-nav"><em>Bloom</em><span>Programmes · About · Join</span></div>
-              <div class="m-img"></div>
+              <img class="m-img" src="images/bloom-coach.webp" width="760" height="950" alt="" loading="lazy" />
               <div class="m-body">
                 <div class="m-tags"><span>Trimester 1–3</span><span>12 weeks</span><span>Home workouts</span></div>
                 <div class="m-h">Strong, calm <i>&amp; ready</i> for birth.</div>
@@ -308,7 +299,7 @@
               <div class="m-body">
                 <div class="m-h">Build <span>real</span> strength.</div>
                 <span class="m-btn">Find your plan</span>
-                <div class="m-cards"><div></div><div></div><div></div></div>
+                <div class="m-cards"><div><strong>Strength</strong></div><div><strong>Conditioning</strong></div><div><strong>Mobility</strong></div></div>
               </div>
             </div>
           </div>
@@ -323,7 +314,7 @@
               <div class="m-body">
                 <div class="m-ring"></div>
                 <div class="m-h">Doors open Monday.</div>
-                <div class="m-count"><span><b>04</b>days</span><span><b>11</b>hrs</span><span><b>32</b>min</span></div>
+                <p class="m-p">A four-week course with guided sessions.</p>
                 <span class="m-btn">Save my seat</span>
               </div>
             </div>
@@ -331,7 +322,7 @@
           <figcaption><strong>Course launch</strong><span>Sales page · minimal</span></figcaption>
         </figure>
       </div>
-      <p class="samples-note">These are concept designs made to show our style — not client sites.</p>
+      <p class="samples-note">Original concept designs for a prenatal coach, a strength studio and a course launch.</p>
     </div>
   </section>
 
@@ -344,14 +335,12 @@
       </div>
       <div class="price-grid">
         <article class="pcard featured reveal">
-          <span class="flag">Most popular</span>
           <h3>Sales page</h3>
           <div class="amt">€1,490 <span>one-time setup</span></div>
           <p class="care">then <strong>€79/month</strong> for hosting, security, backups and small edits</p>
           <a class="btn pink" href="#intake" data-pkg="sales">Request a sales page <span class="arrow" aria-hidden="true">→</span></a>
         </article>
         <article class="pcard reveal">
-          <span class="flag"></span>
           <h3>Site + domain</h3>
           <div class="amt">€2,900 <span>one-time setup</span></div>
           <p class="care">then <strong>€129/month</strong> for the site, your domain and ongoing upkeep</p>
@@ -367,7 +356,7 @@
       <form class="intake" id="form">
         <span class="kicker">Start a project</span>
         <h2>Tell us what you need.</h2>
-        <p class="sub">This goes straight to Paulie at paidilyons6@gmail.com. You’ll get a reply with next steps — usually within a day.</p>
+        <p class="sub">Share your project details, then send the draft from your email app.</p>
 
         <div class="field">
           <label for="name">Name</label>
@@ -404,7 +393,13 @@
           <textarea id="notes" name="notes" rows="4" placeholder="What you sell, deadline, existing domain…"></textarea>
         </div>
         <button class="btn pink" type="submit" style="width:100%">Open email draft</button>
-        <p class="ok" id="ok" role="status" hidden>Send the draft from your email app to submit the request.</p>
+        <p class="ok" id="ok" role="status"></p>
+        <details id="requestCopy" hidden>
+          <summary>Copy the request to email it yourself</summary>
+          <label for="requestText">Your website request</label>
+          <textarea id="requestText" rows="6" readonly></textarea>
+          <p>Email it to <a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a>.</p>
+        </details>
       </form>
     </div>
   </section>
@@ -419,6 +414,7 @@
   </div>
 </footer>
 
+<script src="site.js?v=20261121b"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const pkgSelect = document.getElementById('package');
@@ -433,60 +429,17 @@
   } catch {}
   document.querySelectorAll('[data-pkg]').forEach(a => a.addEventListener('click', () => { pkgSelect.value = a.dataset.pkg; }));
 
-  const nav = document.getElementById('nav');
-  const toggle = document.getElementById('nav-toggle');
-  const links = document.getElementById('nav-links');
-  if (nav) {
-    const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
-    onScroll();
-    addEventListener('scroll', onScroll, { passive: true });
-  }
-  if (toggle && links) {
-    const closeMenu = () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-  }
-
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.remove('pending-reveal');
-          io.unobserve(e.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('.reveal').forEach(el => {
-      if (el.getBoundingClientRect().top >= innerHeight) {
-        el.classList.add('pending-reveal');
-        io.observe(el);
-      }
-    });
-  }
-
   document.getElementById('form').onsubmit = (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
     const needs = [...e.target.querySelectorAll('input[name=need]:checked')].map(x => x.value);
-    const lead = {
-      at: new Date().toISOString(),
-      name: fd.get('name'),
-      email: fd.get('email'),
-      business: fd.get('business'),
-      package: fd.get('package'),
-      needs,
-      notes: fd.get('notes'),
-    };
-
-    document.getElementById('ok').hidden = false;
-    // mailto fallback so you actually receive it before a CRM exists
-    const body = encodeURIComponent(
-      `Name: ${lead.name}\nEmail: ${lead.email}\nBusiness: ${lead.business}\nPackage: ${lead.package}\nNeeds: ${needs.join(', ') || '—'}\n\n${lead.notes || ''}`
-    );
-    location.href = `mailto:paidilyons6@gmail.com?subject=${encodeURIComponent('LinkUp website request — ' + lead.package)}&body=${body}`;
+    const message =
+      `Name: ${fd.get('name')}\nEmail: ${fd.get('email')}\nBusiness: ${fd.get('business')}\nPackage: ${pkgSelect.selectedOptions[0].textContent}\nNeeds: ${needs.join(', ') || '—'}\n\n${fd.get('notes') || ''}`;
+    document.getElementById('requestText').value = message;
+    document.getElementById('requestCopy').hidden = false;
+    document.getElementById('ok').textContent = 'Send the draft from your email app to submit the request.';
+    const subject = encodeURIComponent('LinkUp website request — ' + fd.get('package'));
+    location.href = `mailto:paidilyons6@gmail.com?subject=${subject}&body=${encodeURIComponent(message)}`;
   };
 </script>
 </body>

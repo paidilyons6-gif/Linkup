@@ -4,38 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Studio — LinkUp</title>
-<meta name="theme-color" content="#faf7f2" />
+<meta name="theme-color" content="#fbf7f0" />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="tokens.css?v=20261121" />
-<link rel="stylesheet" href="editor.css?v=20261121" />
-<style>
-  .mode-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-  .mode-toggle button {
-    border: 1px solid var(--line-strong); background: var(--stage-elev); color: var(--paper);
-    border-radius: 12px; padding: 14px 12px; cursor: pointer; text-align: left;
-    font: 600 13.5px var(--sans);
-  }
-  .mode-toggle button small { display: block; margin-top: 4px; font-weight: 500; color: var(--fog); font-size: 12px; }
-  .mode-toggle button[aria-pressed="true"] {
-    border-color: var(--citrus); box-shadow: 0 0 0 1px var(--citrus) inset; background: var(--citrus-soft);
-  }
-  .q-card, .r-card, .hub-card {
-    border: 1px solid var(--line-strong); border-radius: 14px; background: var(--stage-elev);
-    padding: 14px; margin-bottom: 12px;
-  }
-  .q-card h3, .r-card h3 { font-size: 13px; margin-bottom: 10px; color: var(--mist); }
-  .opt-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
-  .benefit-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 6px; }
-  textarea {
-    width: 100%; border: 1px solid var(--line-strong); border-radius: 10px;
-    background: var(--stage-soft); padding: 11px 13px; font-size: 14.5px; color: var(--paper); resize: vertical;
-  }
-</style>
+<link rel="stylesheet" href="tokens.css?v=20261121b" />
+<link rel="stylesheet" href="editor.css?v=20261121b" />
 </head>
 <body class="editor">
 
-<div class="panel">
+<main class="panel" id="studioPanel">
   <div class="top">
     <a class="home" href="index.html"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
     <button class="out" id="signout">Sign out</button>
@@ -46,28 +23,40 @@
     <code>config.js</code> and redeploy.
   </div>
 
-  <a class="invite" id="svcBanner" href="services.html" hidden>
-    <span class="invite-kicker">Done for you</span>
-    <strong>Want a sales page or full website?</strong>
-    <span class="invite-line">We design, build and host it — you just add your content.</span>
-    <span class="invite-cta">See how it works <span aria-hidden="true">→</span></span>
-  </a>
-
   <h1>Studio</h1>
-  <p class="sub" id="who">Guide visitors to the right programme.</p>
+  <p class="sub" id="who" role="status">Loading your workspace…</p>
+  <button class="btn ghost sm" id="retryStudio" type="button" hidden>Retry</button>
 
   <div id="app" hidden>
+    <div class="save-bar">
+      <span class="page-status" id="pageStatus">Draft</span>
+      <button class="btn pink" id="publish" type="button">Publish</button>
+      <a class="btn ghost" id="viewLive" href="#" target="_blank" rel="noopener" hidden>View live page</a>
+      <button class="btn ghost" id="copyLink" type="button" hidden>Copy my link</button>
+      <span class="saved" id="saved" role="status">Saved</span>
+      <span class="hint err" id="saveErr" role="alert"></span>
+      <button class="btn ghost sm" id="retrySave" type="button" hidden>Retry save</button>
+    </div>
+    <nav class="studio-nav" aria-label="Studio sections">
+      <a href="#profile-settings">Profile</a>
+      <a href="#page-design">Design</a>
+      <a href="#page-content">Content</a>
+      <a href="#email-tools">Email</a>
+      <a href="#insights">Taps</a>
+      <a href="#account-settings">Account</a>
+    </nav>
 
-    <h2>Your address</h2>
+    <section class="studio-section" id="profile-settings" aria-labelledby="profile-title">
+    <h2 id="profile-title">Your profile</h2>
     <div class="field">
       <div class="addr">
         <span class="pre" id="origin">yoursite.com/</span>
-        <input id="f-slug" type="text" maxlength="30" autocapitalize="none" spellcheck="false" />
+        <input id="f-slug" aria-label="Page address" aria-describedby="slugMsg" type="text" maxlength="30" autocapitalize="none" spellcheck="false" />
       </div>
       <p class="hint" id="slugMsg">This is the link you put in Instagram, TikTok, everywhere.</p>
     </div>
 
-    <h2>Identity</h2>
+
     <div class="field"><label for="f-name">Name</label><input id="f-name" type="text" /></div>
     <div class="row">
       <div class="field"><label for="f-handle">Handle</label><input id="f-handle" type="text" placeholder="@you" /></div>
@@ -76,14 +65,17 @@
         <div class="up">
           <img class="thumb" id="avatarThumb" alt="" hidden />
           <label class="btn ghost sm" for="up-avatar">Upload</label>
-          <input id="up-avatar" type="file" accept="image/*" data-kind="avatar" data-target="avatar_url" />
+          <input id="up-avatar" aria-label="Upload profile photo" type="file" accept="image/*" data-kind="avatar" data-target="avatar_url" />
           <button class="btn ghost sm" data-clear="avatar_url" type="button">Clear</button>
         </div>
       </div>
     </div>
     <div class="field"><label for="f-tagline">One line about you</label><input id="f-tagline" type="text" /></div>
 
-    <h2>Page mode</h2>
+    </section>
+
+    <section class="studio-section" id="page-design" aria-labelledby="design-title">
+    <h2 id="design-title">Page design</h2>
     <div class="mode-toggle" id="modeToggle">
       <button type="button" data-mode="quiz" aria-pressed="true">
         Sales quiz
@@ -94,9 +86,7 @@
         <small>Curated destinations</small>
       </button>
     </div>
-    <p class="hint">Coaches selling programmes almost always win with the quiz. The hub is for simple lists.</p>
-
-    <h2>Stage</h2>
+    <h3 class="studio-subheading">Appearance</h3>
     <div class="field"><label>Theme</label><div class="themes" id="themes"></div></div>
     <p class="hint" style="margin:18px 0 10px;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;font-weight:700;color:var(--fog)">Background</p>
     <div class="row">
@@ -104,7 +94,7 @@
         <label>Background video</label>
         <div class="up">
           <label class="btn ghost sm" for="up-bgvideo">Upload</label>
-          <input id="up-bgvideo" type="file" accept="video/*" data-kind="bg" data-target="background_video_url" />
+          <input id="up-bgvideo" aria-label="Upload background video" type="file" accept="video/*" data-kind="bg" data-target="background_video_url" />
           <button class="btn ghost sm" data-clear="background_video_url" type="button">Clear</button>
           <span class="hint" id="bgvName" style="margin:0"></span>
         </div>
@@ -114,65 +104,77 @@
         <div class="up">
           <img class="thumb" id="bgiThumb" alt="" hidden />
           <label class="btn ghost sm" for="up-bgimage">Upload</label>
-          <input id="up-bgimage" type="file" accept="image/*" data-kind="bgimg" data-target="background_image_url" />
+          <input id="up-bgimage" aria-label="Upload background photo" type="file" accept="image/*" data-kind="bgimg" data-target="background_image_url" />
           <button class="btn ghost sm" data-clear="background_image_url" type="button">Clear</button>
         </div>
       </div>
     </div>
 
-    <div class="locked" id="welcomeBox">
-      <div class="veil" id="welcomeVeil" hidden>
-        <p>Welcome video is part of Guide.</p>
+    <div id="welcomeBox">
+      <div class="upgrade-note" id="welcomeVeil" hidden>
+        <p>Guide shows your welcome video on the published page.</p>
         <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
       </div>
       <p class="hint" style="margin:18px 0 10px;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;font-weight:700;color:var(--fog)">Welcome video</p>
       <div class="field">
         <div class="up">
           <label class="btn ghost sm" for="up-welcome">Upload</label>
-          <input id="up-welcome" type="file" accept="video/*" data-kind="welcome" data-target="welcome_video_url" />
+          <input id="up-welcome" aria-label="Upload welcome video" type="file" accept="video/*" data-kind="welcome" data-target="welcome_video_url" />
           <button class="btn ghost sm" data-clear="welcome_video_url" type="button">Clear</button>
-          <span class="hint" id="welName" style="margin:0"></span>
+          <span class="hint" id="welName" role="status"></span>
         </div>
+        <details class="media-preview" id="welcomePreview" hidden>
+          <summary>Play welcome video</summary>
+          <video id="welcomeSample" preload="none" controls playsinline></video>
+        </details>
       </div>
     </div>
 
+    </section>
+
+    <section class="studio-section" id="page-content" aria-labelledby="content-title">
+    <h2 id="content-title">Page content</h2>
     <div id="quizEditor">
-      <h2>Sales quiz</h2>
-      <div class="locked" id="quizBox">
-        <div class="veil" id="quizVeil" hidden>
-          <p>The sales quiz is the Guide plan — route every visitor to the right offer.</p>
+      <h3 class="studio-subheading">Sales quiz</h3>
+      <div id="quizBox">
+        <div class="upgrade-note" id="quizVeil" hidden>
+          <p>Guide publishes the quiz. Launch publishes your destinations as a hub.</p>
           <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
         </div>
         <div class="field"><label for="f-introTitle">Intro headline</label><input id="f-introTitle" type="text" /></div>
         <div class="field"><label for="f-introSub">Intro line</label><textarea id="f-introSub" rows="2"></textarea></div>
         <div class="field"><label for="f-introCta">Start button</label><input id="f-introCta" type="text" /></div>
 
-        <h2 style="margin-top:22px">Questions</h2>
+        <h3 class="studio-subheading" id="quiz-questions">Questions</h3>
         <div id="questions"></div>
         <button class="btn ghost" id="addQ" type="button">+ Add question</button>
 
-        <h2>Programmes (results)</h2>
+        <h3 class="studio-subheading">Programme results</h3>
         <p class="hint">Each result is a destination — usually a checkout or sales page.</p>
         <div id="results"></div>
         <div class="up" style="margin-top:8px">
-          <input id="newResultKey" type="text" placeholder="result-id (e.g. trim1)" style="max-width:180px" />
+          <input id="newResultKey" type="text" aria-label="Programme ID" placeholder="Programme ID (optional)" />
           <button class="btn ghost sm" id="addResult" type="button">+ Add programme</button>
         </div>
       </div>
+      <p class="hint quiz-check" id="quizCheck" hidden></p>
     </div>
 
-    <section aria-labelledby="destinations-heading">
-      <h2 id="destinations-heading">Destinations</h2>
+    <section class="destinations" aria-labelledby="destinations-heading">
+      <h3 class="studio-subheading" id="destinations-heading">Destinations</h3>
       <p class="hint">Add a separate link for each Instagram profile, post or other destination.</p>
       <p class="hint" id="quizDestinations" hidden>Quiz visitors can find these under Browse all links.</p>
       <div id="links"></div>
       <button class="btn ghost" id="addLink" type="button">+ Add link</button>
     </section>
 
-    <h2>Email list</h2>
-    <div class="locked" id="captureBox">
-      <div class="veil" id="captureVeil" hidden>
-        <p>Collecting emails is part of Scale.</p>
+    </section>
+
+    <section class="studio-section" id="email-tools" aria-labelledby="email-tools-title">
+    <h2 id="email-tools-title">Email list</h2>
+    <div id="captureBox">
+      <div class="upgrade-note" id="captureVeil" hidden>
+        <p>Scale enables email signup on your published page.</p>
         <button class="btn pink sm" data-buy="business" type="button">Upgrade to Scale — €29/mo</button>
       </div>
       <div class="field">
@@ -184,16 +186,7 @@
       </div>
     </div>
 
-    <h2>Taps</h2>
-    <div class="locked" id="tapsBox">
-      <div class="veil" id="tapsVeil" hidden>
-        <p>Tap insights are part of Guide.</p>
-        <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
-      </div>
-      <div id="taps" class="hint">Nothing tapped yet.</div>
-    </div>
-
-    <h2>Send to your list</h2>
+    <h3 class="studio-subheading">Send to your list</h3>
     <div class="locked" id="sendBox">
       <div class="veil" id="sendVeil" hidden>
         <p>Sending is part of Scale. Broadcasts also need a verified sending domain (Resend).</p>
@@ -207,11 +200,26 @@
       <div class="up">
         <button class="btn pink sm" id="sendBtn" type="button">Send</button>
         <button class="btn ghost sm" id="exportBtn" type="button">Download list (CSV)</button>
-        <span class="hint" id="sendMsg" style="margin:0"></span>
+        <span class="hint" id="sendMsg" role="status"></span>
       </div>
     </div>
 
-    <h2>Plan</h2>
+    </section>
+
+    <section class="studio-section" id="insights" aria-labelledby="insights-title">
+    <h2 id="insights-title">Tap insights</h2>
+    <div class="locked" id="tapsBox">
+      <div class="veil" id="tapsVeil" hidden>
+        <p>Tap insights are part of Guide.</p>
+        <button class="btn pink sm" data-buy="premium" type="button">Upgrade to Guide — €19/mo</button>
+      </div>
+      <div id="taps" class="hint">Nothing tapped yet.</div>
+    </div>
+
+    </section>
+
+    <section class="studio-section" id="account-settings" aria-labelledby="account-title">
+    <h2 id="account-title">Plan and account</h2>
     <div class="plan">
       <div class="plan-now">
         <span class="badge off" id="planBadge">No plan</span>
@@ -220,30 +228,31 @@
       <div class="buy" id="buy"></div>
     </div>
 
-    <h2>Account</h2>
     <div class="up" style="margin-bottom:6px">
       <button class="btn ghost sm" id="billing" type="button">Manage billing</button>
       <button class="btn ghost sm" id="wipe" type="button">Delete my account</button>
     </div>
 
-    <div class="save-bar">
-      <button class="btn pink" id="publish" type="button">Publish</button>
-      <a class="btn ghost" id="viewLive" href="#" target="_blank" rel="noopener" hidden>View live page</a>
-      <button class="btn ghost" id="copyLink" type="button" hidden>Copy my link</button>
-      <span class="saved" id="saved">Saved</span>
-      <span class="hint err" id="saveErr" role="alert" style="margin:0"></span>
-    </div>
-  </div>
-</div>
+    </section>
 
-<div class="preview" id="previewPane">
-  <div class="phone"><iframe id="preview" src="page.html?preview=1" title="Preview"></iframe></div>
-</div>
-<button class="btn pink preview-toggle" id="previewToggle" type="button">Preview</button>
+  <a class="invite" id="svcBanner" href="services.html" hidden>
+    <span class="invite-kicker">Done for you</span>
+    <strong>Want a sales page or full website?</strong>
+    <span class="invite-line">We design, build and host it — you just add your content.</span>
+    <span class="invite-cta">See how it works <span aria-hidden="true">→</span></span>
+  </a>
+  </div>
+</main>
+
+<aside class="preview" id="previewPane" aria-label="Live preview" hidden>
+  <p class="preview-label">Live preview</p>
+  <div class="phone"><iframe id="preview" src="page.html?preview=1" title="Live preview of your page"></iframe></div>
+</aside>
+<button class="btn pink preview-toggle" id="previewToggle" type="button" aria-controls="previewPane" aria-expanded="false" hidden>Preview</button>
 
 <script src="config.js"></script>
-<script src="api.js?v=20261121"></script>
-<script src="linkup.js?v=20261121"></script>
+<script src="api.js?v=20261121b"></script>
+<script src="linkup.js?v=20261121b"></script>
 <script>
   const $ = id => document.getElementById(id);
   let row = null;
@@ -279,13 +288,17 @@
       backgroundImage: r.background_image_url || '',
       links: r.links, captureEnabled: !!r.capture_enabled,
       captureHeading: r.capture_heading || '',
+      badge: !['premium', 'business'].includes(plan),
       quiz: r.quiz,
     };
   };
 
   addEventListener('message', e => {
     if (e.origin !== location.origin || e.source !== $('preview')?.contentWindow) return;
-    if (e.data?.type === 'linkup:ready') { previewReady = true; pushPreview(); }
+    if (e.data?.type === 'linkup:ready') {
+      previewReady = true;
+      pushPreview();
+    } else if (e.data?.type === 'linkup:close-preview') closePreview();
   });
 
   function pushPreview() {
@@ -299,6 +312,7 @@
   function touch(patch) {
     Object.assign(row, patch);
     pushPreview();
+    showQuizCheck();
     revision++;
     $('saved').textContent = 'Unsaved changes';
     $('saved').classList.add('on');
@@ -320,6 +334,7 @@
     if (publication !== undefined) body.published = publication;
     const request = saveQueue.catch(() => {}).then(async () => {
       $('saveErr').textContent = '';
+      $('retrySave').hidden = true;
       try {
         const [persisted] = await API.saveProfile(body) || [];
         if (!persisted) throw new Error('Your session may have expired. Sign in again before saving.');
@@ -331,13 +346,11 @@
         $('saved').textContent = revision === currentRevision ? 'Saved' : 'Unsaved changes';
         $('saved').classList.add('on');
         drawPublication(persisted.slug);
-        if (revision === currentRevision) {
-          setTimeout(() => { if (revision === savedRevision) $('saved').classList.remove('on'); }, 1400);
-        }
       } catch (err) {
         $('saved').textContent = 'Unsaved changes';
         $('saved').classList.add('on');
         $('saveErr').textContent = err.message;
+        $('retrySave').hidden = publication !== undefined;
         throw err;
       }
     });
@@ -376,15 +389,24 @@
     $('welcomeVeil').hidden = API.allows(plan, 'welcome_video');
     $('quizVeil').hidden = API.allows(plan, 'quiz');
     $('captureVeil').hidden = API.allows(plan, 'email_capture');
-    $('tapsVeil').hidden = API.allows(plan, 'welcome_video');
-    $('sendVeil').hidden = API.allows(plan, 'email_capture');
+    for (const [veil, enabled] of [
+      [$('tapsVeil'), API.allows(plan, 'welcome_video')],
+      [$('sendVeil'), API.allows(plan, 'email_capture')],
+    ]) {
+      veil.hidden = enabled;
+      for (const control of veil.parentElement.children) {
+        if (control !== veil) control.inert = !enabled;
+      }
+    }
     drawPublication();
   }
 
   function drawPublication(slug = liveSlug) {
     liveSlug = slug;
     const canPublish = API.allows(plan, 'page');
-    const live = row.published && canPublish;
+    const live = Boolean(row.published && canPublish);
+    $('pageStatus').textContent = live ? 'Live' : row.published ? 'Offline' : 'Draft';
+    $('pageStatus').classList.toggle('is-live', live);
     $('publish').disabled = publishing || (!row.published && !canPublish);
     $('publish').textContent = row.published ? 'Unpublish' : (canPublish ? 'Publish' : 'Pick a plan to publish');
     $('viewLive').hidden = !live;
@@ -412,6 +434,19 @@
     $('quizDestinations').hidden = mode !== 'quiz';
   }
 
+  function showQuizCheck() {
+    const { questions, results } = row.quiz;
+    const message = $('quizCheck');
+    const destinations = new Set(questions.flatMap(question => [question.id, `q:${question.id}`]));
+    Object.keys(results).forEach(key => destinations.add(`result:${key}`));
+    const incomplete = questions.some(question => !Array.isArray(question.options) || !question.options.length ||
+      question.options.some(option => !String(option?.label || '').trim() || !destinations.has(option.next)));
+    message.hidden = row.mode !== 'quiz' || (questions.length > 0 && !incomplete);
+    message.textContent = questions.length
+      ? 'Choose a destination for every answer before sharing your quiz.'
+      : 'Add a question to make your quiz available. Your destinations can still appear as a hub.';
+  }
+
   function nextOptions() {
     const qIds = row.quiz.questions.map(q => [`q:${q.id}`, `Question: ${String(q.text || '').slice(0, 28)}`]);
     const rIds = Object.keys(row.quiz.results || {}).map(k => [`result:${k}`, `Result: ${k}`]);
@@ -431,15 +466,15 @@
           <button class="btn ghost sm" data-del-q="${qi}" type="button">Remove</button>
         </div>
         <div class="field"><label>Prompt</label>
-          <input type="text" data-q-text="${qi}" value="${LinkUp.esc(q.text || '')}" /></div>
+          <input type="text" aria-label="Question ${qi + 1} prompt" data-q-text="${qi}" value="${LinkUp.esc(q.text || '')}" /></div>
         <div class="field"><label>Options</label>
           ${(q.options || []).map((o, oi) => `
             <div class="opt-row">
-              <input type="text" data-o-label="${qi}:${oi}" value="${LinkUp.esc(o.label || '')}" placeholder="Answer" />
-              <select data-o-next="${qi}:${oi}">
+              <input type="text" aria-label="Answer ${oi + 1}" data-o-label="${qi}:${oi}" value="${LinkUp.esc(o.label || '')}" placeholder="Answer" />
+              <select aria-label="Destination for answer ${oi + 1}" data-o-next="${qi}:${oi}">
                 ${opts.map(([v,l]) => `<option value="${LinkUp.esc(v)}" ${(o.next === v || (v.startsWith('q:') && o.next === v.slice(2))) ? 'selected' : ''}>${LinkUp.esc(l)}</option>`).join('')}
               </select>
-              <button class="icon" data-del-o="${qi}:${oi}" type="button" title="Remove">×</button>
+              <button class="icon" data-del-o="${qi}:${oi}" type="button" aria-label="Remove answer">×</button>
             </div>`).join('')}
           <button class="btn ghost sm" data-add-o="${qi}" type="button">+ Option</button>
         </div>`;
@@ -588,34 +623,54 @@
   };
 
   let slugTimer = null;
+
+  async function checkAddress() {
+    clearTimeout(slugTimer);
+    const field = $('f-slug');
+    const wanted = field.value;
+    const message = $('slugMsg');
+    if (wanted.length < 2) {
+      message.textContent = 'Use at least two characters.';
+      message.className = 'hint err';
+      return false;
+    }
+    if (wanted === row.slug) {
+      message.textContent = `${location.host}/${wanted}`;
+      message.className = 'hint';
+      return true;
+    }
+
+    message.textContent = 'Checking address…';
+    message.className = 'hint';
+    try {
+      const free = await API.slugFree(wanted);
+      if (field.value !== wanted) return false;
+      if (!free && wanted !== row.slug) {
+        message.textContent = 'That address is unavailable.';
+        message.className = 'hint err';
+        return false;
+      }
+      if (wanted !== row.slug) touch({ slug: wanted });
+      message.textContent = `${location.host}/${wanted} is available.`;
+      message.className = 'hint ok';
+      return true;
+    } catch {
+      if (field.value === wanted) {
+        message.textContent = 'Could not check this address. Try again.';
+        message.className = 'hint err';
+      }
+      return false;
+    }
+  }
+
   function wireSlug() {
     $('origin').textContent = location.host + '/';
-    const el = $('f-slug');
-    el.value = row.slug || '';
-    el.addEventListener('input', () => {
-      const wanted = el.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
-      if (wanted !== el.value) el.value = wanted;
+    const input = $('f-slug');
+    input.value = row.slug || '';
+    input.addEventListener('input', () => {
+      input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
       clearTimeout(slugTimer);
-      slugTimer = setTimeout(async () => {
-        const msg = $('slugMsg');
-        if (wanted.length < 2) { msg.textContent = 'A bit longer, please.'; msg.className = 'hint err'; return; }
-        try {
-          const free = wanted === row.slug || await API.slugFree(wanted);
-          if (el.value !== wanted) return;
-          if (free) {
-            msg.textContent = `${location.host}/${wanted} is available.`;
-            msg.className = 'hint ok';
-            if (wanted !== row.slug) touch({ slug: wanted });
-          } else {
-            msg.textContent = 'That one is taken.';
-            msg.className = 'hint err';
-          }
-        } catch {
-          if (el.value !== wanted) return;
-          msg.textContent = 'Could not check this address. Try again.';
-          msg.className = 'hint err';
-        }
-      }, 400);
+      slugTimer = setTimeout(checkAddress, 380);
     });
   }
 
@@ -624,14 +679,21 @@
       const file = input.files?.[0]; if (!file) return;
       const col = input.dataset.target;
       const near = input.closest('.up').querySelector('.hint');
-      if (near) near.textContent = 'Uploading…';
+      const clear = input.closest('.up').querySelector('[data-clear]');
+      input.disabled = true;
+      if (clear) clear.disabled = true;
+      if (near) { near.textContent = 'Uploading…'; near.classList.remove('err'); }
       try {
         const url = await API.upload(file, input.dataset.kind);
         touch({ [col]: url }); await save(); drawMedia();
         if (near) { near.textContent = 'Done'; near.classList.remove('err'); }
       } catch (err) {
         if (near) { near.textContent = err.message; near.classList.add('err'); }
-      } finally { input.value = ''; }
+      } finally {
+        input.value = '';
+        input.disabled = false;
+        if (clear) clear.disabled = false;
+      }
     });
   });
   document.querySelectorAll('[data-clear]').forEach(btn => {
@@ -642,6 +704,13 @@
     const b = $('bgiThumb'); b.hidden = !row.background_image_url; if (row.background_image_url) b.src = row.background_image_url;
     $('bgvName').textContent = row.background_video_url ? 'Video added' : '';
     $('welName').textContent = row.welcome_video_url ? 'Video added' : '';
+    const sample = $('welcomeSample');
+    const welcomeUrl = row.welcome_video_url || '';
+    $('welcomePreview').hidden = !welcomeUrl;
+    if (welcomeUrl !== (sample.getAttribute('src') || '')) {
+      if (welcomeUrl) sample.setAttribute('src', welcomeUrl);
+      else { sample.removeAttribute('src'); sample.load(); }
+    }
   }
 
   function celebrate() {
@@ -667,6 +736,10 @@
     publishing = true;
     drawPublication();
     try {
+      if (goingLive && !await checkAddress()) {
+        $('f-slug').focus();
+        return;
+      }
       await save(goingLive);
       if (goingLive) celebrate();
     } catch {
@@ -685,22 +758,48 @@
   $('signout').onclick = () => API.signOut();
 
   const previewPane = $('previewPane');
-  $('previewToggle').onclick = () => {
-    const open = previewPane.classList.toggle('open');
-    $('previewToggle').textContent = open ? 'Close preview' : 'Preview';
-  };
+  const previewToggle = $('previewToggle');
+  const compactPreview = matchMedia('(max-width: 1050px)');
+  function setPreview(open) {
+    const mobile = compactPreview.matches;
+    previewPane.classList.toggle('open', open);
+    previewPane.inert = mobile && !open;
+    $('studioPanel').inert = mobile && open;
+    document.body.classList.toggle('preview-open', mobile && open);
+    previewToggle.textContent = open ? 'Close preview' : 'Preview';
+    previewToggle.setAttribute('aria-expanded', String(open));
+    if (mobile && open) previewToggle.focus();
+  }
+  compactPreview.addEventListener('change', () => setPreview(false));
+  previewToggle.onclick = () => setPreview(!previewPane.classList.contains('open'));
+  function closePreview() {
+    if (!previewPane.classList.contains('open')) return;
+    setPreview(false);
+    previewToggle.focus();
+  }
+  addEventListener('keydown', event => {
+    if (event.key === 'Escape') closePreview();
+  });
+  $('retryStudio').onclick = () => location.reload();
+  $('retrySave').onclick = () => save().catch(() => {});
 
   (async () => {
     if (!API.configured() || !API.signedIn()) return;
     try {
-      row = await API.myProfile();
-      if (!row) throw new Error('No page found for this account.');
-      ({ plan } = await API.myPlan());
+      const [profile, subscription] = await Promise.all([API.myProfile(), API.myPlan()]);
+      if (!profile) throw new Error('No page found for this account.');
+      row = profile;
+      plan = subscription.plan;
     } catch (e) {
-      $('who').textContent = e.message; $('who').className = 'sub err'; return;
+      $('who').textContent = e.message; $('who').className = 'sub err';
+      $('retryStudio').hidden = false;
+      return;
     }
     ensureQuiz(row);
     $('app').hidden = false;
+    previewPane.hidden = false;
+    previewToggle.hidden = false;
+    setPreview(false);
     $('who').textContent = API.user()?.email || '';
     let interest;
     try { interest = JSON.parse(localStorage.getItem('linkup.serviceInterest') || 'null'); } catch {}
@@ -721,7 +820,7 @@
     const themeWrap = $('themes');
     Object.entries(LinkUp.THEMES).forEach(([name, t]) => {
       const b = document.createElement('button');
-      b.className = 'swatch'; b.type = 'button'; b.title = t.label; b.dataset.theme = name;
+      b.className = 'swatch'; b.type = 'button'; b.title = t.label; b.setAttribute('aria-label', t.label); b.dataset.theme = name;
       b.setAttribute('aria-pressed', (row.theme || 'midnight') === name);
       b.style.background = `radial-gradient(110% 110% at 32% 24%, #fff 0%, ${t.light} 22%, ${t.accent} 55%, ${t.deep} 100%)`;
       b.onclick = () => {
@@ -733,11 +832,11 @@
 
     liveSlug = row.slug;
     setMode(row.mode || 'quiz');
-    wireSlug(); drawQuestions(); drawResults(); drawLinks(); drawMedia(); drawPlan(); pushPreview();
+    wireSlug(); drawQuestions(); drawResults(); drawLinks(); drawMedia(); drawPlan(); pushPreview(); showQuizCheck();
 
     if (new URLSearchParams(location.search).get('paid') === '1') {
       const recheck = async () => {
-        try { ({ plan } = await API.myPlan()); drawPlan(); drawExtras(); }
+        try { ({ plan } = await API.myPlan()); drawPlan(); pushPreview(); drawExtras(); }
         catch { $('saveErr').textContent = 'Could not confirm your plan yet. Refresh to try again.'; }
       };
       setTimeout(recheck, 1500); setTimeout(recheck, 5000);

@@ -7,53 +7,15 @@
 const LinkUp = (() => {
   const KEY = 'linkup.profile';
 
-  /* Demo is a generic coach — not a real client brand. Shows the quiz product.
-   * Avatar + backdrop are inline SVGs so the hero iframe looks finished offline. */
-  const DEMO_AVATAR = "data:image/svg+xml," + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
-      <defs>
-        <linearGradient id="g" x1="18%" y1="12%" x2="86%" y2="90%">
-          <stop offset="0%" stop-color="#f3b6bf"/>
-          <stop offset="55%" stop-color="#e8677a"/>
-          <stop offset="100%" stop-color="#b8273b"/>
-        </linearGradient>
-      </defs>
-      <rect width="240" height="240" rx="120" fill="url(#g)"/>
-      <text x="120" y="158" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#fbf3e6" fill-opacity=".95">M</text>
-    </svg>`
-  );
-  const DEMO_BACKDROP = "data:image/svg+xml," + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2400" viewBox="0 0 1600 2400">
-      <defs>
-        <radialGradient id="a" cx="18%" cy="8%" r="60%">
-          <stop offset="0%" stop-color="#e8677a" stop-opacity=".55"/>
-          <stop offset="100%" stop-color="#1f0d12" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="b" cx="92%" cy="22%" r="50%">
-          <stop offset="0%" stop-color="#b8273b" stop-opacity=".4"/>
-          <stop offset="100%" stop-color="#1f0d12" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#2c1219"/>
-          <stop offset="55%" stop-color="#1f0d12"/>
-          <stop offset="100%" stop-color="#140709"/>
-        </linearGradient>
-      </defs>
-      <rect width="1600" height="2400" fill="url(#c)"/>
-      <rect width="1600" height="2400" fill="url(#a)"/>
-      <rect width="1600" height="2400" fill="url(#b)"/>
-      <circle cx="1180" cy="520" r="220" fill="#e8677a" fill-opacity=".08"/>
-      <circle cx="320" cy="980" r="280" fill="#f3b6bf" fill-opacity=".05"/>
-    </svg>`
-  );
+  // A fictional coach for the sample quiz.
   const DEMO = {
     name: 'Maya Chen',
     handle: '@maya.moves',
     tagline: 'Strength, pregnancy fitness, and training that fits real life.',
-    avatar: DEMO_AVATAR,
+    avatar: '/images/demo-coach.webp',
     welcomeVideo: '',
     backgroundVideo: '',
-    backgroundImage: DEMO_BACKDROP,
+    backgroundImage: '',
     theme: 'royal',
     mode: 'quiz', // 'quiz' | 'hub'
     bubbleStyle: 'glass',
@@ -197,7 +159,7 @@ const LinkUp = (() => {
       out.quiz = {
         ...base.quiz,
         ...p.quiz,
-        questions: Array.isArray(p.quiz.questions) ? p.quiz.questions : base.quiz.questions,
+        questions: Array.isArray(p.quiz.questions) ? p.quiz.questions.filter(q => typeof q?.id === 'string') : base.quiz.questions,
         results: p.quiz.results && typeof p.quiz.results === 'object' ? p.quiz.results : base.quiz.results,
       };
     }
@@ -225,7 +187,7 @@ const LinkUp = (() => {
   }
 
   function applyTheme(root, name) {
-    const t = THEMES[name] || THEMES.midnight;
+    const t = Object.hasOwn(THEMES, name) ? THEMES[name] : THEMES.midnight;
     root.style.setProperty('--p-bg', t.bg);
     root.style.setProperty('--p-accent', t.accent);
     root.style.setProperty('--p-deep', t.deep);
@@ -235,8 +197,8 @@ const LinkUp = (() => {
   }
 
   function backgroundHtml(p) {
-    if (p.backgroundVideo) {
-      return `<video src="${esc(p.backgroundVideo)}" autoplay muted loop playsinline
+    if (p.backgroundVideo && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return `<video src="${esc(p.backgroundVideo)}" autoplay muted loop playsinline aria-hidden="true"
                      ${p.backgroundImage ? `poster="${esc(p.backgroundImage)}"` : ''}></video>`;
     }
     if (p.backgroundImage) return `<img src="${esc(p.backgroundImage)}" alt="" />`;
@@ -258,17 +220,20 @@ const LinkUp = (() => {
     if (!links.length) {
       return `<div class="hub-empty"><p>No destinations yet.</p></div>`;
     }
-    return `<nav class="hub-list">${links.map(({ link: l, i }, order) => {
+    return `<nav class="hub-list" aria-label="Destinations">${links.map(({ link: l, i }, order) => {
       const url = safeUrl(l.url);
       const emoji = String(l.emoji || '');
       const firstEmoji = emojiSegmenter?.segment(emoji)[Symbol.iterator]().next().value?.segment ?? [...emoji][0] ?? '';
-      return `<a class="hub-item rise" style="--rise:${order * 70}ms" href="${esc(url)}"
-        ${url === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'} data-i="${i}" data-label="${esc(l.label)}">
-        ${l.emoji ? `<span class="hub-emoji">${esc(firstEmoji)}</span>` : ''}
+      const active = url !== '#';
+      const tag = active ? 'a' : 'span';
+      return `<${tag} class="hub-item rise" style="--rise:${Math.min(order, 6) * 45}ms"
+        ${active ? `href="${esc(url)}" target="_blank" rel="noopener noreferrer"` : ''}
+        data-i="${i}" data-label="${esc(l.label)}">
+        <span class="hub-emoji" aria-hidden="true">${firstEmoji ? esc(firstEmoji) : '→'}</span>
         <span class="hub-copy"><strong>${esc(l.label)}</strong>
         ${l.note ? `<small>${esc(l.note)}</small>` : ''}</span>
-        <span class="hub-arrow" aria-hidden="true">→</span>
-      </a>`;
+        ${active ? '<span class="hub-arrow" aria-hidden="true">→</span>' : ''}
+      </${tag}>`;
     }).join('')}</nav>`;
   }
 
@@ -277,7 +242,7 @@ const LinkUp = (() => {
     return `
       <div class="capture-wrap">
         <form class="capture" onsubmit="LinkUp.onCapture(event)">
-          <input type="email" name="email" required placeholder="Your email" aria-label="Your email" />
+          <input type="email" name="email" autocomplete="email" required placeholder="Your email" aria-label="Your email" />
           <button type="submit">Join</button>
         </form>
         <p class="capture-note">${esc(p.captureHeading || '')}</p>
@@ -286,8 +251,7 @@ const LinkUp = (() => {
   }
 
   /* ── Quiz funnel ────────────────────────────────────────────────────── */
-  function quizShell(p) {
-    const q = p.quiz || {};
+  function quizShell() {
     return `
       <div class="quiz" id="quiz" data-step="intro">
         <div class="quiz-progress" aria-hidden="true"><i id="quizBar"></i></div>
@@ -295,35 +259,20 @@ const LinkUp = (() => {
       </div>`;
   }
 
-  function renderQuizStep(p, step, { root = document } = {}) {
+  function renderQuizStep(p, step, { root = document, depth = 0, focus = false, demo = false } = {}) {
     const stage = root.querySelector('#quizStage');
     const bar = root.querySelector('#quizBar');
     const quizRoot = root.querySelector('#quiz');
     if (!stage || !p.quiz) return;
 
     const questions = p.quiz.questions || [];
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const firstPaint = !stage.dataset.ready;
 
     function swap(html, progress) {
       if (bar) bar.style.width = `${Math.max(4, progress * 100)}%`;
       if (quizRoot) quizRoot.dataset.step = step;
 
-      const paint = () => {
-        stage.innerHTML = html;
-        stage.classList.remove('out');
-        stage.dataset.ready = '1';
-        void stage.offsetWidth;
-        stage.classList.add('in');
-      };
-
-      if (firstPaint || reduced) {
-        paint();
-        return;
-      }
-      stage.classList.remove('in');
-      stage.classList.add('out');
-      setTimeout(paint, 220);
+      stage.innerHTML = html;
+      if (focus) stage.querySelector('h1, h2')?.focus();
     }
 
     if (step === 'intro') {
@@ -331,7 +280,7 @@ const LinkUp = (() => {
         <div class="quiz-panel intro">
           ${p.avatar ? `<img class="quiz-avatar" src="${esc(p.avatar)}" alt="" />` : `<div class="quiz-mark" aria-hidden="true"></div>`}
           <p class="quiz-kicker">${esc(p.name || 'LinkUp')}</p>
-          <h1>${esc(p.quiz.introTitle || 'Find your next step')}</h1>
+          <h1 tabindex="-1">${esc(p.quiz.introTitle || 'Find your next step')}</h1>
           <p class="quiz-lede">${esc(p.quiz.introSub || '')}</p>
           ${questions.length ? `<button type="button" class="quiz-cta" data-quiz-go="q:${esc(questions[0].id)}">${esc(p.quiz.introCta || 'Start')}</button>` : ''}
           ${p.mode === 'quiz' && (p.links || []).some(l => l.label) ? `<button type="button" class="quiz-skip" data-quiz-go="hub">Browse all links</button>` : ''}
@@ -342,35 +291,51 @@ const LinkUp = (() => {
     if (step === 'hub') {
       swap(`
         <div class="quiz-panel hub">
-          <button type="button" class="quiz-back" data-quiz-go="intro">← Back</button>
-          <h2>All destinations</h2>
+          <button type="button" class="quiz-back" data-quiz-go="back">← Back</button>
+          <h2 tabindex="-1">All destinations</h2>
           ${hubHtml(p)}
         </div>`, 1);
       return;
     }
 
+    if (step === 'demo-checkout') {
+      swap(`<div class="quiz-panel result">
+        <h2 tabindex="-1">This is where your checkout opens.</h2>
+        <p class="quiz-lede">On your own page, each programme can link to your sales page or payment provider.</p>
+        <a class="quiz-cta" href="/account.html" target="_top">Build my own quiz</a>
+        <button type="button" class="quiz-back" data-quiz-go="back">← Back to result</button>
+      </div>`, 1);
+      return;
+    }
+
     if (step.startsWith('q:')) {
-      const id = step.slice(2);
-      const qi = questions.findIndex(x => x.id === id);
-      const question = questions[qi];
-      if (!question) {
-        swap(`<div class="quiz-panel"><h2>This step is unavailable</h2><button type="button" class="quiz-cta" data-quiz-go="intro">Start again</button></div>`, 1);
-        return;
-      }
-      const progress = (qi + 1) / (questions.length + 1);
+      const question = questions.find(item => item?.id === step.slice(2));
+      const options = Array.isArray(question?.options) ? question.options.filter(opt => opt?.label) : [];
+      const progress = Math.min(.88, depth / (questions.length + 1));
       swap(`
         <div class="quiz-panel question">
-          <p class="quiz-count">Question ${qi + 1} of ${questions.length}</p>
-          <h2>${esc(question.text)}</h2>
-          <div class="quiz-options">
-            ${(question.options || []).map((opt, i) => `
-              <button type="button" class="quiz-option rise" style="--rise:${i * 60}ms"
-                data-quiz-go="${esc(opt.next || '')}">
+          <div class="quiz-question-top">
+            <button type="button" class="quiz-back" data-quiz-go="back">← Back</button>
+            <p class="quiz-count">Question ${depth}</p>
+          </div>
+          <h2 tabindex="-1">${esc(question?.text || 'This step is unavailable')}</h2>
+          ${options.length ? `<div class="quiz-options">
+            ${options.map(opt => `
+              <button type="button" class="quiz-option"
+                data-label="${esc(opt.label)}" data-quiz-go="${esc(opt.next || 'unavailable')}">
                 <span>${esc(opt.label)}</span>
                 <i aria-hidden="true">→</i>
               </button>`).join('')}
-          </div>
+          </div>` : '<p class="quiz-lede">There are no answers for this question yet.</p>'}
         </div>`, progress);
+      return;
+    }
+
+    if (step === 'unavailable') {
+      swap(`<div class="quiz-panel">
+        <h2 tabindex="-1">This step is unavailable</h2>
+        <button type="button" class="quiz-back" data-quiz-go="back">← Back</button>
+      </div>`, .6);
       return;
     }
 
@@ -378,62 +343,77 @@ const LinkUp = (() => {
       const key = step.slice(7);
       const r = Object.hasOwn(p.quiz.results || {}, key) ? p.quiz.results[key] : null;
       if (!r) {
-        swap(`<div class="quiz-panel"><h2>Nothing matched</h2><button type="button" class="quiz-cta" data-quiz-go="intro">Start again</button></div>`, 1);
+        swap(`<div class="quiz-panel"><h2 tabindex="-1">This programme is unavailable</h2><button type="button" class="quiz-back" data-quiz-go="back">← Back</button></div>`, 1);
         return;
       }
       const url = safeUrl(r.url);
       swap(`
         <div class="quiz-panel result">
           <p class="quiz-kicker">Your match</p>
-          <h1>${esc(r.title)}</h1>
+          <h1 tabindex="-1">${esc(r.title || 'Your recommendation')}</h1>
           <p class="quiz-lede">${esc(r.subtitle || '')}</p>
           <ul class="quiz-benefits">
-            ${(r.benefits || []).map(b => `<li>${esc(b)}</li>`).join('')}
+            ${(Array.isArray(r.benefits) ? r.benefits : []).map(b => `<li>${esc(b)}</li>`).join('')}
           </ul>
           ${r.price ? `<p class="quiz-price">${esc(r.price)}</p>` : ''}
-          <a class="quiz-cta" href="${esc(url)}" ${url === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}">${esc(r.cta || 'Continue')}</a>
-          <button type="button" class="quiz-skip" data-quiz-go="intro">Retake the quiz</button>
+          ${demo ? `<button type="button" class="quiz-cta" data-quiz-go="demo-checkout">${esc(r.cta || 'Continue')}</button>` :
+            url === '#' ? '' : `<a class="quiz-cta" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(r.cta || 'Continue')}</a>`}
+          <div class="quiz-result-actions">
+            <button type="button" class="quiz-back" data-quiz-go="back">← Back</button>
+            <button type="button" class="quiz-skip" data-quiz-go="intro">Retake the quiz</button>
+          </div>
         </div>`, 1);
     }
   }
 
-  function wireQuiz(p, { root = document, onTap } = {}) {
+  function wireQuiz(p, { root = document, demo = false } = {}) {
     const quiz = root.querySelector('#quiz');
     if (!quiz) return;
+    const history = [];
     let step = 'intro';
-    renderQuizStep(p, step, { root });
+    renderQuizStep(p, step, { root, demo });
 
-    quiz.onclick = (e) => {
-      const btn = e.target.closest('[data-quiz-go]');
-      if (!btn) return;
-      const next = btn.getAttribute('data-quiz-go');
-      if (!next) return;
-      if (onTap && btn.matches('.quiz-option, .quiz-cta')) {
-        try { onTap(btn.textContent.trim().slice(0, 80)); } catch {}
+    quiz.onclick = event => {
+      const button = event.target.closest('[data-quiz-go]');
+      if (!button) return;
+      let next = button.dataset.quizGo;
+      if (next === 'back') {
+        step = history.pop() || 'intro';
+      } else if (next === 'intro') {
+        history.length = 0;
+        step = next;
+      } else {
+        if (p.quiz.questions.some(question => question?.id === next)) next = `q:${next}`;
+        const allowed = next === 'hub' || (demo && next === 'demo-checkout') ||
+          next.startsWith('q:') || next.startsWith('result:');
+        history.push(step);
+        step = allowed ? next : 'unavailable';
       }
-      if (next.startsWith('q:')) step = next;
-      else if (next.startsWith('result:')) step = next;
-      else if (next === 'hub' || next === 'intro') step = next;
-      else if (next.startsWith('q') && !next.includes(':')) step = `q:${next}`;
-      else step = next;
-      renderQuizStep(p, step, { root });
+      renderQuizStep(p, step, { root, demo, depth: history.length, focus: true });
     };
   }
 
   /* Renders into whatever containers exist. */
-  function render(p, { root = document, bgEl, pageEl, interactive = true } = {}) {
+  function render(p, { root = document, bgEl, pageEl, interactive = true, demo = false } = {}) {
     p = mergeProfile(p);
     const html = root.documentElement || document.documentElement;
     applyTheme(html, p.theme);
-    html.setAttribute('data-mode', p.mode === 'hub' ? 'hub' : 'quiz');
+    const quizMode = p.mode === 'quiz' && p.quiz?.enabled !== false && p.quiz?.questions?.length > 0;
+    html.setAttribute('data-mode', quizMode ? 'quiz' : 'hub');
     const bg = bgEl || root.querySelector('.bg');
     const page = pageEl || root.querySelector('.page');
-    if (bg) bg.innerHTML = backgroundHtml(p);
+    if (bg) {
+      const background = backgroundHtml(p);
+      if (bg.dataset.renderedBackground !== background) {
+        bg.innerHTML = background;
+        bg.dataset.renderedBackground = background;
+      }
+    }
     if (!page) return;
 
-    const foot = `<p class="foot">Made with <a href="/">LinkUp</a></p>`;
+    const foot = p.badge === false ? '' : '<p class="foot">Made with <a href="/" target="_top">LinkUp</a></p>';
 
-    if (p.mode === 'hub' || p.quiz?.enabled === false || !p.quiz?.questions?.length) {
+    if (!quizMode) {
       page.innerHTML = `
         <header class="profile-head rise">
           ${p.avatar ? `<img class="avatar" src="${esc(p.avatar)}" alt="" />` : ''}
@@ -448,10 +428,10 @@ const LinkUp = (() => {
     }
 
     page.innerHTML = `
-      ${quizShell(p)}
+      ${quizShell()}
       ${captureHtml(p)}
       ${foot}`;
-    if (interactive) wireQuiz(p, { root });
+    if (interactive) wireQuiz(p, { root, demo });
   }
 
   function liven() { /* hub items use CSS rise; quiz handles its own motion */ }

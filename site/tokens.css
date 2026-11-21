@@ -17,40 +17,18 @@
   font-display: swap;
   src: url("fonts/fraunces-600-italic.woff2") format("woff2");
 }
-@font-face {
-  font-family: "Syne";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("fonts/synne-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Syne";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("fonts/synne-600.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Syne";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("fonts/synne-700.woff2") format("woff2");
-}
-
 :root {
-  --bg:           #faf7f2;
+  --bg:           #fbf7f0;
   --bg-warm:      #f3eee6;
   --surface:      #fffdf9;
   --surface-2:    #f1ebe1;
   --ink:          #1c1616;
   --ink-soft:     #5b4f4c;
-  --muted:        #8a7d78;
+  --muted:        #70625e;
   --line:         #e8dfd3;
   --line-strong:  #d6cabb;
 
-  --accent:       #9b1c2e;
+  --accent:       #871b35;
   --accent-deep:  #6e1020;
   --accent-soft:  rgba(155, 28, 46, 0.08);
   --accent-glow:  rgba(155, 28, 46, 0.16);
@@ -75,7 +53,7 @@
   --plum:         var(--ink);
 
   --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans:    "Syne", ui-sans-serif, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --sans:    ui-sans-serif, system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --serif:   var(--display);
 
   --r-sm: 8px;
@@ -95,7 +73,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 88px; }
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
