@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 const session = { access_token: 'test-access', refresh_token: 'test-refresh', expires_at: 9999999999, user: { id: 'test-user', email: 'test@example.com' } };
-const profile = { id: 'test-id', user_id: 'test-user', name: 'Test Creator', slug: 'creator', links: [{ label: 'My website', url: 'https://example.com' }], published: false, theme: 'blush' };
+const profile = { id: 'test-id', user_id: 'test-user', name: 'Test Creator', slug: 'creator', links: [{ label: 'My website', url: 'https://example.com' }], published: false, theme: 'blush', mode: 'hub', quiz: {} };
 async function editor(page, failSave = false) {
   await page.addInitScript(s => localStorage.setItem('linkup.session', JSON.stringify(s)), session);
   await page.route('https://*.supabase.co/**', async route => {
@@ -20,16 +20,22 @@ test('marketing and demo work without console errors or mobile overflow', async 
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
+  const menu = page.getByRole('button', { name: 'Menu', exact: true });
+  if (await menu.isVisible()) await menu.click();
   await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
+  if (await menu.isVisible()) await page.keyboard.press('Escape');
   const frame = page.frameLocator('iframe');
-  await expect(frame.locator('.name')).toHaveText('Becca Lyons');
+  await expect(frame.locator('.quiz-kicker')).toHaveText('Maya Chen');
+  await frame.getByRole('button', { name: 'Start', exact: true }).click();
+  await expect(frame.getByRole('heading', { name: 'Where are you right now?' })).toBeVisible();
+  await frame.getByRole('button', { name: 'Pregnant', exact: false }).first().click();
+  await expect(frame.getByRole('heading', { name: 'Which trimester?' })).toBeVisible();
+  await frame.getByRole('button', { name: /First/ }).click();
+  await expect(frame.getByRole('heading', { name: 'Trimester 1 Studio' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.goto('/page.html?demo=1');
   await expect(page.locator('#welcome')).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole('textbox', { name: 'Your email' }).fill('demo@example.com');
-  await page.getByRole('button', { name: 'Join', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('has not been collected');
   expect(errors).toEqual([]);
 });
 test('reset links work even with an existing session', async ({ page }) => {
@@ -57,7 +63,11 @@ test('editing updates the preview and successful publishing exposes the saved li
   page.on('pageerror', error => errors.push(error.message));
   await editor(page);
   await page.locator('#f-name').fill('New Creator');
+  const previewButton = page.getByRole('button', { name: 'Preview', exact: true });
+  if (await previewButton.isVisible()) await previewButton.click();
   await expect(page.frameLocator('#preview').locator('.name')).toHaveText('New Creator');
+  const closePreview = page.getByRole('button', { name: 'Close preview', exact: true });
+  if (await closePreview.isVisible()) await closePreview.click();
   await page.locator('#publish').click();
   await expect(page.locator('#publish')).toHaveText('Unpublish');
   await expect(page.locator('#viewLive')).toHaveAttribute('href', 'http://127.0.0.1:4173/creator');
@@ -90,7 +100,50 @@ test('marketing copy and pricing stay visible without JavaScript', async ({ brow
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto(baseURL);
-  await expect(page.getByRole('heading', { name: 'Basic', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Record a hello', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Launch', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Guide', exact: true })).toBeVisible();
   await context.close();
+});
+
+test('published renderer fields expose video, capture, and plan badge as returned by the API', async ({ page }) => {
+  let joined;
+  await page.route('https://*.supabase.co/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/rpc/public_profile')) {
+      return route.fulfill({ json: {
+        id: 'test-id', name: 'Public Creator', mode: 'hub', links: [], badge: false,
+        avatar: '/favicon.svg', backgroundImage: '/favicon.svg', welcomeVideo: '/sample.mp4',
+        captureEnabled: true, captureHeading: 'Get updates',
+      } });
+    }
+    if (url.includes('/rpc/join_list')) {
+      joined = route.request().postDataJSON();
+      return route.fulfill({ json: true });
+    }
+    return route.fulfill({ status: 404 });
+  });
+  await page.route('**/sample.mp4', () => {});
+  await page.goto('/creator', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#welcome')).toBeVisible();
+  await expect(page.locator('#welcomeVideo')).toHaveAttribute('src', '/sample.mp4');
+  await expect(page.locator('.avatar')).toHaveAttribute('src', '/favicon.svg');
+  await expect(page.locator('.bg img')).toHaveAttribute('src', '/favicon.svg');
+  await page.getByRole('button', { name: 'Skip', exact: true }).click();
+  await expect(page.locator('.foot')).toHaveCount(0);
+  await expect(page.getByText('Get updates')).toBeVisible();
+  await page.getByRole('textbox', { name: 'Your email' }).fill('reader@example.com');
+  await page.getByRole('button', { name: 'Join', exact: true }).click();
+  await expect(page.getByRole('status').filter({ visible: true })).toContainText("you're on the list");
+  expect(joined).toEqual({ p_profile_id: 'test-id', p_email: 'reader@example.com' });
+});
+
+test('preview capture gives feedback without saving an email', async ({ page }) => {
+  await page.goto('/page.html?preview=1');
+  await page.evaluate(() => window.postMessage({
+    type: 'linkup:profile', profile: { mode: 'hub', name: 'Preview Creator', captureEnabled: true },
+  }, location.origin));
+  await page.getByRole('textbox', { name: 'Your email' }).fill('preview@example.com');
+  await page.getByRole('button', { name: 'Join', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('has not been collected');
+  expect(await page.evaluate(() => localStorage.getItem('linkup.emails'))).toBeNull();
 });

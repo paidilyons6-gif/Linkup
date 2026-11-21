@@ -4,23 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>LinkUp</title>
-<meta name="theme-color" content="#2e1b2b" />
+<meta name="theme-color" content="#111629" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="linkup.css" />
-<style>
-  .missing {
-    position: relative; z-index: 2; min-height: 100dvh;
-    display: grid; place-content: center; justify-items: center; gap: 16px;
-    text-align: center; padding: 32px; color: #fff;
-  }
-  .missing h1 { font-family: var(--serif); font-size: 30px; letter-spacing: -.02em; }
-  .missing p { opacity: .8; max-width: 32ch; line-height: 1.5; }
-  .missing a {
-    margin-top: 8px; text-decoration: none; padding: 12px 22px; border-radius: var(--r-pill);
-    background: rgba(255,255,255,.16); font-size: 14px; font-weight: 600;
-  }
-</style>
+<link rel="stylesheet" href="tokens.css?v=20261121" />
+<link rel="stylesheet" href="linkup.css?v=20261121" />
 </head>
 <body>
 
@@ -45,11 +32,9 @@
 </div>
 
 <script src="config.js"></script>
-<script src="api.js"></script>
-<script src="linkup.js"></script>
+<script src="api.js?v=20261121"></script>
+<script src="linkup.js?v=20261121"></script>
 <script>
-  /* The address is the path: /becca, or ?u=becca when opened as a plain file.
-     Netlify rewrites /:slug onto this page — see netlify.toml. */
   const slug = (new URLSearchParams(location.search).get('u')
              || location.pathname.replace(/^\/+|\/+$/g, '').split('/').pop() || '')
              .toLowerCase();
@@ -72,53 +57,73 @@
     document.getElementById('missing').hidden = false;
   }
 
+  // The public RPC uses renderer keys. Accept older snake_case payloads too.
+  function toView(raw) {
+    let quiz = raw.quiz;
+    if (typeof quiz === 'string') {
+      try { quiz = JSON.parse(quiz); } catch { quiz = null; }
+    }
+    return {
+      ...raw, quiz: quiz || {},
+      mode: raw.mode || (quiz?.questions?.length && quiz.enabled !== false ? 'quiz' : 'hub'),
+      avatar: raw.avatar ?? raw.avatar_url ?? '',
+      backgroundVideo: raw.backgroundVideo ?? raw.background_video_url ?? '',
+      backgroundImage: raw.backgroundImage ?? raw.background_image_url ?? '',
+      welcomeVideo: raw.welcomeVideo ?? raw.welcome_video_url ?? '',
+      bubbleStyle: raw.bubbleStyle ?? raw.bubble_style ?? 'glass',
+      captureEnabled: raw.captureEnabled ?? raw.capture_enabled ?? false,
+      captureHeading: raw.captureHeading ?? raw.capture_heading ?? '',
+    };
+  }
+
   (async () => {
     if (!API.configured() || !slug || slug === 'u.html') return notFound();
 
-    let p = null;
-    try { p = await API.publicProfile(slug); } catch {
+    let raw = null;
+    try { raw = await API.publicProfile(slug); } catch {
       notFound();
-      document.querySelector('#missing h1').textContent = 'Could not load this page';
-      document.querySelector('#missing p').textContent = 'Please check your connection and try again.';
-      const retry = document.querySelector('#missing a');
-      retry.textContent = 'Try again'; retry.href = location.href;
+      const missing = document.getElementById('missing');
+      missing.querySelector('h1').textContent = 'Could not load this page';
+      missing.querySelector('p').textContent = 'Check your connection and try again.';
+      const retry = missing.querySelector('a');
+      retry.textContent = 'Try again';
+      retry.href = location.href;
       return;
     }
-    if (!p) return notFound();
+    if (!raw) return notFound();
 
     document.getElementById('loading').hidden = true;
+    const p = toView(raw);
     document.title = p.name ? `${p.name} — LinkUp` : 'LinkUp';
     LinkUp.render(p);
-    LinkUp.liven();
 
-    // The badge is a Basic-plan thing; the database decides, not the browser.
-    if (!p.badge) document.querySelector('.foot')?.remove();
+    if (raw.badge === false) {
+      page.dataset.hideBadge = '1';
+      document.querySelector('.foot')?.remove();
+    }
 
-    /* Count the tap, then let the link do what it was going to do. keepalive
-       means the request survives the page being navigated away from, so no
-       delay is added for the sake of a number. */
-    document.querySelectorAll('.bubble').forEach(a => {
-      a.addEventListener('click', () => {
-        API.recordTap(p.id, a.dataset.label || 'Untitled');
-      });
+    page.addEventListener('click', (e) => {
+      const hit = e.target.closest('.quiz-option, .hub-item, .quiz-cta[href]');
+      if (!hit || !raw.id) return;
+      const label = (hit.dataset.label || hit.textContent.trim()).slice(0, 80) || 'tap';
+      API.recordTap(raw.id, label);
     });
 
-    // Joining a list writes a real row, so the demo handler is replaced.
     const form = document.querySelector('.capture');
     if (form) {
-      form.onsubmit = async (e) => {
+      form.onsubmit = async e => {
         e.preventDefault();
         const input = form.querySelector('input[name=email]');
         const btn = form.querySelector('button');
+        const status = form.parentElement.querySelector('.capture-status');
+        status.textContent = '';
         btn.disabled = true;
         try {
-          await API.joinList(p.id, input.value.trim());
+          await API.joinList(raw.id, input.value.trim());
           form.closest('.capture-wrap').innerHTML =
-            `<p class="capture-note">Thanks — you're on the list.</p>`;
+            `<p class="capture-note" role="status">Thanks — you're on the list.</p>`;
         } catch {
           btn.disabled = false;
-          let status = form.parentElement.querySelector('.capture-status');
-          if (!status) { status = document.createElement('p'); status.className = 'capture-status'; status.setAttribute('role', 'alert'); form.after(status); }
           status.textContent = "That didn't send. Try again in a moment.";
         }
       };

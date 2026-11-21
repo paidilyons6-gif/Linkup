@@ -3,78 +3,111 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>LinkUp — the link in bio people actually stop on</title>
-<meta name="description" content="A link-in-bio page with a welcome video and your offers as bubbles, over a video of you. Built in minutes, from €5 a month." />
-<meta name="theme-color" content="#fbf7f8" />
+<title>LinkUp — Turn bio traffic into programme sales</title>
+<meta name="description" content="The link-in-bio that asks the right questions and sends each visitor to the programme they should buy. No seller fees. From €9/month." />
+<meta name="theme-color" content="#faf7f2" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<meta property="og:title" content="LinkUp — the link in bio people actually stop on" />
-<meta property="og:description" content="A welcome video, then your offers as bubbles, over a video of you." />
+<meta property="og:title" content="LinkUp — Turn bio traffic into programme sales" />
+<meta property="og:description" content="A sales quiz in your Instagram bio. Visitors get matched to the right offer — you keep 100% of what you sell." />
 <meta property="og:type" content="website" />
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="tokens.css?v=20261121" />
+<link rel="stylesheet" href="site.css?v=20261121" />
 </head>
 <body>
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
-    <a class="link" href="#how">How it works</a>
-    <a class="link" href="#pricing">Pricing</a>
-    <a class="link" href="account.html?mode=signin">Sign in</a>
-    <a class="btn pink sm" href="account.html">Build mine</a>
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a class="link" href="#how">How it works</a>
+      <a class="link" href="#why">Why LinkUp</a>
+      <a class="link" href="#pricing">Pricing</a>
+      <a class="link" href="services.html">Websites</a>
+      <a class="link" href="account.html?mode=signin">Sign in</a>
+    </nav>
+    <a class="btn pink sm nav-cta" href="account.html">Start free</a>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span></span><span></span>
+    </button>
   </div>
 </header>
 
-<a class="skip-link" href="#main">Skip to content</a>
-<main id="main">
+<main>
 
   <section class="hero">
     <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">Your bio link, but worth clicking</span>
-        <h1>One link.<br />Everything <em>you do</em>.</h1>
-        <p class="lede">
-          A short welcome video, then everything you offer as bubbles floating over
-          a video of you. Not another grey list of links.
+      <div class="hero-copy">
+        <p class="brand-hero hero-anim" style="--d:0ms">Link<span>Up</span></p>
+        <h1 class="hero-anim" style="--d:90ms">Your bio link<br />should <em>sell</em>.</h1>
+        <p class="lede hero-anim" style="--d:160ms">
+          A guided quiz that matches each visitor to the right programme — then sends them to checkout.
         </p>
-        <div class="hero-cta">
-          <a class="btn pink" href="account.html">Build mine free</a>
-          <a class="btn ghost" href="page.html?demo=1">See a live one</a>
+        <div class="hero-cta hero-anim" style="--d:240ms">
+          <a class="btn pink" href="account.html">Build your quiz free <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn ghost" href="page.html">Open the demo</a>
         </div>
-        <p class="hero-note">Free to build. From €5/month when you're ready to publish.</p>
+        <p class="hero-proof hero-anim" style="--d:320ms"><span><b>0%</b> of your sales</span><span><b>Free</b> to build</span><span>Publish from <b>€9/mo</b></span></p>
       </div>
-
-      <div class="phone-stage">
-        <!-- The real page, not a picture of it. Whatever it does here is what a
-             customer's visitor gets. -->
-        <div class="phone">
-          <iframe src="page.html?demo=1" title="An example LinkUp page" loading="lazy"></iframe>
+      <div class="hero-stage">
+        <div class="device">
+          <iframe src="page.html?preview=1" title="LinkUp demo quiz" loading="eager"></iframe>
         </div>
+        <p class="hero-caption">Go on — tap through it.</p>
       </div>
     </div>
   </section>
 
-  <section class="alt" id="how">
+  <section id="how">
     <div class="wrap">
       <div class="section-head">
-        <h2>Up in about five minutes</h2>
-        <p>No website, no designer, no waiting on anyone.</p>
+        <span class="kicker">How it works</span>
+        <h2>Ask. Match. <em>Convert.</em></h2>
+        <p>Built for coaches and creators who sell programmes — not for people who just need a link dump. Free to build. 0% cut of your sales. Publish from €9/month.</p>
       </div>
       <div class="steps">
-        <div class="step reveal">
-          <div class="step-n">1</div>
-          <h3>Record a hello</h3>
-          <p>Fifteen seconds on your phone. It plays first, so people meet you before they meet your prices.</p>
+        <article class="step reveal">
+          <div class="step-n">01</div>
+          <h3>Write the questions</h3>
+          <p>Pregnant? Which trimester? Gain muscle? Lose weight? Your audience already knows — make them tap it.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-n">02</div>
+          <h3>Map every answer</h3>
+          <p>Each path lands on a programme result: benefits, price line, and one clear buy button.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-n">03</div>
+          <h3>Drop one link in bio</h3>
+          <p>Instagram, TikTok, YouTube. Traffic hits the quiz, not a list they scroll past.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Why not Linktree</span>
+        <h2>Lists don’t sell programmes. <em>Guidance does.</em></h2>
+      </div>
+      <div class="contrast">
+        <div class="reveal">
+          <h3>Typical bio link</h3>
+          <ul class="contrast-list contrast-bad">
+            <li>Ten identical buttons, equal weight</li>
+            <li>Visitor guesses which programme fits</li>
+            <li>Seller fees on some platforms (up to 12%)</li>
+            <li>Feels like everyone else’s page</li>
+          </ul>
         </div>
-        <div class="step reveal">
-          <div class="step-n">2</div>
-          <h3>Add your bubbles</h3>
-          <p>One for each thing you sell or want people to see. Give the important one a tag and make it bigger.</p>
-        </div>
-        <div class="step reveal">
-          <div class="step-n">3</div>
-          <h3>Put it in your bio</h3>
-          <p>One link. Change what's behind it whenever you like — nobody has to click anything new.</p>
+        <div class="reveal">
+          <h3>LinkUp</h3>
+          <ul class="contrast-list">
+            <li>Interactive quiz with smooth transitions</li>
+            <li>Personalised programme recommendation</li>
+            <li><strong>0% cut</strong> of what you sell off-platform</li>
+            <li>Benefits-first result screens that convert</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -83,47 +116,51 @@
   <section id="pricing">
     <div class="wrap">
       <div class="section-head">
-        <h2>Priced so it's not a decision</h2>
-        <p>Cancel whenever. No setup fee, no cut of what you sell.</p>
+        <span class="kicker">Pricing</span>
+        <h2>Less than Linktree Pro. <em>Built to sell.</em></h2>
+        <p>Linktree Pro is about $15/mo and still takes up to 9% if you sell through them. LinkUp takes <strong>nothing</strong> from your programme checkouts.</p>
       </div>
 
       <div class="tiers">
         <div class="tier reveal">
-          <h3>Basic</h3>
-          <div class="price">€5<span>/month</span></div>
-          <p>Your page, your bubbles, your background.</p>
+          <div>
+            <h3>Launch</h3>
+            <div class="price">€9<span>/month</span></div>
+            <p>A polished hub for simple link pages.</p>
+          </div>
           <ul>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited bubbles</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Background photo or video</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Five themes</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Edit from your phone</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Public page + themes</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Link hub mode</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Background media · edit on phone</li>
           </ul>
           <a class="btn ghost" href="account.html">Start free</a>
         </div>
 
         <div class="tier featured reveal">
-          <span class="tier-flag">Most people pick this</span>
-          <h3>Premium</h3>
-          <div class="price">€10<span>/month</span></div>
-          <p>Everything in Basic, plus the bit that sells.</p>
+          <div>
+            <span class="tier-flag">Best for coaches</span>
+            <h3>Guide</h3>
+            <div class="price">€19<span>/month</span></div>
+            <p>The sales quiz — your unfair advantage.</p>
+          </div>
           <ul>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Welcome video</strong></li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Your own LinkUp address</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>See what gets tapped</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>No LinkUp badge</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Sales quiz funnel</strong></li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Programme result pages with benefits</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Welcome video · tap insights · no badge</li>
           </ul>
           <a class="btn pink" href="account.html">Start free</a>
         </div>
 
         <div class="tier reveal">
-          <h3>Business</h3>
-          <div class="price">€15<span>/month</span></div>
-          <p>Everything in Premium, plus your mailing list.</p>
+          <div>
+            <h3>Scale</h3>
+            <div class="price">€29<span>/month</span></div>
+            <p>Own the list. Keep selling after the click.</p>
+          </div>
           <ul>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Collect email addresses</strong></li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send to your whole list</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Export any time</li>
-            <li><svg class="tick" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#ffdcec"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#ef4e97" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Unsubscribe handled for you</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Email capture</strong> (+ broadcasts when sending domain is set)</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>CSV export anytime</li>
+            <li><svg class="tick" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="rgba(155,28,46,.1)"/><path d="M6 10.5l2.6 2.5L14 8" stroke="#9b1c2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Guide</li>
           </ul>
           <a class="btn ghost" href="account.html">Start free</a>
         </div>
@@ -131,37 +168,68 @@
     </div>
   </section>
 
-  <section class="alt">
+  <section class="ink" id="websites">
+    <div class="wrap teaser">
+      <div class="section-head" style="margin-bottom:0">
+        <span class="kicker">Done for you</span>
+        <h2>Need the whole site? <em>We build it.</em></h2>
+        <p>Your quiz finds the right programme. We can design, host and look after the sales page or website it sends people to — you just add your content.</p>
+        <div class="band-cta">
+          <a class="btn pink" href="services.html">See how it works <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn ghost" href="services.html#examples">View sample designs</a>
+        </div>
+      </div>
+      <ul class="teaser-list" aria-label="What we build">
+        <li><span>i.</span>Sales pages for a single programme</li>
+        <li><span>ii.</span>Small sites on your own domain</li>
+        <li><span>iii.</span>Hosting, care and small edits every month</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band" id="faq">
     <div class="narrow">
-      <div class="section-head"><h2>Questions</h2></div>
+      <div class="section-head">
+        <span class="kicker">Questions</span>
+        <h2>Straight answers.</h2>
+      </div>
       <details>
-        <summary>Do I need a website?</summary>
-        <p>No. LinkUp is the website. You put one link in your Instagram or TikTok bio and change what's behind it whenever you want.</p>
+        <summary>Is this only for fitness coaches?</summary>
+        <p>No. Any creator who sells programmes, courses, or offers can build a quiz. Fitness is a natural fit — pregnancy, goals, experience level — but the builder is open-ended.</p>
       </details>
       <details>
-        <summary>What if I hate being on camera?</summary>
-        <p>Leave the welcome video out and the page opens straight onto your bubbles. You can add one later — it takes fifteen seconds and it's the thing people remember.</p>
+        <summary>Do you take a cut of my sales?</summary>
+        <p>No. LinkUp never processes your programme checkout. Visitors leave to your Stripe, Shopify, Kajabi, or whatever you already use. You keep 100%.</p>
       </details>
       <details>
-        <summary>Can I change it after it's live?</summary>
-        <p>As often as you like. Edit it on your phone and it's updated for everyone immediately. The link never changes.</p>
+        <summary>Can I still use a normal link list?</summary>
+        <p>Yes. Switch to Hub mode in the studio anytime. Most sellers keep the quiz as the default.</p>
       </details>
       <details>
-        <summary>What happens to my email list if I leave?</summary>
-        <p>You export it and take it with you. Addresses people gave you are yours, not ours.</p>
+        <summary>How is this priced vs Linktree?</summary>
+        <p>Linktree Pro is about $15/mo with seller fees if you sell through them. Premium is $35/mo for 0% fees. LinkUp Guide is €19/mo with a sales quiz they don’t have — and 0% on your off-platform sales at every tier.</p>
       </details>
       <details>
-        <summary>Is there a free trial?</summary>
-        <p>Building a page is free — you only pay when you want it live on your own address. Your subscription starts when you complete checkout.</p>
+        <summary>Is building free?</summary>
+        <p>Yes. Build and preview everything. You only pay when you publish on your address.</p>
+      </details>
+      <details>
+        <summary>Do website builds charge online?</summary>
+        <p>No. Sales pages and full sites are quoted and invoiced by email — see <a href="services.html">how it works</a>. In-app payments are only for LinkUp plans (Launch / Guide / Scale) when you publish.</p>
+      </details>
+      <details>
+        <summary>Do Scale broadcasts work out of the box?</summary>
+        <p>Email capture on your page works with Scale. Sending broadcasts needs a verified sending domain (Resend) configured by us — until then the send button explains that email isn’t configured yet.</p>
       </details>
     </div>
   </section>
 
-  <section>
-    <div class="narrow" style="text-align:center">
-      <h2>Your bio link is doing nothing. Give it a job.</h2>
-      <div class="hero-cta" style="justify-content:center; margin-top:26px">
-        <a class="btn pink" href="account.html">Build mine free</a>
+  <section class="closing">
+    <div class="narrow">
+      <h2>Stop making people guess which programme is <em>theirs.</em></h2>
+      <p class="closing-note">Free to build. Publish when you’re ready — from €9/month.</p>
+      <div class="closing-cta">
+        <a class="btn pink" href="account.html">Build your quiz free</a>
       </div>
     </div>
   </section>
@@ -169,34 +237,50 @@
 </main>
 
 <footer class="foot">
-  <div class="wrap nav-in" style="height:auto; padding-block:8px">
-    <a class="logo" href="/"><span class="logo-mark"></span>LinkUp</a>
+  <div class="wrap nav-in">
+    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>LinkUp</a>
     <a href="terms.html">Terms</a>
     <a href="privacy.html">Privacy</a>
+    <a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a>
     <span>© <span id="yr"></span> LinkUp</span>
   </div>
 </footer>
 
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
-
-  // Hairline under the nav only once you've scrolled past the top.
   const nav = document.getElementById('nav');
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
   const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
   onScroll();
   addEventListener('scroll', onScroll, { passive: true });
-
-  // Cards ease in as they arrive. Anyone who has asked for reduced motion just
-  // gets them, already in place.
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const items = document.querySelectorAll('.reveal');
-  if (reduced || !('IntersectionObserver' in window)) {
-    items.forEach(el => el.classList.add('in'));
-  } else {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  const closeMenu = () => {
+    nav.classList.remove('open');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  };
+  if (toggle && links) {
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.remove('pending-reveal');
+          io.unobserve(e.target);
+        }
+      });
     }, { rootMargin: '0px 0px -10% 0px' });
-    items.forEach(el => io.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (el.getBoundingClientRect().top >= innerHeight) {
+        el.classList.add('pending-reveal');
+        io.observe(el);
+      }
+    });
   }
 </script>
 </body>

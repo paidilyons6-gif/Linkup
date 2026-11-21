@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Terms — LinkUp</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="tokens.css?v=20261121" />
+<link rel="stylesheet" href="site.css?v=20261121" />
 <style>
   .doc { padding: 40px 0 80px; }
   .doc h1 { font-family: var(--serif); font-size: 38px; letter-spacing: -.03em; margin-bottom: 8px; }
@@ -16,9 +16,12 @@
   .doc p { margin-bottom: 12px; }
   .doc ul { margin: 0 0 12px 20px; }
   .doc li { margin-bottom: 6px; }
-  .doc strong { color: var(--ink); }
-  .review { background: #fff6d6; border: 1px solid #e8d48a; border-radius: var(--r-md);
-            padding: 16px 18px; font-size: 14.5px; line-height: 1.55; margin-bottom: 30px; color: var(--ink); }
+  .review {
+    background: rgba(240, 194, 75, 0.12); border: 1px solid rgba(240, 194, 75, 0.35);
+    border-radius: var(--r-md); padding: 16px 18px; font-size: 14.5px; line-height: 1.55;
+    margin-bottom: 30px; color: var(--mist);
+  }
+  .doc strong { color: var(--paper); }
 </style>
 </head>
 <body>
@@ -28,17 +31,12 @@
 </div></header>
 
 <main class="narrow doc">
-  <div class="review">
-    <strong>Read this before publishing.</strong> This is a reasonable starting point
-    that matches how the software actually behaves, but it is a binding contract with
-    your customers. Have a solicitor read it, and fill in the placeholders, before you
-    take money.
-  </div>
-
   <h1>Terms</h1>
   <p class="when">Last updated: <span id="d"></span></p>
 
-  <p>LinkUp is a service of <strong>[YOUR COMPANY NAME]</strong>, [ADDRESS], Ireland.
+  <p>LinkUp is a service of <strong>Paidi Lyons trading as LinkUp (DocKit)</strong>,
+     Kilbree, Cappoquin, Co. Waterford, P51 P403, Ireland.
+     Questions: <strong><a href="mailto:paidilyons6@gmail.com">paidilyons6@gmail.com</a></strong>.
      Using it means agreeing to what's below. These terms are governed by Irish law.</p>
 
   <h2>What you get</h2>
@@ -48,11 +46,13 @@
      change with a month's notice.</p>
 
   <h2>Paying</h2>
-  <p>Plans are monthly, in euro, charged in advance, and renew automatically until you
-     cancel. Prices include VAT where it applies. You can cancel at any time from
-     Manage billing — you keep access until the end of the month you've paid for, and
-     part-months aren't refunded.</p>
-  <p>If a payment fails we'll retry. If it keeps failing your page stops being public,
+  <p>LinkUp software plans (Launch, Guide, Scale) are monthly, in euro, charged in advance
+     via Stripe, and renew automatically until you cancel. Prices include VAT where it
+     applies. You can cancel at any time from Manage billing — you keep access until the
+     end of the month you've paid for, and part-months aren't refunded.</p>
+  <p>Done-for-you website builds and care packages are quoted and invoiced separately by
+     email — they are not charged through the in-app Stripe checkout.</p>
+  <p>If a software payment fails we'll retry. If it keeps failing your page stops being public,
      but nothing is deleted — pay and it comes straight back.</p>
   <p><strong>Your first fourteen days:</strong> as a consumer buying online in the EU you
      have fourteen days to change your mind. If you publish a page inside that window

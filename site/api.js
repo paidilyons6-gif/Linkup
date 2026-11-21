@@ -34,17 +34,21 @@ const API = (() => {
   let refreshRequest = null;
   async function refreshSession() {
     if (!session?.refresh_token) return;
-    const dueAt = (session.expires_at || 0) * 1000;
+    const current = session;
+    const dueAt = (current.expires_at || 0) * 1000;
     if (Date.now() < dueAt - 60_000) return;
     const res = await fetch(`${URL_}/auth/v1/token?grant_type=refresh_token`, {
       method: 'POST',
       headers: { apikey: ANON, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: session.refresh_token }),
+      body: JSON.stringify({ refresh_token: current.refresh_token }),
     });
-    if (res.ok) keep(await res.json());
+    if (res.ok) {
+      const updated = await res.json();
+      if (session === current) keep(updated);
+    }
     // 400/401 means the refresh token is spent — anything else (a 5xx, a dead
     // connection) is not proof of that, so the session is kept and retried.
-    else if (res.status === 400 || res.status === 401) keep(null);
+    else if (session === current && (res.status === 400 || res.status === 401)) keep(null);
   }
 
   async function fresh() {
@@ -58,13 +62,13 @@ const API = (() => {
     try { session = JSON.parse(event.newValue || 'null'); } catch { session = null; }
   });
 
-  async function rest(path, opts = {}) {
-    await fresh();
+  async function rest(path, opts = {}, anonymous = false) {
+    if (!anonymous) await fresh();
     const res = await fetch(`${URL_}/rest/v1/${path}`, {
       ...opts,
       headers: {
         apikey: ANON,
-        Authorization: `Bearer ${session?.access_token || ANON}`,
+        Authorization: `Bearer ${(!anonymous && session?.access_token) || ANON}`,
         'Content-Type': 'application/json',
         ...(opts.headers || {}),
       },
@@ -78,8 +82,8 @@ const API = (() => {
     return body;
   }
 
-  const rpc = (fn, args = {}) =>
-    rest(`rpc/${fn}`, { method: 'POST', body: JSON.stringify(args) });
+  const rpc = (fn, args = {}, anonymous = false) =>
+    rest(`rpc/${fn}`, { method: 'POST', body: JSON.stringify(args) }, anonymous);
 
   // ── Accounts ──────────────────────────────────────────────────────────
   async function auth(kind, email, password) {
@@ -150,6 +154,7 @@ const API = (() => {
   const allows = (plan, feature) => ({
     page:          ['basic', 'premium', 'business'],
     welcome_video: ['premium', 'business'],
+    quiz:          ['premium', 'business'],
     email_capture: ['business'],
   }[feature] || []).includes(plan);
 
@@ -164,11 +169,11 @@ const API = (() => {
      survives the browser navigating away half a millisecond later. */
   function recordTap(profileId, label) {
     try {
-      fetch(`${URL_}/rest/v1/taps`, {
+      fetch(`${URL_}/rest/v1/rpc/record_tap`, {
         method: 'POST', keepalive: true,
         headers: { apikey: ANON, Authorization: `Bearer ${ANON}`,
                    'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify({ profile_id: profileId, label }),
+        body: JSON.stringify({ p_profile_id: profileId, p_label: label }),
       }).catch(() => {});
     } catch { /* never let counting break a link */ }
   }
@@ -191,7 +196,7 @@ const API = (() => {
   const deleteAccount = () => rpc('delete_me');
 
   const slugFree     = (slug) => rpc('slug_available', { p_slug: slug });
-  const publicProfile = (slug) => rpc('public_profile', { p_slug: slug });
+  const publicProfile = (slug) => rpc('public_profile', { p_slug: slug }, true);
 
   // ── Files ─────────────────────────────────────────────────────────────
   /* Straight to Supabase Storage. The bucket caps the size and the mime types,
@@ -204,14 +209,13 @@ const API = (() => {
       throw new Error('Choose a JPG, PNG, WebP, GIF, MP4, WebM or MOV file.');
     }
     const ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const path = `${user().id}/${kind}-${Date.now()}.${ext}`;
+    const path = `${user().id}/${kind}-${crypto.randomUUID()}.${ext || 'bin'}`;
     const res = await fetch(`${URL_}/storage/v1/object/media/${path}`, {
       method: 'POST',
       headers: {
         apikey: ANON,
         Authorization: `Bearer ${session.access_token}`,
         'Content-Type': file.type || 'application/octet-stream',
-        'x-upsert': 'true',
       },
       body: file,
     });
@@ -239,12 +243,11 @@ const API = (() => {
     location.href = body.url;
   }
 
-  const joinList = (profileId, email) =>
-    rest('subscribers', {
-      method: 'POST',
-      headers: { Prefer: 'return=minimal,resolution=merge-duplicates' },
-      body: JSON.stringify({ profile_id: profileId, email }),
-    });
+  const joinList = async (profileId, email) => {
+    const ok = await rpc('join_list', { p_profile_id: profileId, p_email: email }, true);
+    if (!ok) throw new Error('Email signup is not available on this page');
+    return ok;
+  };
 
   return {
     configured, signedIn, user, signUp, signIn, signOut, resetPassword, setPassword,
