@@ -11,7 +11,7 @@ Live site: https://linkupping.netlify.app
 
 ## Deployment and verification
 
-1. Deploy the combined release to a Netlify preview using the root configuration. Confirm `/build` reaches the studio and `/bybecca` still uses the public renderer. Check the live project mapping before promoting the preview.
+1. Deploy the combined release to a Netlify preview using the checked-in routing and headers. Confirm `/build` reaches the studio and `/bybecca` still uses the public renderer. Check the live project mapping before promoting the preview.
 2. In an isolated Supabase and Stripe test environment, verify signup, password recovery, the first purchase, an upgrade of that subscription, publish, cancellation and webhook retry. Enable price changes in the Stripe Customer Portal for the configured LinkUp prices.
 3. Deploy the updated backend functions after the Stripe test succeeds. Monitor webhook delivery and confirm that billing updates reach the editor. Keep the live and test Stripe keys and webhook secrets separate.
 

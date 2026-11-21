@@ -1,16 +1,21 @@
 import { test, expect } from '@playwright/test';
 const session = { access_token: 'test-access', refresh_token: 'test-refresh', expires_at: 9999999999, user: { id: 'test-user', email: 'test@example.com' } };
 const profile = { id: 'test-id', user_id: 'test-user', name: 'Test Creator', slug: 'creator', links: [{ label: 'My website', url: 'https://example.com' }], published: false, theme: 'blush', mode: 'hub', quiz: {} };
-async function editor(page, failSave = false) {
+async function editor(page, failSave = false, initialProfile = profile) {
+  let stored = structuredClone(initialProfile);
   await page.addInitScript(s => localStorage.setItem('linkup.session', JSON.stringify(s)), session);
   await page.route('https://*.supabase.co/**', async route => {
     const url = route.request().url();
     if (route.request().method() === 'PATCH') {
       await new Promise(r => setTimeout(r, 150));
-      return route.fulfill({ status: failSave ? 500 : 200, json: failSave ? { message: 'Save failed' } : [{ ...profile, ...route.request().postDataJSON() }] });
+      if (failSave) return route.fulfill({ status: 500, json: { message: 'Save failed' } });
+      stored = { ...stored, ...route.request().postDataJSON() };
+      return route.fulfill({ json: [stored] });
     }
     if (url.includes('/profiles?')) await new Promise(r => setTimeout(r, 300));
-    const json = url.includes('/subscriptions?') ? [{ plan: 'premium', status: 'active' }] : url.includes('/profiles?') ? [profile] : [];
+    const json = url.includes('/subscriptions?') ? [{ plan: 'premium', status: 'active' }] :
+      url.includes('/profiles?') ? [stored] :
+      url.includes('/rpc/public_profile') && stored.published ? stored : null;
     await route.fulfill({ json });
   });
   await page.goto('/build');
@@ -146,4 +151,44 @@ test('preview capture gives feedback without saving an email', async ({ page }) 
   await page.getByRole('button', { name: 'Join', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('has not been collected');
   expect(await page.evaluate(() => localStorage.getItem('linkup.emails'))).toBeNull();
+});
+
+test('multiple Instagram destinations survive publishing and can be browsed from a quiz or hub', async ({ page }) => {
+  await editor(page, false, {
+    ...profile, mode: 'quiz',
+    quiz: { questions: [{ id: 'q1', text: 'Find a programme', options: [] }] },
+  });
+  const destinations = page.getByRole('region', { name: 'Destinations' });
+  const links = [
+    { label: 'Coaching Instagram', entered: 'www.instagram.com/example_coaching/', url: 'https://www.instagram.com/example_coaching/' },
+    { label: 'Studio Instagram', entered: 'https://www.instagram.com/example_studio/', url: 'https://www.instagram.com/example_studio/' },
+  ];
+  for (const link of links) {
+    await destinations.getByRole('button', { name: 'Add link' }).click();
+    const card = destinations.locator('.hub-card').last();
+    await expect(card.getByLabel('Label')).toBeFocused();
+    await card.getByLabel('Label').fill(link.label);
+    await card.getByLabel('URL').fill(link.entered);
+  }
+
+  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Unpublish', exact: true })).toBeVisible();
+  await page.reload();
+  for (const [i, link] of links.entries()) {
+    await expect(destinations.locator('.hub-card').nth(i + 1).getByLabel('URL')).toHaveValue(link.entered);
+  }
+
+  await page.goto('/creator');
+  await page.getByRole('button', { name: 'Browse all links' }).click();
+  for (const link of links) {
+    await expect(page.getByRole('link', { name: link.label })).toHaveAttribute('href', link.url);
+  }
+
+  await page.goto('/build');
+  await page.locator('#modeToggle [data-mode="hub"]').click();
+  await expect(page.locator('#saved')).toHaveText('Saved');
+  await page.goto('/creator');
+  for (const link of links) {
+    await expect(page.getByRole('link', { name: link.label })).toHaveAttribute('href', link.url);
+  }
 });

@@ -1,0 +1,3 @@
+# Keep the Studio route ahead of the public profile fallback.
+/build  /edit.html  200
+/:slug  /u.html  200

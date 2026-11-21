@@ -161,11 +161,13 @@
       </div>
     </div>
 
-    <div id="hubEditor" hidden>
-      <h2>Destinations</h2>
+    <section aria-labelledby="destinations-heading">
+      <h2 id="destinations-heading">Destinations</h2>
+      <p class="hint">Add a separate link for each Instagram profile, post or other destination.</p>
+      <p class="hint" id="quizDestinations" hidden>Quiz visitors can find these under Browse all links.</p>
       <div id="links"></div>
       <button class="btn ghost" id="addLink" type="button">+ Add link</button>
-    </div>
+    </section>
 
     <h2>Email list</h2>
     <div class="locked" id="captureBox">
@@ -407,7 +409,7 @@
     $('modeToggle').querySelectorAll('button').forEach(b =>
       b.setAttribute('aria-pressed', b.dataset.mode === mode));
     $('quizEditor').hidden = mode !== 'quiz';
-    $('hubEditor').hidden = mode !== 'hub';
+    $('quizDestinations').hidden = mode !== 'quiz';
   }
 
   function nextOptions() {
@@ -540,13 +542,13 @@
       card.className = 'hub-card';
       card.innerHTML = `
         <div class="row">
-          <div class="field" style="margin:0"><label>Label</label>
-            <input data-l="label:${i}" value="${LinkUp.esc(l.label || '')}" /></div>
-          <div class="field" style="margin:0"><label>Emoji</label>
-            <input data-l="emoji:${i}" value="${LinkUp.esc(l.emoji || '')}" maxlength="4" /></div>
+          <div class="field" style="margin:0"><label for="destination-label-${i}">Label</label>
+            <input id="destination-label-${i}" data-l="label:${i}" value="${LinkUp.esc(l.label || '')}" /></div>
+          <div class="field" style="margin:0"><label for="destination-emoji-${i}">Emoji</label>
+            <input id="destination-emoji-${i}" data-l="emoji:${i}" value="${LinkUp.esc(l.emoji || '')}" maxlength="4" /></div>
         </div>
-        <div class="field"><label>URL</label><input data-l="url:${i}" value="${LinkUp.esc(l.url || '')}" /></div>
-        <div class="field"><label>Note</label><input data-l="note:${i}" value="${LinkUp.esc(l.note || '')}" /></div>
+        <div class="field"><label for="destination-url-${i}">URL</label><input id="destination-url-${i}" data-l="url:${i}" inputmode="url" autocapitalize="none" spellcheck="false" value="${LinkUp.esc(l.url || '')}" /></div>
+        <div class="field"><label for="destination-note-${i}">Note</label><input id="destination-note-${i}" data-l="note:${i}" value="${LinkUp.esc(l.note || '')}" /></div>
         <button class="btn ghost sm" data-del-l="${i}" type="button">Remove</button>`;
       wrap.appendChild(card);
     });
@@ -573,7 +575,9 @@
   };
   $('addLink').onclick = () => {
     (row.links ||= []).push({ label: '', url: '', note: '', emoji: '', shape: 'pill', size: 'm' });
-    drawLinks(); touch({ links: row.links });
+    drawLinks();
+    $('destination-label-' + (row.links.length - 1)).focus();
+    touch({ links: row.links });
   };
 
   $('modeToggle').onclick = (e) => {

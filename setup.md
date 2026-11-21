@@ -2,7 +2,7 @@
 
 ## Frontend
 
-The Netlify project publishes the `site/` directory from the repository root. The root `netlify.toml` rewrites `/build` to the studio before applying the public profile fallback. Keep the deployed origin and the allowed Auth callbacks aligned, including `/account.html` for recovery. A frontend deploy leaves the Supabase project and Stripe settings as configured.
+The Netlify project publishes the `site/` directory from the repository root. `site/_redirects` rewrites `/build` to the studio before applying the public profile fallback. `site/_headers` sets the response headers. Both files travel with a manual deploy. Keep the deployed origin and the allowed Auth callbacks aligned, including `/account.html` for recovery. A frontend deploy leaves the Supabase project and Stripe settings as configured.
 
 ## Supabase
 

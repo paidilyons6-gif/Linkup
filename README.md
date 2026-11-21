@@ -27,6 +27,6 @@ The local site opens at http://localhost:4173. `/page.html?demo=1` shows the mar
 
 ## Deploy
 
-Netlify publishes only `site/`. The root `netlify.toml` defines routing, headers and cache policy. Deploy from the repository root so Netlify sees that configuration. The archived original export is retained for reference.
+Netlify publishes only `site/`. That directory contains `_redirects` and `_headers`, so it also works as a manual deploy. Download the `LinkUp-Netlify` artifact from a passing GitHub Actions push run, unzip it and upload the folder containing `index.html` to the existing Netlify project. The archived original export is retained for reference.
 
 The hosted Supabase project is configured in `site/config.js` using its public URL and anon key. `supabase/functions/` contains the Edge Function source and `supabase/migrations/` contains schema updates for the existing backend. See [setup.md](setup.md), [PRODUCTION.md](PRODUCTION.md) and [the backend contract](docs/backend-contract.md).
